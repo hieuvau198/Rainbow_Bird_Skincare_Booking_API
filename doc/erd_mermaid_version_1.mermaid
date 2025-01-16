@@ -1,0 +1,151 @@
+erDiagram
+    User {
+        int user_id PK
+        string username
+        string password
+        string email
+        string phone
+        string full_name
+        string role
+        datetime created_at
+        datetime last_login_at
+    }
+    Service {
+        int service_id PK
+        string service_name
+        string description
+        decimal price
+        string currency
+        int duration_minutes
+        string location
+        bool is_active
+        datetime created_at
+    }
+    Answer {
+        int answer_id PK
+        int question_id FK
+        string description
+        bool is_active
+        datetime created_at
+    }
+    AnswerRecommendation {
+        int recommendation_id PK
+        int answer_id FK
+        int service_id FK
+        bool is_active
+        datetime created_at
+    }
+    Question {
+        int question_id PK
+        string description
+        bool is_active
+        datetime created_at
+    }
+    Booking {
+        int booking_id PK
+        int customer_id FK
+        int therapist_id FK
+        int service_id FK
+        datetime booking_date
+        datetime start_time
+        datetime end_time
+        string status
+        string notes
+        datetime created_at
+    }
+    Customer {
+        int customer_id PK
+        int user_id FK
+        string preferences
+        string medical_history
+        datetime last_visit_at
+    }
+    Therapist {
+        int therapist_id PK
+        int user_id FK
+        string specialization
+        text bio
+        bool is_available
+        string schedule
+        decimal rating
+    }
+    Payment {
+        int payment_id PK
+        int booking_id FK
+        decimal amount
+        string currency
+        string payment_method
+        string status
+        datetime payment_date
+        string transaction_id
+    }
+    Review {
+        int review_id PK
+        int booking_id FK
+        int rating
+        text feedback
+        datetime created_at
+    }
+    CancelBooking {
+        int cancellation_id PK
+        int booking_id FK
+        datetime cancelled_at
+        string reason
+        bool is_refunded
+    }
+    CancelPolicy {
+        int policy_id PK
+        int max_cancellations
+        int waiting_time_minutes
+        bool is_active
+        datetime created_at
+    }
+    PaymentPolicy {
+        int policy_id PK
+        decimal minimum_payment_amount
+        string currency
+        int payment_window_hours
+        bool requires_deposit
+        decimal deposit_percentage
+        bool is_active
+        datetime created_at
+    }
+    Staff {
+        int staff_id PK
+        int user_id FK
+        string department
+        string position
+        datetime hire_date
+    }
+    Manager {
+        int manager_id PK
+        int user_id FK
+        string department
+        text responsibilities
+        datetime hire_date
+    }
+    Report {
+        int report_id PK
+        int staff_id FK
+        int manager_id FK
+        string report_type
+        text content
+        string status
+        datetime report_date
+    }
+
+    User ||--o{ Customer : has
+    User ||--o{ Therapist : has
+    User ||--o{ Staff : has
+    User ||--o{ Manager : has
+    Service ||--o{ Booking : has
+    Question ||--|{ Answer : must_have_at_least_one
+    Answer ||--|{ AnswerRecommendation : must_have_at_least_one
+    Service ||--o{ AnswerRecommendation : has
+    Customer ||--o{ Booking : makes
+    Therapist ||--o{ Booking : conducts
+    Booking ||--|| Payment : must_have
+    Booking ||--o| Review : receives
+    Booking ||--o| CancelBooking : may_have
+    Staff ||--o{ Report : generates
+    Manager ||--o{ Report : reviews
