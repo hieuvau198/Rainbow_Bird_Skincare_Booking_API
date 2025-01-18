@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\workspace\\github\\hieu_api_template\\Infrastructure\\Infrastructure.csproj": {}
+    "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Infrastructure.csproj": {}
   },
   "projects": {
-    "D:\\workspace\\github\\hieu_api_template\\Domain\\Domain.csproj": {
+    "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\workspace\\github\\hieu_api_template\\Domain\\Domain.csproj",
+        "projectUniqueName": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "D:\\workspace\\github\\hieu_api_template\\Domain\\Domain.csproj",
+        "projectPath": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Domain.csproj",
         "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
-        "outputPath": "D:\\workspace\\github\\hieu_api_template\\Domain\\obj\\",
+        "outputPath": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -69,14 +69,14 @@
         }
       }
     },
-    "D:\\workspace\\github\\hieu_api_template\\Infrastructure\\Infrastructure.csproj": {
+    "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\workspace\\github\\hieu_api_template\\Infrastructure\\Infrastructure.csproj",
+        "projectUniqueName": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Infrastructure.csproj",
         "projectName": "Infrastructure",
-        "projectPath": "D:\\workspace\\github\\hieu_api_template\\Infrastructure\\Infrastructure.csproj",
+        "projectPath": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Infrastructure.csproj",
         "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
-        "outputPath": "D:\\workspace\\github\\hieu_api_template\\Infrastructure\\obj\\",
+        "outputPath": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -97,8 +97,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\workspace\\github\\hieu_api_template\\Domain\\Domain.csproj": {
-                "projectPath": "D:\\workspace\\github\\hieu_api_template\\Domain\\Domain.csproj"
+              "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Domain.csproj": {
+                "projectPath": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Domain.csproj"
               }
             }
           }
@@ -118,6 +118,24 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.1, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.1, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.1, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

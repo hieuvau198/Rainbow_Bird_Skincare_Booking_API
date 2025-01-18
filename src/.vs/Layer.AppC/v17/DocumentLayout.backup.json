@@ -1,0 +1,180 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{C096DDCB-C5DA-46AD-9BFD-1A9CC5D30073}|Api\\Api.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{C096DDCB-C5DA-46AD-9BFD-1A9CC5D30073}|Api\\Api.csproj|solutionrelative:api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2211C1C9-689B-49A4-828D-6E35F54B7AE0}|Domain\\Domain.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\domain\\entities\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2211C1C9-689B-49A4-828D-6E35F54B7AE0}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{945E2942-4EAB-4793-8D0D-D9F8234EBC3D}|Application\\Application.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\application\\dtos\\housedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{945E2942-4EAB-4793-8D0D-D9F8234EBC3D}|Application\\Application.csproj|solutionrelative:application\\dtos\\housedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2211C1C9-689B-49A4-828D-6E35F54B7AE0}|Domain\\Domain.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\domain\\entities\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2211C1C9-689B-49A4-828D-6E35F54B7AE0}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C096DDCB-C5DA-46AD-9BFD-1A9CC5D30073}|Api\\Api.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C096DDCB-C5DA-46AD-9BFD-1A9CC5D30073}|Api\\Api.csproj|solutionrelative:api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2211C1C9-689B-49A4-828D-6E35F54B7AE0}|Domain\\Domain.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\domain\\entities\\answerrecommendation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2211C1C9-689B-49A4-828D-6E35F54B7AE0}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\answerrecommendation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2211C1C9-689B-49A4-828D-6E35F54B7AE0}|Domain\\Domain.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\domain\\entities\\therapist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2211C1C9-689B-49A4-828D-6E35F54B7AE0}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\therapist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\infrastructure\\persistence\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\persistence\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 669,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Payment.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Entities\\Payment.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Payment.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Entities\\Payment.cs",
+              "RelativeToolTip": "Domain\\Entities\\Payment.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-18T02:03:26.053Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "HouseDto.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Application\\DTOs\\HouseDto.cs",
+              "RelativeDocumentMoniker": "Application\\DTOs\\HouseDto.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Application\\DTOs\\HouseDto.cs",
+              "RelativeToolTip": "Application\\DTOs\\HouseDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-18T02:03:16.424Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Api\\appsettings.json",
+              "RelativeDocumentMoniker": "Api\\appsettings.json",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Api\\appsettings.json",
+              "RelativeToolTip": "Api\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-01-17T14:39:10.418Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AnswerRecommendation.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Entities\\AnswerRecommendation.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\AnswerRecommendation.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Entities\\AnswerRecommendation.cs",
+              "RelativeToolTip": "Domain\\Entities\\AnswerRecommendation.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAgwBUAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-17T13:58:20.017Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Therapist.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Entities\\Therapist.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Therapist.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Entities\\Therapist.cs",
+              "RelativeToolTip": "Domain\\Entities\\Therapist.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-17T13:58:07.574Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Persistence\\AppDbContext.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\AppDbContext.cs",
+              "RelativeToolTip": "Infrastructure\\Persistence\\AppDbContext.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAuwA8AAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-17T13:56:07.515Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Api\\Program.cs",
+              "RelativeDocumentMoniker": "Api\\Program.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Api\\Program.cs",
+              "RelativeToolTip": "Api\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-17T13:44:44.271Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Booking.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Entities\\Booking.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Booking.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Entities\\Booking.cs",
+              "RelativeToolTip": "Domain\\Entities\\Booking.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-17T13:38:09.195Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedHeight": 415,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            }
+          ]
+        },
+        {
+          "DockedHeight": 332,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
