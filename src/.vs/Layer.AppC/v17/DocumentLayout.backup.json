@@ -1,0 +1,408 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\infrastructure\\repositories\\houserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\repositories\\houserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2211C1C9-689B-49A4-828D-6E35F54B7AE0}|Domain\\Domain.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\domain\\interfaces\\ihouserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2211C1C9-689B-49A4-828D-6E35F54B7AE0}|Domain\\Domain.csproj|solutionrelative:domain\\interfaces\\ihouserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C096DDCB-C5DA-46AD-9BFD-1A9CC5D30073}|Api\\Api.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\api\\controllers\\housecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C096DDCB-C5DA-46AD-9BFD-1A9CC5D30073}|Api\\Api.csproj|solutionrelative:api\\controllers\\housecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C096DDCB-C5DA-46AD-9BFD-1A9CC5D30073}|Api\\Api.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\api\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C096DDCB-C5DA-46AD-9BFD-1A9CC5D30073}|Api\\Api.csproj|solutionrelative:api\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{945E2942-4EAB-4793-8D0D-D9F8234EBC3D}|Application\\Application.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\application\\interfaces\\ihouseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{945E2942-4EAB-4793-8D0D-D9F8234EBC3D}|Application\\Application.csproj|solutionrelative:application\\interfaces\\ihouseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\infrastructure\\persistence\\skincaredbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\persistence\\skincaredbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2211C1C9-689B-49A4-828D-6E35F54B7AE0}|Domain\\Domain.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\domain\\entities\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2211C1C9-689B-49A4-828D-6E35F54B7AE0}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2211C1C9-689B-49A4-828D-6E35F54B7AE0}|Domain\\Domain.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\domain\\entities\\paymentpolicy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2211C1C9-689B-49A4-828D-6E35F54B7AE0}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\paymentpolicy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2211C1C9-689B-49A4-828D-6E35F54B7AE0}|Domain\\Domain.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\domain\\entities\\service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2211C1C9-689B-49A4-828D-6E35F54B7AE0}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{945E2942-4EAB-4793-8D0D-D9F8234EBC3D}|Application\\Application.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\application\\services\\houseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{945E2942-4EAB-4793-8D0D-D9F8234EBC3D}|Application\\Application.csproj|solutionrelative:application\\services\\houseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\infrastructure\\persistence\\entities\\timeslot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\persistence\\entities\\timeslot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\infrastructure\\persistence\\entities\\question.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\persistence\\entities\\question.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\infrastructure\\persistence\\entities\\therapistavailability.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\persistence\\entities\\therapistavailability.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\infrastructure\\persistence\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\persistence\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\infrastructure\\persistence\\entities\\therapistprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\persistence\\entities\\therapistprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\infrastructure\\persistence\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\persistence\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\infrastructure\\persistence\\entities\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\persistence\\entities\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\infrastructure\\persistence\\entities\\cancelbooking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\persistence\\entities\\cancelbooking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\infrastructure\\persistence\\entities\\cancelpolicy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\persistence\\entities\\cancelpolicy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\infrastructure\\persistence\\entities\\customeranswer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\persistence\\entities\\customeranswer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\infrastructure\\persistence\\entities\\paymentpolicy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\persistence\\entities\\paymentpolicy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|d:\\workspace\\github\\rainbow_bird_skincare_booking_api\\src\\infrastructure\\persistence\\entities\\quizrecommendation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{364AA17C-21BC-4EBE-BA61-F8B7BB63D9FE}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\persistence\\entities\\quizrecommendation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 669,
+          "SelectedChildIndex": 9,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Payment.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Entities\\Payment.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Payment.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Entities\\Payment.cs",
+              "RelativeToolTip": "Domain\\Entities\\Payment.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-20T03:50:15.214Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PaymentPolicy.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Entities\\PaymentPolicy.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\PaymentPolicy.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Entities\\PaymentPolicy.cs",
+              "RelativeToolTip": "Domain\\Entities\\PaymentPolicy.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAA7wAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-20T03:50:12.616Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Service.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Entities\\Service.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Service.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Entities\\Service.cs",
+              "RelativeToolTip": "Domain\\Entities\\Service.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAA7wAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-20T03:50:07.193Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "IHouseService.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Application\\Interfaces\\IHouseService.cs",
+              "RelativeDocumentMoniker": "Application\\Interfaces\\IHouseService.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Application\\Interfaces\\IHouseService.cs",
+              "RelativeToolTip": "Application\\Interfaces\\IHouseService.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAASwAsAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-20T03:45:15.393Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "HouseService.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Application\\Services\\HouseService.cs",
+              "RelativeDocumentMoniker": "Application\\Services\\HouseService.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Application\\Services\\HouseService.cs",
+              "RelativeToolTip": "Application\\Services\\HouseService.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAawAwAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-20T03:45:08.367Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "WeatherForecastController.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Api\\Controllers\\WeatherForecastController.cs",
+              "RelativeDocumentMoniker": "Api\\Controllers\\WeatherForecastController.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Api\\Controllers\\WeatherForecastController.cs",
+              "RelativeToolTip": "Api\\Controllers\\WeatherForecastController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-20T03:44:46.841Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "HouseController.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Api\\Controllers\\HouseController.cs",
+              "RelativeDocumentMoniker": "Api\\Controllers\\HouseController.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Api\\Controllers\\HouseController.cs",
+              "RelativeToolTip": "Api\\Controllers\\HouseController.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABYAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-20T03:41:04.912Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "TimeSlot.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\TimeSlot.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Persistence\\Entities\\TimeSlot.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\TimeSlot.cs",
+              "RelativeToolTip": "Infrastructure\\Persistence\\Entities\\TimeSlot.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAzwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-20T03:34:57.009Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "HouseRepository.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Repositories\\HouseRepository.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Repositories\\HouseRepository.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Repositories\\HouseRepository.cs",
+              "RelativeToolTip": "Infrastructure\\Repositories\\HouseRepository.cs",
+              "ViewState": "AgIAABoAAAAAAAAAAAAgwDIAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-20T03:27:49.371Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "IHouseRepository.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Interfaces\\IHouseRepository.cs",
+              "RelativeDocumentMoniker": "Domain\\Interfaces\\IHouseRepository.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Domain\\Interfaces\\IHouseRepository.cs",
+              "RelativeToolTip": "Domain\\Interfaces\\IHouseRepository.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA8AAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-20T03:27:04.502Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "TherapistAvailability.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\TherapistAvailability.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Persistence\\Entities\\TherapistAvailability.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\TherapistAvailability.cs",
+              "RelativeToolTip": "Infrastructure\\Persistence\\Entities\\TherapistAvailability.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-20T03:26:34.444Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "User.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\User.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Persistence\\Entities\\User.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\User.cs",
+              "RelativeToolTip": "Infrastructure\\Persistence\\Entities\\User.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAxwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T14:05:24.159Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "TherapistProfile.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\TherapistProfile.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Persistence\\Entities\\TherapistProfile.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\TherapistProfile.cs",
+              "RelativeToolTip": "Infrastructure\\Persistence\\Entities\\TherapistProfile.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAA3wAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T14:05:20.996Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "SkincareDbContext.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\SkincareDbContext.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Persistence\\SkincareDbContext.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\SkincareDbContext.cs",
+              "RelativeToolTip": "Infrastructure\\Persistence\\SkincareDbContext.cs",
+              "ViewState": "AgIAAA4BAAAAAAAAAAAAACIBAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T14:00:14.57Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Persistence\\AppDbContext.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\AppDbContext.cs",
+              "RelativeToolTip": "Infrastructure\\Persistence\\AppDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T14:00:12.644Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Booking.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\Booking.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Persistence\\Entities\\Booking.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\Booking.cs",
+              "RelativeToolTip": "Infrastructure\\Persistence\\Entities\\Booking.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAIwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T14:00:06.23Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "CancelBooking.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\CancelBooking.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Persistence\\Entities\\CancelBooking.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\CancelBooking.cs",
+              "RelativeToolTip": "Infrastructure\\Persistence\\Entities\\CancelBooking.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T14:00:05.594Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "CancelPolicy.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\CancelPolicy.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Persistence\\Entities\\CancelPolicy.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\CancelPolicy.cs",
+              "RelativeToolTip": "Infrastructure\\Persistence\\Entities\\CancelPolicy.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T14:00:04.19Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "CustomerAnswer.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\CustomerAnswer.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Persistence\\Entities\\CustomerAnswer.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\CustomerAnswer.cs",
+              "RelativeToolTip": "Infrastructure\\Persistence\\Entities\\CustomerAnswer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T14:00:01.528Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "PaymentPolicy.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\PaymentPolicy.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Persistence\\Entities\\PaymentPolicy.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\PaymentPolicy.cs",
+              "RelativeToolTip": "Infrastructure\\Persistence\\Entities\\PaymentPolicy.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T14:00:00.081Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Question.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\Question.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Persistence\\Entities\\Question.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\Question.cs",
+              "RelativeToolTip": "Infrastructure\\Persistence\\Entities\\Question.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAxwBcAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T13:59:57.524Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "QuizRecommendation.cs",
+              "DocumentMoniker": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\QuizRecommendation.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Persistence\\Entities\\QuizRecommendation.cs",
+              "ToolTip": "D:\\workspace\\github\\Rainbow_Bird_Skincare_Booking_API\\src\\Infrastructure\\Persistence\\Entities\\QuizRecommendation.cs",
+              "RelativeToolTip": "Infrastructure\\Persistence\\Entities\\QuizRecommendation.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-19T13:59:54.591Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedHeight": 332,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
