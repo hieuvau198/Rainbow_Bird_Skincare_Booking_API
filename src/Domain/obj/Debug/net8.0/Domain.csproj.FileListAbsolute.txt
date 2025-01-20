@@ -9,3 +9,15 @@ D:\workspace\boilerplate\api\Layer.AppC\Domain\obj\Debug\net8.0\Domain.dll
 D:\workspace\boilerplate\api\Layer.AppC\Domain\obj\Debug\net8.0\refint\Domain.dll
 D:\workspace\boilerplate\api\Layer.AppC\Domain\obj\Debug\net8.0\Domain.pdb
 D:\workspace\boilerplate\api\Layer.AppC\Domain\obj\Debug\net8.0\ref\Domain.dll
+D:\workspace\github\Rainbow_Bird_Skincare_Booking_API\src\Domain\bin\Debug\net8.0\Domain.deps.json
+D:\workspace\github\Rainbow_Bird_Skincare_Booking_API\src\Domain\bin\Debug\net8.0\Domain.dll
+D:\workspace\github\Rainbow_Bird_Skincare_Booking_API\src\Domain\bin\Debug\net8.0\Domain.pdb
+D:\workspace\github\Rainbow_Bird_Skincare_Booking_API\src\Domain\obj\Debug\net8.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\workspace\github\Rainbow_Bird_Skincare_Booking_API\src\Domain\obj\Debug\net8.0\Domain.AssemblyInfoInputs.cache
+D:\workspace\github\Rainbow_Bird_Skincare_Booking_API\src\Domain\obj\Debug\net8.0\Domain.AssemblyInfo.cs
+D:\workspace\github\Rainbow_Bird_Skincare_Booking_API\src\Domain\obj\Debug\net8.0\Domain.csproj.CoreCompileInputs.cache
+D:\workspace\github\Rainbow_Bird_Skincare_Booking_API\src\Domain\obj\Debug\net8.0\Domain.sourcelink.json
+D:\workspace\github\Rainbow_Bird_Skincare_Booking_API\src\Domain\obj\Debug\net8.0\Domain.dll
+D:\workspace\github\Rainbow_Bird_Skincare_Booking_API\src\Domain\obj\Debug\net8.0\refint\Domain.dll
+D:\workspace\github\Rainbow_Bird_Skincare_Booking_API\src\Domain\obj\Debug\net8.0\Domain.pdb
+D:\workspace\github\Rainbow_Bird_Skincare_Booking_API\src\Domain\obj\Debug\net8.0\ref\Domain.dll
