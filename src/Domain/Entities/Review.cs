@@ -1,39 +1,19 @@
-﻿using Domain.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+public partial class Review
 {
-    public class Review : IEntity
-    {
-        public int Id { get; private set; }
-        public int BookingId { get; private set; }
-        public int Rating { get; private set; }
-        public string Feedback { get; private set; }
-        public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+    public int ReviewId { get; set; }
 
-        public Booking Booking { get; private set; }
+    public int BookingId { get; set; }
 
-        public Review(int bookingId, int rating, string feedback)
-        {
-            BookingId = bookingId;
-            Rating = rating;
-            Feedback = feedback;
-        }
+    public int? Rating { get; set; }
 
-        private Review(int id, int bookingId, int rating, string feedback, DateTime createdAt)
-        {
-            Id = id;
-            BookingId = bookingId;
-            Rating = rating;
-            Feedback = feedback;
-            CreatedAt = createdAt;
-        }
+    public string? Feedback { get; set; }
 
-        // This constructor is used for EF Core to map database entities
-        internal Review() { }
-    }
+    public DateTime? CreatedAt { get; set; }
+
+    public virtual Booking Booking { get; set; } = null!;
 }

@@ -1,56 +1,41 @@
-﻿using Domain.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+public partial class Booking
 {
-    public class Booking : IEntity
-    {
-        public int Id { get; private set; }
-        public int CustomerId { get; private set; }
-        public int TherapistId { get; private set; }
-        public int ServiceId { get; private set; }
-        public DateTime BookingDate { get; private set; }
-        public DateTime StartTime { get; private set; }
-        public DateTime EndTime { get; private set; }
-        public string Status { get; private set; }
-        public string Notes { get; private set; }
-        public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+    public int BookingId { get; set; }
 
-        public Customer Customer { get; private set; }
-        public Therapist Therapist { get; private set; }
-        public Service Service { get; private set; }
-            
-        public Booking(int customerId, int therapistId, int serviceId, DateTime bookingDate, DateTime startTime, DateTime endTime, string status, string notes)
-        {
-            CustomerId = customerId;
-            TherapistId = therapistId;
-            ServiceId = serviceId;
-            BookingDate = bookingDate;
-            StartTime = startTime;
-            EndTime = endTime;
-            Status = status;
-            Notes = notes;
-        }
+    public int CustomerId { get; set; }
 
-        private Booking(int id, int customerId, int therapistId, int serviceId, DateTime bookingDate, DateTime startTime, DateTime endTime, string status, string notes, DateTime createdAt)
-        {
-            Id = id;
-            CustomerId = customerId;
-            TherapistId = therapistId;
-            ServiceId = serviceId;
-            BookingDate = bookingDate;
-            StartTime = startTime;
-            EndTime = endTime;
-            Status = status;
-            Notes = notes;
-            CreatedAt = createdAt;
-        }
+    public int TherapistId { get; set; }
 
-        // This constructor is used for EF Core to map database entities
-        internal Booking() { }
-    }
+    public int ServiceId { get; set; }
+
+    public int SlotId { get; set; }
+
+    public int? PaymentId { get; set; }
+
+    public DateOnly BookingDate { get; set; }
+
+    public string? Status { get; set; }
+
+    public string? Notes { get; set; }
+
+    public DateTime? CreatedAt { get; set; }
+
+    public virtual CancelBooking? CancelBooking { get; set; }
+
+    public virtual Customer Customer { get; set; } = null!;
+
+    public virtual Payment? Payment { get; set; }
+
+    public virtual Review? Review { get; set; }
+
+    public virtual Service Service { get; set; } = null!;
+
+    public virtual TimeSlot Slot { get; set; } = null!;
+
+    public virtual Therapist Therapist { get; set; } = null!;
 }

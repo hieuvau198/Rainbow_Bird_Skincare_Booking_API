@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Infrastructure.Persistence.Entities;
+namespace Domain.Entities;
 
 public partial class QuizRecommendation
 {

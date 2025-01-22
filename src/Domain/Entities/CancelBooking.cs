@@ -1,39 +1,19 @@
-﻿using Domain.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+public partial class CancelBooking
 {
-    public class CancelBooking : IEntity
-    {
-        public int Id { get; private set; }
-        public int BookingId { get; private set; }
-        public DateTime CancelledAt { get; private set; } = DateTime.UtcNow;
-        public string Reason { get; private set; }
-        public bool IsRefunded { get; private set; }
+    public int CancellationId { get; set; }
 
-        public Booking Booking { get; private set; }
+    public int BookingId { get; set; }
 
-        public CancelBooking(int bookingId, string reason, bool isRefunded)
-        {
-            BookingId = bookingId;
-            Reason = reason;
-            IsRefunded = isRefunded;
-        }
+    public DateTime? CancelledAt { get; set; }
 
-        private CancelBooking(int id, int bookingId, DateTime cancelledAt, string reason, bool isRefunded)
-        {
-            Id = id;
-            BookingId = bookingId;
-            CancelledAt = cancelledAt;
-            Reason = reason;
-            IsRefunded = isRefunded;
-        }
+    public string? Reason { get; set; }
 
-        // This constructor is used for EF Core to map database entities
-        internal CancelBooking() { }
-    }
+    public bool? IsRefunded { get; set; }
+
+    public virtual Booking Booking { get; set; } = null!;
 }
