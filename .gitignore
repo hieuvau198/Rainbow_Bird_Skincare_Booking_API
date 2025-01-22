@@ -1,4 +1,5 @@
 # Ignore Visual Studio files and folders inside the src directory
+src/.vs/
 src/*.vs/
 src/**/*.user
 src/**/*.suo
