@@ -25,16 +25,28 @@ builder.Services.AddDbContext<SkincareDbContext>(options =>
     builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<IUserService, UserService>();
 
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader());
+});
 
 var app = builder.Build();
+
+app.UseCors("AllowAll"); // This enables CORS with the defined policy
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+else
+{
+    // Enforce HTTPS for production
+    app.UseHttpsRedirection();
+}
 // Configure the HTTP request pipeline
 
 app.UseAuthorization();

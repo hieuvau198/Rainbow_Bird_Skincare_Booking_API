@@ -12,7 +12,3 @@
 *.log
 *.cache
 *.pdb
-
-# Ignore app-specific files
-Api/appsettings*.json
-Api/Properties/launchSettings.json
