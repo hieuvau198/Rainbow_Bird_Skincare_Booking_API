@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+public partial class Customer
 {
-    public class Customer : User
-    {
-        public string Preferences { get; private set; }
-        public string MedicalHistory { get; private set; }
-        public DateTime? LastVisitAt { get; private set; }
+    public int CustomerId { get; set; }
 
-        public Customer(string username, string password, string email, string phone, string fullName, string role, string preferences, string medicalHistory)
-            : base(username, password, email, phone, fullName, role)
-        {
-            Preferences = preferences;
-            MedicalHistory = medicalHistory;
-        }
-    }
+    public int UserId { get; set; }
+
+    public string? Preferences { get; set; }
+
+    public string? MedicalHistory { get; set; }
+
+    public DateTime? LastVisitAt { get; set; }
+
+    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
+    public virtual ICollection<CustomerQuiz> CustomerQuizzes { get; set; } = new List<CustomerQuiz>();
+
+    public virtual User User { get; set; } = null!;
 }

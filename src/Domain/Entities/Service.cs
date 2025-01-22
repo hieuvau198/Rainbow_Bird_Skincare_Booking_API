@@ -1,32 +1,29 @@
-﻿using Domain.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+public partial class Service
 {
-    public class Service : IEntity
-    {
-        public int Id { get; private set; }
-        public string ServiceName { get; private set; }
-        public string Description { get; private set; }
-        public decimal Price { get; private set; }
-        public string Currency { get; private set; }
-        public int DurationMinutes { get; private set; }
-        public string Location { get; private set; }
-        public bool IsActive { get; private set; } = true;
-        public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+    public int ServiceId { get; set; }
 
-        public Service(string serviceName, decimal price, string currency, int durationMinutes, string location, string description = null)
-        {
-            ServiceName = serviceName;
-            Price = price;
-            Currency = currency;
-            DurationMinutes = durationMinutes;
-            Location = location;
-            Description = description;
-        }
-    }
+    public string ServiceName { get; set; } = null!;
+
+    public string? Description { get; set; }
+
+    public decimal Price { get; set; }
+
+    public string? Currency { get; set; }
+
+    public int DurationMinutes { get; set; }
+
+    public string? Location { get; set; }
+
+    public bool? IsActive { get; set; }
+
+    public DateTime? CreatedAt { get; set; }
+
+    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
+    public virtual ICollection<QuizRecommendation> QuizRecommendations { get; set; } = new List<QuizRecommendation>();
 }

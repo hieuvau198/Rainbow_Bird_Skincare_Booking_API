@@ -1,34 +1,33 @@
-﻿using Domain.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+public partial class User
 {
-    public class User : IEntity
-    {
-        public int Id { get; private set; }
-        public string Username { get; private set; }
-        public string Password { get; private set; } // Consider using a secure hashing mechanism
-        public string Email { get; private set; }
-        public string Phone { get; private set; }
-        public string FullName { get; private set; }
-        public string Role { get; private set; }
-        public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
-        public DateTime? LastLoginAt { get; private set; }
+    public int UserId { get; set; }
 
-        // ... other properties and methods
+    public string Username { get; set; } = null!;
 
-        public User(string username, string password, string email, string phone, string fullName, string role)
-        {
-            Username = username;
-            Password = password; // Hash password before storing
-            Email = email;
-            Phone = phone;
-            FullName = fullName;
-            Role = role;
-        }
-    }
+    public string Password { get; set; } = null!;
+
+    public string Email { get; set; } = null!;
+
+    public string? Phone { get; set; }
+
+    public string FullName { get; set; } = null!;
+
+    public string? Role { get; set; }
+
+    public DateTime? CreatedAt { get; set; }
+
+    public DateTime? LastLoginAt { get; set; }
+
+    public virtual Customer? Customer { get; set; }
+
+    public virtual Manager? Manager { get; set; }
+
+    public virtual Staff? Staff { get; set; }
+
+    public virtual Therapist? Therapist { get; set; }
 }

@@ -1,49 +1,21 @@
-﻿using Domain.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+public partial class Payment
 {
-    public class Payment : IEntity
-    {
-        public int Id { get; private set; }
-        public int BookingId { get; private set; }
-        public decimal Amount { get; private set; }
-        public string Currency { get; private set; }
-        public string PaymentMethod { get; private set; }
-        public string Status { get; private set; }
-        public DateTime PaymentDate { get; private set; }
-        public string TransactionId { get; private set; }
+    public int PaymentId { get; set; }
 
-        public Booking Booking { get; private set; }
+    public decimal TotalAmount { get; set; }
 
-        public Payment(int bookingId, decimal amount, string currency, string paymentMethod, string status, DateTime paymentDate, string transactionId)
-        {
-            BookingId = bookingId;
-            Amount = amount;
-            Currency = currency;
-            PaymentMethod = paymentMethod;
-            Status = status;
-            PaymentDate = paymentDate;
-            TransactionId = transactionId;
-        }
+    public string? Currency { get; set; }
 
-        private Payment(int id, int bookingId, decimal amount, string currency, string paymentMethod, string status, DateTime paymentDate, string transactionId)
-        {
-            Id = id;
-            BookingId = bookingId;
-            Amount = amount;
-            Currency = currency;
-            PaymentMethod = paymentMethod;
-            Status = status;
-            PaymentDate = paymentDate;
-            TransactionId = transactionId;
-        }
+    public string? PaymentMethod { get; set; }
 
-        // This constructor is used for EF Core to map database entities
-        internal Payment() { }
-    }
+    public string? Status { get; set; }
+
+    public DateTime? PaymentDate { get; set; }
+
+    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 }

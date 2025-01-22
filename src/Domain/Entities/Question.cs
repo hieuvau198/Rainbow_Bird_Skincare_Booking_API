@@ -1,22 +1,29 @@
-﻿using Domain.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+public partial class Question
 {
-    public class Question : IEntity
-    {
-        public int Id { get; private set; }
-        public string Description { get; private set; }
-        public bool IsActive { get; private set; } = true;
-        public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+    public int QuestionId { get; set; }
 
-        public Question(string description)
-        {
-            Description = description;
-        }
-    }
+    public int QuizId { get; set; }
+
+    public string Content { get; set; } = null!;
+
+    public int? Points { get; set; }
+
+    public bool? IsMultipleChoice { get; set; }
+
+    public int? DisplayOrder { get; set; }
+
+    public bool? IsActive { get; set; }
+
+    public DateTime? CreatedAt { get; set; }
+
+    public virtual ICollection<Answer> Answers { get; set; } = new List<Answer>();
+
+    public virtual ICollection<CustomerAnswer> CustomerAnswers { get; set; } = new List<CustomerAnswer>();
+
+    public virtual Quiz Quiz { get; set; } = null!;
 }
