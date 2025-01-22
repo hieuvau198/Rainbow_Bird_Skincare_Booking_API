@@ -1,6 +1,6 @@
 # Visual Studio temporary files, build results, and
 # user-specific files
-.vs/
+.vs\
 *.Layer.AppC
 
 # Visual Studio Code workspace files
