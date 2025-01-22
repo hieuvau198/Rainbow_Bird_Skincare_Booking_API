@@ -1,0 +1,31 @@
+# Visual Studio temporary files, build results, and
+# user-specific files
+.vs/
+*.user
+*.suo
+*.cache
+*.log
+*.pdb
+*.obj
+*.dll
+*.exe
+*.vscode/
+*.ipch
+*.tlog
+*.lastbuildstate
+*.opensdf
+*.sdf
+*.suo
+*.vcxproj.user
+*.VC.db
+*.VC.opendb
+
+# Visual Studio Code workspace files
+.vscode/
+*.code-workspace
+
+# Build output folders
+bin/
+obj/
+Debug/
+Release/
