@@ -1,0 +1,251 @@
+erDiagram
+    %% Core User entities
+    User o|--|o Customer : has
+    User o|--|o Therapist : has
+    User o|--|o Staff : has
+    User o|--|o Manager : has
+
+    %% Quiz and Assessment structure
+    Quiz ||--|{ Question : contains
+    Question ||--|{ Answer : has
+    Quiz ||--o{ CustomerQuiz : taken_by
+    Quiz ||--|{ QuizRecommendation : has
+    Service ||--o{ QuizRecommendation : is_recommended_in
+    
+    %% Customer Quiz responses
+    Customer ||--o{ CustomerQuiz : takes
+    CustomerQuiz ||--|{ CustomerAnswer : contains
+    Question ||--o{ CustomerAnswer : answers
+    Answer ||--o{ CustomerAnswer : selected
+    
+    %% Time Slot and Schedule Management
+    WorkingDay ||--|{ TimeSlot : has
+    TimeSlot ||--o{ Booking : booked_for
+    Therapist ||--o{ TherapistAvailability : sets
+    TimeSlot ||--|{ TherapistAvailability : has
+    
+    %% Simplified Therapist Profile
+    Therapist ||--o| TherapistProfile : has
+    
+    %% Booking and Payment
+    Customer ||--o{ Booking : makes
+    Therapist ||--o{ Booking : conducts
+    Service ||--o{ Booking : provides
+    Payment ||--|{ Booking : covers
+    Booking ||--o| Review : receives
+    Booking ||--o| CancelBooking : may_have
+
+    User {
+        int user_id PK
+        string username
+        string password
+        string email
+        string phone
+        string full_name
+        enum role "ENUM(customer, therapist, staff, manager)"
+        datetime created_at
+        datetime last_login_at
+    }
+
+    TherapistProfile {
+        int profile_id PK
+        int therapist_id FK
+        text bio
+        text personal_statement
+        string profile_image
+        string education 
+        string certifications 
+        string experience 
+        string specialties 
+        int years_experience
+        bool accepts_new_clients
+        datetime created_at
+        datetime updated_at
+    }
+
+    Quiz {
+        int quiz_id PK
+        string name
+        string description
+        string category
+        int total_points
+        bool is_active
+        datetime created_at
+    }
+
+    WorkingDay {
+        int working_day_id PK
+        string day_name
+        time start_time
+        time end_time
+        int slot_duration_minutes
+        bool is_active
+        datetime created_at
+    }
+
+    TimeSlot {
+        int slot_id PK
+        int working_day_id FK
+        time start_time
+        time end_time
+        int slot_number
+        bool is_active
+        datetime created_at
+    }
+
+    TherapistAvailability {
+        int availability_id PK
+        int therapist_id FK
+        int slot_id FK
+        date working_date
+        enum status
+        datetime created_at
+    }
+
+    Question {
+        int question_id PK
+        int quiz_id FK
+        string content
+        int points
+        bool is_multiple_choice
+        int display_order
+        bool is_active
+        datetime created_at
+    }
+
+    Answer {
+        int answer_id PK
+        int question_id FK
+        string content
+        int points
+        bool is_active
+        datetime created_at
+    }
+
+    CustomerQuiz {
+        int customer_quiz_id PK
+        int customer_id FK
+        int quiz_id FK
+        int total_score
+        string status
+        datetime started_at
+        datetime completed_at
+    }
+
+    CustomerAnswer {
+        int customer_answer_id PK
+        int customer_quiz_id FK
+        int question_id FK
+        int answer_id FK
+        int points_earned
+        datetime answered_at
+    }
+
+    QuizRecommendation {
+        int recommendation_id PK
+        int quiz_id FK
+        int service_id FK
+        int min_score
+        int max_score
+        bool is_active
+        datetime created_at
+    }
+
+    Service {
+        int service_id PK
+        string service_name
+        string description
+        decimal price
+        string currency
+        int duration_minutes
+        string location
+        bool is_active
+        datetime created_at
+    }
+
+    Customer {
+        int customer_id PK
+        int user_id FK
+        string preferences
+        string medical_history
+        datetime last_visit_at
+    }
+
+    Therapist {
+        int therapist_id PK
+        int user_id FK
+        bool is_available
+        string schedule
+        decimal rating
+    }
+
+    Staff {
+        int staff_id PK
+        int user_id FK
+        string department
+        string position
+        datetime hire_date
+    }
+
+    Manager {
+        int manager_id PK
+        int user_id FK
+        string department
+        text responsibilities
+        datetime hire_date
+    }
+
+    Booking {
+        int booking_id PK
+        int customer_id FK
+        int therapist_id FK
+        int service_id FK
+        int slot_id FK
+        int payment_id FK
+        date booking_date
+        string status
+        string notes
+        datetime created_at
+    }
+
+    Payment {
+        int payment_id PK
+        decimal total_amount
+        string currency
+        string payment_method
+        string status
+        datetime payment_date
+    }
+
+    Review {
+        int review_id PK
+        int booking_id FK
+        int rating
+        text feedback
+        datetime created_at
+    }
+
+    CancelBooking {
+        int cancellation_id PK
+        int booking_id FK
+        datetime cancelled_at
+        string reason
+        bool is_refunded
+    }
+
+    CancelPolicy {
+        int policy_id PK
+        int max_cancellations
+        int waiting_time_minutes
+        bool is_active
+        datetime created_at
+    }
+
+    PaymentPolicy {
+        int policy_id PK
+        string currency
+        int payment_window_hours
+        decimal tax_percentage
+        bool is_active
+        datetime created_at
+    }
