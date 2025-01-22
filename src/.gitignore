@@ -1,4 +1,18 @@
+# Ignore Visual Studio files
 .vs/
-bin/
-obj/
-*.suo
+
+# Ignore build output folders
+**/bin/
+**/obj/
+
+# Ignore Visual Studio Code workspace settings
+.vscode/
+
+# Ignore temporary files and logs
+*.log
+*.cache
+*.pdb
+
+# Ignore app-specific files
+Api/appsettings*.json
+Api/Properties/launchSettings.json
