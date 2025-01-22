@@ -17,13 +17,13 @@ builder.Services.AddDbContext<SkincareDbContext>(options =>
 
 // Register DI for services such as Repositories, Application Services, etc
 
-    // House DI
-    builder.Services.AddScoped<IHouseRepository, HouseRepository>();
-    builder.Services.AddScoped<IHouseService, HouseService>();
+// House DI
+builder.Services.AddScoped<IHouseRepository, HouseRepository>();
+builder.Services.AddScoped<IHouseService, HouseService>();
 
-    // User DI
-    builder.Services.AddScoped<IUserRepository, UserRepository>();
-    builder.Services.AddScoped<IUserService, UserService>();
+// User DI
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddCors(options =>
 {
@@ -37,18 +37,20 @@ var app = builder.Build();
 
 app.UseCors("AllowAll"); // This enables CORS with the defined policy
 
-if (app.Environment.IsDevelopment())
+// Enable Swagger UI for both development and production environments
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-else
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+});
+
+if (!app.Environment.IsDevelopment())
 {
     // Enforce HTTPS for production
     app.UseHttpsRedirection();
 }
-// Configure the HTTP request pipeline
 
+// Configure the HTTP request pipeline
 app.UseAuthorization();
 
 app.MapControllers();
