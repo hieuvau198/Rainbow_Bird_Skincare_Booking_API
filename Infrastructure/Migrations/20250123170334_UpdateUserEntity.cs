@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class UpdateUserEntity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -112,7 +112,9 @@ namespace Infrastructure.Migrations
                     full_name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     role = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     created_at = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())"),
-                    last_login_at = table.Column<DateTime>(type: "datetime", nullable: true)
+                    last_login_at = table.Column<DateTime>(type: "datetime", nullable: true),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {

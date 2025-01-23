@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(SkincareDbContext))]
-    [Migration("20250122184513_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250123170334_UpdateUserEntity")]
+    partial class UpdateUserEntity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -969,6 +969,12 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("phone");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Role")
                         .HasMaxLength(20)
