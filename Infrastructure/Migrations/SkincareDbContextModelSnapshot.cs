@@ -967,6 +967,12 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("phone");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Role")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
