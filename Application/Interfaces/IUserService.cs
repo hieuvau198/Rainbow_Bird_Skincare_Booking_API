@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace Application.Interfaces
         Task<UserDto> CreateUserAsync(CreateUserDto createUserDto);
         Task UpdateUserAsync(int id, UpdateUserDto updateUserDto);
         Task DeleteUserAsync(int id);
+        UserDto MapToDto(User user);
     }
 }

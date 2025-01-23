@@ -30,4 +30,9 @@ public partial class User
     public virtual Staff? Staff { get; set; }
 
     public virtual Therapist? Therapist { get; set; }
+
+    // New refresh token properties
+    public string? RefreshToken { get; set; }
+
+    public DateTime? RefreshTokenExpiryTime { get; set; }
 }
