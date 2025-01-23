@@ -26,6 +26,7 @@ namespace Application.Services
             _userRepository = userRepository;
             _configuration = configuration;
             _userService = userService;
+            var token = new JwtSecurityToken();
         }
 
         public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto)
