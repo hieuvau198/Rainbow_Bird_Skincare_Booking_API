@@ -8,6 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<_FunctionsSkipCleanOutput>true</_FunctionsSkipCleanOutput>
 		<!-- Ensure consistent versions across projects -->
 		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
