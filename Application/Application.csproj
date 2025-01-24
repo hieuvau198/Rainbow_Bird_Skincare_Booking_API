@@ -8,13 +8,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<_FunctionsSkipCleanOutput>true</_FunctionsSkipCleanOutput>
 		<!-- Ensure consistent versions across projects -->
 		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
 		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.0.0" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.0" />
-  <PackageReference Include="Microsoft.IdentityModel.Protocols" Version="7.0.3" />
 	</ItemGroup>
 
 	<ItemGroup>
