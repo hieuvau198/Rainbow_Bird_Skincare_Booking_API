@@ -82,7 +82,7 @@ namespace Application.Services
             await _userRepository.DeleteAsync(user);
         }
 
-        private static UserDto MapToDto(User user)
+        public UserDto MapToDto(User user)
         {
             return new UserDto
             {
