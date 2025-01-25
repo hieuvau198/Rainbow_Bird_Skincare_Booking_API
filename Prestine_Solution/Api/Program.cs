@@ -45,12 +45,20 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RestrictPolicy", policy =>
+        policy.RequireRole("Manager", "Admin"));
+    options.AddPolicy("StandardPolicy", policy =>
+        policy.RequireRole("Staff", "Therapist", "Manager", "Admin"));
+    options.AddPolicy("OpenPolicy", policy =>
+        policy.RequireRole("Customer", "Staff", "Therapist", "Manager", "Admin"));
+});
 
 // Register DI for services such as Repositories, Application Services, etc
 
-    // House DI
-    builder.Services.AddScoped<IHouseRepository, HouseRepository>();
+// House DI
+builder.Services.AddScoped<IHouseRepository, HouseRepository>();
     builder.Services.AddScoped<IHouseService, HouseService>();
 
     // Auth DI
