@@ -18,7 +18,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "StandardPolicy")]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
             var users = await _userService.GetAllUsersAsync();
@@ -26,6 +26,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy = "StandardPolicy")]
         public async Task<ActionResult<UserDto>> GetUser(int id)
         {
             try
@@ -40,6 +41,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "RestrictPolicy")]
         public async Task<ActionResult<UserDto>> CreateUser(CreateUserDto createUserDto)
         {
             try
@@ -54,6 +56,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Policy = "RestrictPolicy")]
         public async Task<IActionResult> UpdateUser(int id, UpdateUserDto updateUserDto)
         {
             try
@@ -68,6 +71,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = "RestrictPolicy")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             try
