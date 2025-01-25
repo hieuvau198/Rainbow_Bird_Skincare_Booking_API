@@ -1,6 +1,7 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -49,7 +50,7 @@ namespace Application.Services
                 Email = createUserDto.Email,
                 Phone = createUserDto.Phone,
                 FullName = createUserDto.FullName,
-                Role = createUserDto.Role,
+                Role = createUserDto.Role ?? UserRole.Customer,
                 CreatedAt = DateTime.UtcNow
             };
 
