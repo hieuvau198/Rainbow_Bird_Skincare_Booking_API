@@ -84,5 +84,19 @@ namespace Api.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        [HttpPost("/initiate")]
+        public async Task<ActionResult<UserDto>> InitiateUser(CreateUserDto createUserDto)
+        {
+            try
+            {
+                var user = await _userService.CreateUserAsync(createUserDto);
+                return CreatedAtAction(nameof(GetUser), new { id = user.UserId }, user);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
