@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace Domain.Entities;
@@ -17,7 +18,7 @@ public partial class User
 
     public string FullName { get; set; } = null!;
 
-    public string? Role { get; set; }
+    public UserRole? Role { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 

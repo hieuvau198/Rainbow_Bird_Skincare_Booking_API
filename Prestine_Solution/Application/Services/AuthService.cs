@@ -105,7 +105,7 @@ namespace Application.Services
             {
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role ?? "Customer")
+                new Claim(ClaimTypes.Role, user.Role.ToString() ?? "Customer")
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
@@ -164,54 +164,3 @@ namespace Application.Services
         }
     }
 }
-
-
-
-
-//using System;
-//using System.Threading.Tasks;
-//using Application.DTOs;
-//using Application.DTOs.Auth;
-//using Application.Interfaces;
-
-//namespace Application.Services
-//{
-//    public class AuthService : IAuthService
-//    {
-//        public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto)
-//        {
-//            // Empty response
-//            return await Task.FromResult<AuthResponseDto>(null);
-//        }
-
-//        public async Task<AuthResponseDto> RefreshTokenAsync(RefreshTokenDto refreshTokenDto)
-//        {
-//            // Empty response
-//            return await Task.FromResult<AuthResponseDto>(null);
-//        }
-
-//        public async Task LogoutAsync(string username)
-//        {
-//            // Do nothing
-//            await Task.CompletedTask;
-//        }
-
-//        private (string Token, DateTime Expiration) GenerateAccessToken()
-//        {
-//            // No token generation, empty response
-//            return (string.Empty, DateTime.MinValue);
-//        }
-
-//        private string GenerateRefreshToken()
-//        {
-//            // No refresh token generation, empty response
-//            return string.Empty;
-//        }
-
-//        private bool VerifyPassword(string inputPassword, string storedHash)
-//        {
-//            // Always return false for password verification
-//            return false;
-//        }
-//    }
-//}

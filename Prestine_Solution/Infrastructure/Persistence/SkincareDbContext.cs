@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using BCrypt.Net;
 using Domain.Entities;
+using Domain.Enums;
+using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence;
@@ -668,12 +671,16 @@ public partial class SkincareDbContext : DbContext
                 .HasMaxLength(20)
                 .HasColumnName("phone");
             entity.Property(e => e.Role)
-                .HasMaxLength(20)
+                .HasConversion<int>()
                 .HasColumnName("role");
             entity.Property(e => e.Username)
                 .HasMaxLength(50)
                 .HasColumnName("username");
+
         });
+
+        // Seed Data for User entity
+        
 
         modelBuilder.Entity<WorkingDay>(entity =>
         {
