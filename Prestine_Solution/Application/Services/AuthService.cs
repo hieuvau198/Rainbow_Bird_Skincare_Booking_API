@@ -105,7 +105,7 @@ namespace Application.Services
             {
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role ?? "User")
+                new Claim(ClaimTypes.Role, user.Role ?? "Customer")
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
