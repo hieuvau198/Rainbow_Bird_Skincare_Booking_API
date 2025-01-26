@@ -7,7 +7,7 @@ namespace Application.Interfaces
     {
         Task<AuthResponseDto> LoginAsync(LoginDto loginDto);
         Task<AuthResponseDto> GoogleLoginAsync(GoogleLoginDto googleLoginDto);
-        Task<AuthResponseDto> RegisterBasicUserAsync(RegisterUserDto registerUserDto)
+        Task<AuthResponseDto> RegisterBasicUserAsync(RegisterUserDto registerUserDto);
         Task<AuthResponseDto> RefreshTokenAsync(RefreshTokenDto refreshTokenDto);
         Task LogoutAsync(string username);
     }
