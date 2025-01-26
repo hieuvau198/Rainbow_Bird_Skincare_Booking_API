@@ -1,5 +1,6 @@
 using Application.Interfaces;
 using Application.Services;
+using Application.Utils;
 using Domain.Interfaces;
 using Infrastructure.Persistence;
 using Infrastructure.Repositories;
@@ -52,16 +53,22 @@ var key = Encoding.ASCII.GetBytes(
     builder.Configuration["Jwt:SecretKey"] ??
     throw new InvalidOperationException("JWT Secret Key is not configured"));
 
-builder.Services.AddAuthentication(x =>
+// Add Google authentication along with JWT
+builder.Services.AddAuthentication(options =>
 {
-    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})// Add to existing authentication configuration
+.AddGoogle(options =>
+{
+    options.ClientId = builder.Configuration["Google:ClientId"];
+    options.ClientSecret = builder.Configuration["Google:ClientSecret"];
 })
-.AddJwtBearer(x =>
+.AddJwtBearer(options =>
 {
-    x.RequireHttpsMetadata = false;
-    x.SaveToken = true;
-    x.TokenValidationParameters = new TokenValidationParameters
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(key),
@@ -73,6 +80,7 @@ builder.Services.AddAuthentication(x =>
         ClockSkew = TimeSpan.Zero
     };
 });
+
 
 builder.Services.AddAuthorization(options =>
 {
@@ -97,17 +105,23 @@ builder.Services.AddScoped<IHouseRepository, HouseRepository>();
     builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<IUserService, UserService>();
 
+    builder.Services.AddScoped<GoogleTokenValidator>();
+
+
+// Add CORS service and allow all origins for simplicity (you can restrict this to specific origins later)
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", builder =>
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader());
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()  // Allow all origins
+              .AllowAnyMethod()  // Allow any HTTP method (GET, POST, etc.)
+              .AllowAnyHeader(); // Allow any headers
+    });
 });
 
 var app = builder.Build();
 
-app.UseCors("AllowAll"); // This enables CORS with the defined policy
+app.UseCors("AllowAll"); // Enable CORS policy globally
 
 // Enable Swagger UI for both development and production environments
 app.UseSwagger();
