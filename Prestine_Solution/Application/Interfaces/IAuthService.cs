@@ -6,6 +6,7 @@ namespace Application.Interfaces
     public interface IAuthService
     {
         Task<AuthResponseDto> LoginAsync(LoginDto loginDto);
+        Task<AuthResponseDto> GoogleLoginAsync(GoogleLoginDto googleLoginDto);
         Task<AuthResponseDto> RefreshTokenAsync(RefreshTokenDto refreshTokenDto);
         Task LogoutAsync(string username);
     }
