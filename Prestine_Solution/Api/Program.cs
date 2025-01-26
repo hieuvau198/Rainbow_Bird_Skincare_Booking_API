@@ -1,5 +1,6 @@
 using Application.Interfaces;
 using Application.Services;
+using Application.Utils;
 using Domain.Interfaces;
 using Infrastructure.Persistence;
 using Infrastructure.Repositories;
@@ -57,6 +58,11 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})// Add to existing authentication configuration
+.AddGoogle(options =>
+{
+    options.ClientId = builder.Configuration["Google:ClientId"];
+    options.ClientSecret = builder.Configuration["Google:ClientSecret"];
 })
 .AddJwtBearer(options =>
 {
@@ -73,11 +79,6 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero
     };
-})
-.AddGoogle(options =>
-{
-    options.ClientId = builder.Configuration["Google:ClientId"];
-    options.ClientSecret = builder.Configuration["Google:ClientSecret"];
 });
 
 
@@ -104,17 +105,23 @@ builder.Services.AddScoped<IHouseRepository, HouseRepository>();
     builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<IUserService, UserService>();
 
+    builder.Services.AddScoped<GoogleTokenValidator>();
+
+
+// Add CORS service and allow all origins for simplicity (you can restrict this to specific origins later)
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", builder =>
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader());
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()  // Allow all origins
+              .AllowAnyMethod()  // Allow any HTTP method (GET, POST, etc.)
+              .AllowAnyHeader(); // Allow any headers
+    });
 });
 
 var app = builder.Build();
 
-app.UseCors("AllowAll"); // This enables CORS with the defined policy
+app.UseCors("AllowAll"); // Enable CORS policy globally
 
 // Enable Swagger UI for both development and production environments
 app.UseSwagger();

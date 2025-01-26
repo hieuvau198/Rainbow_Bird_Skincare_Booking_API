@@ -15,9 +15,11 @@ namespace Application.DTOs.Auth
         [Required]
         public string Password { get; set; } = null!;
     }
+
     public class GoogleLoginDto
     {
         public string IdToken { get; set; }
+        public string ClientId { get; set; }
     }
 
     public class AuthResponseDto
