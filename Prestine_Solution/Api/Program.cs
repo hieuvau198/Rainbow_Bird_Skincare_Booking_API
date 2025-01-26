@@ -52,16 +52,17 @@ var key = Encoding.ASCII.GetBytes(
     builder.Configuration["Jwt:SecretKey"] ??
     throw new InvalidOperationException("JWT Secret Key is not configured"));
 
-builder.Services.AddAuthentication(x =>
+// Add Google authentication along with JWT
+builder.Services.AddAuthentication(options =>
 {
-    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-.AddJwtBearer(x =>
+.AddJwtBearer(options =>
 {
-    x.RequireHttpsMetadata = false;
-    x.SaveToken = true;
-    x.TokenValidationParameters = new TokenValidationParameters
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(key),
@@ -72,7 +73,13 @@ builder.Services.AddAuthentication(x =>
         ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero
     };
+})
+.AddGoogle(options =>
+{
+    options.ClientId = builder.Configuration["Google:ClientId"];
+    options.ClientSecret = builder.Configuration["Google:ClientSecret"];
 });
+
 
 builder.Services.AddAuthorization(options =>
 {

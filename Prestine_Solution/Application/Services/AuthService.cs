@@ -5,6 +5,7 @@ using System.Text;
 using Application.DTOs;
 using Application.DTOs.Auth;
 using Application.Interfaces;
+using Application.Utils;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -55,6 +56,37 @@ namespace Application.Services
                 User = _userService.MapToDto(user)
             };
         }
+
+        public async Task<AuthResponseDto> GoogleLoginAsync(GoogleLoginDto googleLoginDto)
+        {
+            var googleTokenValidator = new GoogleTokenValidator();
+            var googleUser = await googleTokenValidator.ValidateAsync(googleLoginDto.IdToken);
+
+            if (googleUser == null)
+                throw new UnauthorizedAccessException("Invalid Google token");
+
+            // Check if the user already exists, otherwise create a new one
+            var user = await _userRepository.GetByEmailAsync(googleUser.Email);
+            if (user == null)
+                throw new UnauthorizedAccessException("Invalid username or password");
+
+            var (accessToken, accessTokenExpiration) = GenerateAccessToken(user);
+            var refreshToken = GenerateRefreshToken();
+
+            // Store refresh token
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+            await _userRepository.UpdateAsync(user);
+
+            return new AuthResponseDto
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken,
+                AccessTokenExpiration = accessTokenExpiration,
+                User = _userService.MapToDto(user)
+            };
+        }
+
 
         public async Task<AuthResponseDto> RefreshTokenAsync(RefreshTokenDto refreshTokenDto)
         {

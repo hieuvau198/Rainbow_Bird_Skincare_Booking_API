@@ -58,5 +58,21 @@ namespace Api.Controllers
             await _authService.LogoutAsync(username);
             return Ok(new { message = "Logged out successfully" });
         }
+
+        [HttpPost("google-login")]
+        [AllowAnonymous]
+        public async Task<ActionResult<AuthResponseDto>> GoogleLogin([FromBody] GoogleLoginDto googleLoginDto)
+        {
+            try
+            {
+                var authResponse = await _authService.GoogleLoginAsync(googleLoginDto);
+                return Ok(authResponse);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
+            }
+        }
+
     }
 }
