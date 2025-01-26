@@ -32,6 +32,25 @@ namespace Api.Controllers
             }
         }
 
+        [HttpPost("register")]
+        [AllowAnonymous]
+        public async Task<ActionResult<AuthResponseDto>> Register([FromBody] RegisterUserDto registerUserDto)
+        {
+            try
+            {
+                var authResponse = await _authService.RegisterBasicUserAsync(registerUserDto);
+                return Ok(authResponse);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+            }
+        }
+
         [HttpPost("refresh-token")]
         [AllowAnonymous]
         public async Task<ActionResult<AuthResponseDto>> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)

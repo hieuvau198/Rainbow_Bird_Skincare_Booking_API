@@ -173,26 +173,30 @@ namespace Application.Services
 
         // IMPLEMENT OAUTH HERE
 
-        public async Task<AuthResponseDto> GoogleLoginAsync(GoogleLoginDto googleLoginDto)
+        public async Task<AuthResponseDto> RegisterBasicUserAsync(RegisterUserDto registerUserDto)
         {
-            // Validate Google token and get email
-            var payload = await _googleTokenValidator.ValidateTokenAsync(
-                googleLoginDto.IdToken,
-                googleLoginDto.ClientId
-            );
+            if (await _userRepository.UsernameExistsAsync(registerUserDto.Username))
+                throw new InvalidOperationException("Username already exists");
 
-            var user = await _userRepository.GetByEmailAsync(payload.Email);
-            if (user == null)
-                throw new UnauthorizedAccessException("You have not registered with this Google account.");
+            if (await _userRepository.EmailExistsAsync(registerUserDto.Email))
+                throw new InvalidOperationException("Email already exists");
 
-            // Update last login time
-            user.LastLoginAt = DateTime.UtcNow;
-            await _userRepository.UpdateAsync(user);
+            var user = new User
+            {
+                Username = registerUserDto.Username,
+                Password = BCrypt.Net.BCrypt.HashPassword(registerUserDto.Password),
+                Email = registerUserDto.Email,
+                FullName = registerUserDto.FullName ?? registerUserDto.Username,
+                Role = UserRole.Customer,
+                CreatedAt = DateTime.UtcNow
+            };
 
+            await _userRepository.CreateAsync(user);
+
+            // Automatically log in after registration
             var (accessToken, accessTokenExpiration) = GenerateAccessToken(user);
             var refreshToken = GenerateRefreshToken();
 
-            // Store refresh token (you might want to create a separate repository for this)
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
             await _userRepository.UpdateAsync(user);
@@ -202,8 +206,69 @@ namespace Application.Services
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
                 AccessTokenExpiration = accessTokenExpiration,
-                User = _userService.MapToDto(user)
+                User = MapToDto(user)
             };
         }
+
+        public async Task<AuthResponseDto> GoogleLoginAsync(GoogleLoginDto googleLoginDto)
+        {
+            // Validate Google token and get user details
+            var payload = await _googleTokenValidator.ValidateTokenAsync(
+                googleLoginDto.IdToken,
+                googleLoginDto.ClientId
+            );
+
+            var user = await _userRepository.GetByEmailAsync(payload.Email);
+
+            // Auto-register user if not found
+            if (user == null)
+            {
+                user = new User
+                {
+                    Email = payload.Email,
+                    FullName = payload.Name,
+                    Role = UserRole.Customer,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                await _userRepository.CreateAsync(user);
+            }
+
+            // Update last login time
+            user.LastLoginAt = DateTime.UtcNow;
+            await _userRepository.UpdateAsync(user);
+
+            var (accessToken, accessTokenExpiration) = GenerateAccessToken(user);
+            var refreshToken = GenerateRefreshToken();
+
+            // Store refresh token
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+            await _userRepository.UpdateAsync(user);
+
+            return new AuthResponseDto
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken,
+                AccessTokenExpiration = accessTokenExpiration,
+                User = MapToDto(user)
+            };
+        }
+
+        private UserDto MapToDto(User user)
+        {
+            return new UserDto
+            {
+                UserId = user.UserId,
+                Username = user.Username,
+                Email = user.Email,
+                Phone = user.Phone,
+                FullName = user.FullName,
+                Role = user.Role,
+                CreatedAt = user.CreatedAt,
+                LastLoginAt = user.LastLoginAt
+            };
+        }
+
     }
 }
