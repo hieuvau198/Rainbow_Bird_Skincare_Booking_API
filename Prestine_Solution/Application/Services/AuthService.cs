@@ -168,11 +168,7 @@ namespace Application.Services
         {
             return BCrypt.Net.BCrypt.Verify(inputPassword, storedHash);
         }
-
-
-
-        // IMPLEMENT OAUTH HERE
-
+        
         public async Task<AuthResponseDto> RegisterBasicUserAsync(RegisterUserDto registerUserDto)
         {
             if (await _userRepository.UsernameExistsAsync(registerUserDto.Username))
@@ -186,6 +182,7 @@ namespace Application.Services
                 Username = registerUserDto.Username,
                 Password = BCrypt.Net.BCrypt.HashPassword(registerUserDto.Password),
                 Email = registerUserDto.Email,
+                Phone = registerUserDto.Phone,
                 FullName = registerUserDto.FullName ?? registerUserDto.Username,
                 Role = UserRole.Customer,
                 CreatedAt = DateTime.UtcNow
@@ -209,6 +206,8 @@ namespace Application.Services
                 User = MapToDto(user)
             };
         }
+        
+        // IMPLEMENT OAUTH HERE
 
         public async Task<AuthResponseDto> GoogleLoginAsync(GoogleLoginDto googleLoginDto)
         {
