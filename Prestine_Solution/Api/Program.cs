@@ -96,7 +96,6 @@ builder.Services.AddAuthorization(options =>
 
 // House DI
 builder.Services.AddScoped<IHouseRepository, HouseRepository>();
-    builder.Services.AddScoped<IHouseService, HouseService>();
 
     // Auth DI
     builder.Services.AddScoped<IAuthService, AuthService>();
