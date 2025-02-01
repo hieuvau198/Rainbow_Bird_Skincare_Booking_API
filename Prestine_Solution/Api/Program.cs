@@ -94,9 +94,6 @@ builder.Services.AddAuthorization(options =>
 
 // Register DI for services such as Repositories, Application Services, etc
 
-// House DI
-builder.Services.AddScoped<IHouseRepository, HouseRepository>();
-
     // Auth DI
     builder.Services.AddScoped<IAuthService, AuthService>();
 
