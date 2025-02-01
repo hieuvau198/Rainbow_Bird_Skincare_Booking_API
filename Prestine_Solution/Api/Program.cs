@@ -99,7 +99,10 @@ builder.Services.AddAuthorization(options =>
 
     // User DI
     builder.Services.AddScoped<IUserRepository, UserRepository>();
+    builder.Services.AddScoped<ITherapistRepository, TherapistRepository>();
+
     builder.Services.AddScoped<IUserService, UserService>();
+    builder.Services.AddScoped<ITherapistService, TherapistService>();
 
     builder.Services.AddScoped<GoogleTokenValidator>();
 
