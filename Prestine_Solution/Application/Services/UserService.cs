@@ -35,6 +35,24 @@ namespace Application.Services
             return MapToDto(user);
         }
 
+        public async Task<UserDto> GetUserByUsernameAsync(string username)
+        {
+            var user = await _userRepository.GetByUsernameAsync(username);
+            if (user == null)
+                throw new KeyNotFoundException($"User with username {username} not found");
+
+            return MapToDto(user);
+        }
+
+        public async Task<UserDto> GetUserByEmailAsync(string email)
+        {
+            var user = await _userRepository.GetByEmailAsync(email);
+            if (user == null)
+                throw new KeyNotFoundException($"User with email {email} not found");
+
+            return MapToDto(user);
+        }
+
         public async Task<UserDto> CreateUserAsync(CreateUserDto createUserDto)
         {
             if (await _userRepository.UsernameExistsAsync(createUserDto.Username))
