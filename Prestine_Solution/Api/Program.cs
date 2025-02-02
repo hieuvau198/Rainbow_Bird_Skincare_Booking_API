@@ -1,7 +1,9 @@
 using Application.Interfaces;
+using Application.Mappings;
 using Application.Services;
 using Application.Utils;
 using Domain.Interfaces;
+using Google.Apis.Auth.OAuth2;
 using Infrastructure.Persistence;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -43,6 +45,7 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
 
 // Register the DbContext
 builder.Services.AddDbContext<SkincareDbContext>(options =>
@@ -93,19 +96,24 @@ builder.Services.AddAuthorization(options =>
 });
 
 // Register DI for services such as Repositories, Application Services, etc
+builder.Services.AddScoped<DbContext, SkincareDbContext>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IAuthService, AuthService>();
 
-    // Auth DI
-    builder.Services.AddScoped<IAuthService, AuthService>();
 
-    // User DI
     builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<ITherapistRepository, TherapistRepository>();
+    builder.Services.AddScoped<ITherapistProfileRepository, TherapistProfileRepository>();
 
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<ITherapistService, TherapistService>();
+    builder.Services.AddScoped<ITherapistProfileService, TherapistProfileService>();
+    builder.Services.AddScoped<IImageService, ImageService>();
 
     builder.Services.AddScoped<GoogleTokenValidator>();
 
+// Mapping
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Add CORS service and allow all origins for simplicity (you can restrict this to specific origins later)
 builder.Services.AddCors(options =>
