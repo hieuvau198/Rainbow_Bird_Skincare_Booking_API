@@ -595,7 +595,7 @@ public partial class SkincareDbContext : DbContext
             entity.Property(e => e.Languages).HasColumnName("languages");
             entity.Property(e => e.PersonalStatement).HasColumnName("personal_statement");
             entity.Property(e => e.ProfileImage)
-                .HasMaxLength(255)
+                .HasColumnType("NVARCHAR(MAX)")
                 .HasColumnName("profile_image");
             entity.Property(e => e.Specialties).HasColumnName("specialties");
             entity.Property(e => e.TherapistId).HasColumnName("therapist_id");
