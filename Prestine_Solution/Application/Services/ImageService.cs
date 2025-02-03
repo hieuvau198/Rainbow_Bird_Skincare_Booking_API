@@ -27,6 +27,11 @@ namespace Application.Services
             return $"data:{file.ContentType};base64,{Convert.ToBase64String(bytes)}";
         }
 
+        public Task DeleteImageAsync(string imageUrl)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool IsValidImage(IFormFile file)
         {
             if (file == null || file.Length == 0)
@@ -37,6 +42,11 @@ namespace Application.Services
 
             var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
             return _allowedExtensions.Contains(extension);
+        }
+
+        public Task<string> UploadImageAsync(IFormFile image)
+        {
+            throw new NotImplementedException();
         }
     }
 }

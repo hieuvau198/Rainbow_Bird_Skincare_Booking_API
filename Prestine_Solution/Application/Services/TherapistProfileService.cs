@@ -53,13 +53,12 @@ namespace Application.Services
             // Handle profile image
             if (dto.ProfileImage != null)
             {
-                profile.ProfileImage = await _imageService.ConvertToBase64Async(dto.ProfileImage);
+                profile.ProfileImage = await _imageService.UploadImageAsync(dto.ProfileImage);
             }
 
             var createdProfile = await _repository.CreateAsync(profile);
             return _mapper.Map<TherapistProfileDto>(createdProfile);
         }
-
         public async Task<TherapistProfileDto> UpdateProfileAsync(int therapistId, UpdateTherapistProfileDto dto)
         {
             var profiles = await _repository.GetAllAsync();
@@ -71,7 +70,13 @@ namespace Application.Services
             // Handle profile image update
             if (dto.ProfileImage != null)
             {
-                existingProfile.ProfileImage = await _imageService.ConvertToBase64Async(dto.ProfileImage);
+                // Delete old image if it exists
+                if (!string.IsNullOrEmpty(existingProfile.ProfileImage))
+                {
+                    await _imageService.DeleteImageAsync(existingProfile.ProfileImage);
+                }
+
+                existingProfile.ProfileImage = await _imageService.UploadImageAsync(dto.ProfileImage);
             }
 
             // Update other properties
@@ -81,7 +86,6 @@ namespace Application.Services
             await _repository.UpdateAsync(existingProfile);
             return _mapper.Map<TherapistProfileDto>(existingProfile);
         }
-
         public async Task DeleteProfileAsync(int therapistId)
         {
             var profiles = await _repository.GetAllAsync();
@@ -90,9 +94,14 @@ namespace Application.Services
             if (profile == null)
                 throw new KeyNotFoundException($"Profile not found for therapist ID: {therapistId}");
 
+            // Delete profile image if it exists
+            if (!string.IsNullOrEmpty(profile.ProfileImage))
+            {
+                await _imageService.DeleteImageAsync(profile.ProfileImage);
+            }
+
             await _repository.DeleteAsync(profile);
         }
-
         public async Task<IEnumerable<TherapistProfileDto>> GetAllProfilesAsync()
         {
             var profiles = await _repository.GetAllAsync();

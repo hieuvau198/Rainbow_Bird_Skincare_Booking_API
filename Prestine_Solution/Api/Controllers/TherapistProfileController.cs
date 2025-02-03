@@ -22,7 +22,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "OpenPolicy")]
+        //[Authorize(Policy = "OpenPolicy")]
         public async Task<ActionResult<IEnumerable<TherapistProfileDto>>> GetAllProfiles()
         {
             try
@@ -38,7 +38,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{therapistId}")]
-        [Authorize(Policy = "OpenPolicy")]
+        //[Authorize(Policy = "OpenPolicy")]
         public async Task<ActionResult<TherapistProfileDto>> GetProfile(int therapistId)
         {
             try
@@ -58,7 +58,7 @@ namespace API.Controllers
         }
 
         [HttpPost("{therapistId}")]
-        [Authorize(Policy = "StandardPolicy")]
+        //[Authorize(Policy = "StandardPolicy")]
         public async Task<ActionResult<TherapistProfileDto>> CreateProfile(
             int therapistId,
             [FromForm] CreateTherapistProfileDto createDto)
@@ -87,7 +87,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{therapistId}")]
-        [Authorize(Policy = "StandardPolicy")]
+        //[Authorize(Policy = "StandardPolicy")]
         public async Task<ActionResult<TherapistProfileDto>> UpdateProfile(
             int therapistId,
             [FromForm] UpdateTherapistProfileDto updateDto)
@@ -113,7 +113,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{therapistId}")]
-        [Authorize(Policy = "RestrictPolicy")]
+        //[Authorize(Policy = "RestrictPolicy")]
         public async Task<IActionResult> DeleteProfile(int therapistId)
         {
             try

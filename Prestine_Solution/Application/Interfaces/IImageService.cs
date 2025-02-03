@@ -9,7 +9,7 @@ namespace Application.Interfaces
 {
     public interface IImageService
     {
-        Task<string> ConvertToBase64Async(IFormFile file);
-        bool IsValidImage(IFormFile file);
+        Task<string> UploadImageAsync(IFormFile image);
+        Task DeleteImageAsync(string imageUrl);
     }
 }

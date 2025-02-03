@@ -108,9 +108,10 @@ builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<ITherapistService, TherapistService>();
     builder.Services.AddScoped<ITherapistProfileService, TherapistProfileService>();
-    builder.Services.AddScoped<IImageService, ImageService>();
 
-    builder.Services.AddScoped<GoogleTokenValidator>();
+    builder.Services.AddScoped<IImageService, FirebaseImageService>();
+
+builder.Services.AddScoped<GoogleTokenValidator>();
 
 // Mapping
 builder.Services.AddAutoMapper(typeof(MappingProfile));
