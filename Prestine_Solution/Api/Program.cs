@@ -15,6 +15,8 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddUserSecrets<Program>(); // Load user secrets
+
 
 // Add services to handle Firebase credentials
 builder.Services.AddSingleton<IFirebaseCredentialProvider>(sp =>
