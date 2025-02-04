@@ -19,15 +19,10 @@ namespace Api.Controllers
         {
             var googleClientId = _configuration["Google:ClientId"];
             var googleClientSecret = _configuration["Google:ClientSecret"];
+            var firebaseServiceAccountJson = _configuration["Firebase:ServiceAccountJson"];
 
-            //var firebaseServiceAccount = new Dictionary<string, string>
-            //{
-            //    { "type", _configuration["Firebase:ServiceAccount:Type"] },
-            //    { "project_id", _configuration["Firebase:ServiceAccount:ProjectId"] },
-            //    { "private_key_id", _configuration["Firebase:ServiceAccount:PrivateKeyId"] },
-            //    { "client_email", _configuration["Firebase:ServiceAccount:ClientEmail"] },
-            //    { "client_id", _configuration["Firebase:ServiceAccount:ClientId"] }
-            //};
+            // Check if Firebase credentials are correctly retrieved
+            bool isFirebaseConfigured = !string.IsNullOrEmpty(firebaseServiceAccountJson);
 
             var result = new
             {
@@ -35,12 +30,12 @@ namespace Api.Controllers
                 {
                     ClientId = googleClientId,
                     ClientSecret = googleClientSecret
+                },
+                Firebase = new
+                {
+                    IsConfigured = isFirebaseConfigured,
+                    Message = isFirebaseConfigured ? "Firebase is set up correctly!" : "Firebase is NOT configured properly."
                 }
-                //,
-                //Firebase = new
-                //{
-                //    ServiceAccount = firebaseServiceAccount
-                //}
             };
 
             return Ok(result);
