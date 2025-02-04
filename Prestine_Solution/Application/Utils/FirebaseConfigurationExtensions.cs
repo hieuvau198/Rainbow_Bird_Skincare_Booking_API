@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 
@@ -35,8 +36,25 @@ namespace Application.Utils
                 }
             }
 
-            // Production: Use ServiceAccountJson
-            return configuration["Firebase:ServiceAccountJson"];
+            // Production: Retrieve the existing JSON string from configuration
+            var serviceAccountJsonProd = configuration["Firebase:ServiceAccountJson"];
+
+            // Ensure it's a properly formatted JSON string
+            if (!string.IsNullOrWhiteSpace(serviceAccountJsonProd))
+            {
+                try
+                {
+                    // Attempt to parse to verify JSON validity
+                    JObject.Parse(serviceAccountJsonProd);
+                    return serviceAccountJsonProd;
+                }
+                catch (JsonReaderException)
+                {
+                    throw new InvalidOperationException("Invalid Firebase Service Account JSON format in production.");
+                }
+            }
+
+            throw new InvalidOperationException("Firebase Service Account JSON is missing in production configuration.");
         }
     }
 }
