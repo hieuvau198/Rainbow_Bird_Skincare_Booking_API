@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Google.Apis.Auth.OAuth2;
+using Google.Cloud.Storage.V1;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -41,7 +43,26 @@ namespace Api.Controllers
             }
 
             // Check if Firebase credentials are correctly retrieved
-            bool isFirebaseConfigured = !string.IsNullOrEmpty(firebaseServiceAccountJson);
+            bool canCreateStorageClient = false;
+            string firebaseMessage = "Firebase is NOT configured properly.";
+
+            if (!string.IsNullOrEmpty(firebaseServiceAccountJson))
+            {
+                try
+                {
+                    // Load Firebase credentials
+                    var credential = GoogleCredential.FromJson(firebaseServiceAccountJson);
+
+                    // Attempt to create a StorageClient
+                    var storageClient = StorageClient.Create(credential);
+                    canCreateStorageClient = true;
+                    firebaseMessage = "Firebase StorageClient was created successfully!";
+                }
+                catch (Exception ex)
+                {
+                    firebaseMessage = $"Failed to create StorageClient: {ex.Message}";
+                }
+            }
 
             var result = new
             {
@@ -52,8 +73,9 @@ namespace Api.Controllers
                 },
                 Firebase = new
                 {
-                    IsConfigured = isFirebaseConfigured,
-                    Message = isFirebaseConfigured ? "Firebase is set up correctly!" : "Firebase is NOT configured properly."
+                    IsConfigured = !string.IsNullOrEmpty(firebaseServiceAccountJson),
+                    CanCreateStorageClient = canCreateStorageClient,
+                    Message = firebaseMessage
                 }
             };
 
