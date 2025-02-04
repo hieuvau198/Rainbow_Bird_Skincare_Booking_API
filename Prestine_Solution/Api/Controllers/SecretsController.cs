@@ -20,14 +20,14 @@ namespace Api.Controllers
             var googleClientId = _configuration["Google:ClientId"];
             var googleClientSecret = _configuration["Google:ClientSecret"];
 
-            var firebaseServiceAccount = new Dictionary<string, string>
-            {
-                { "type", _configuration["Firebase:ServiceAccount:type"] },
-                { "project_id", _configuration["Firebase:ServiceAccount:project_id"] },
-                { "private_key_id", _configuration["Firebase:ServiceAccount:private_key_id"] },
-                { "client_email", _configuration["Firebase:ServiceAccount:client_email"] },
-                { "client_id", _configuration["Firebase:ServiceAccount:client_id"] }
-            };
+            //var firebaseServiceAccount = new Dictionary<string, string>
+            //{
+            //    { "type", _configuration["Firebase:ServiceAccount:Type"] },
+            //    { "project_id", _configuration["Firebase:ServiceAccount:ProjectId"] },
+            //    { "private_key_id", _configuration["Firebase:ServiceAccount:PrivateKeyId"] },
+            //    { "client_email", _configuration["Firebase:ServiceAccount:ClientEmail"] },
+            //    { "client_id", _configuration["Firebase:ServiceAccount:ClientId"] }
+            //};
 
             var result = new
             {
@@ -35,11 +35,12 @@ namespace Api.Controllers
                 {
                     ClientId = googleClientId,
                     ClientSecret = googleClientSecret
-                },
-                Firebase = new
-                {
-                    ServiceAccount = firebaseServiceAccount
                 }
+                //,
+                //Firebase = new
+                //{
+                //    ServiceAccount = firebaseServiceAccount
+                //}
             };
 
             return Ok(result);

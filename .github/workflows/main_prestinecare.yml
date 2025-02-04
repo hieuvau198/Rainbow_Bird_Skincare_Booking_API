@@ -59,6 +59,11 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_40A3CDBCF41E422BB6B5FE3C3C3DFAFE }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C7FC23484CCC43FB9D810FAC5444AD34 }}
 
+      - name: Set up Google and Firebase Secrets
+        run: |
+            echo "Google__ClientId=${{ secrets.GOOGLE_CLIENT_ID }}" >> $GITHUB_ENV
+            echo "Google__ClientSecret=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> $GITHUB_ENV
+        
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
