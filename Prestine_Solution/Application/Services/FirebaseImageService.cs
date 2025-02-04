@@ -26,18 +26,10 @@ namespace Application.Services
 
             if (!string.IsNullOrEmpty(firebaseServiceAccountJson))
             {
-                // Ensure Config directory exists
-                var configPath = Path.Combine(Directory.GetCurrentDirectory(), "Config");
-                Directory.CreateDirectory(configPath);
-
-                // Path for credentials file
-                var credentialsPath = Path.Combine(configPath, "firebase-credentials.json");
-
-                // Write service account JSON to file
-                File.WriteAllText(credentialsPath, firebaseServiceAccountJson);
-
-                // Set environment variable to credentials file
-                Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialsPath);
+                // Create temp file for credentials
+                var tempPath = Path.GetTempFileName();
+                File.WriteAllText(tempPath, firebaseServiceAccountJson);
+                Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", tempPath);
             }
 
             // Create storage client
