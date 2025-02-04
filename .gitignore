@@ -12,5 +12,3 @@
 *.log
 *.cache
 *.pdb
-
-secrets.json
