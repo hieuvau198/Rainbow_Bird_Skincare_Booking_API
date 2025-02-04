@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
+using System.Text;
 
 namespace Application.Utils
 {
@@ -36,21 +37,29 @@ namespace Application.Utils
                 }
             }
 
-            // Production: Retrieve the existing JSON string from configuration
-            var serviceAccountJsonProd = configuration["Firebase:ServiceAccountJson"];
+            // Production: Retrieve and decode the Base64 string from configuration
+            var base64EncodedJson = configuration["Firebase:ServiceAccountJson"];
 
-            // Ensure it's a properly formatted JSON string
-            if (!string.IsNullOrWhiteSpace(serviceAccountJsonProd))
+            if (!string.IsNullOrWhiteSpace(base64EncodedJson))
             {
                 try
                 {
-                    // Attempt to parse to verify JSON validity
-                    JObject.Parse(serviceAccountJsonProd);
-                    return serviceAccountJsonProd;
+                    // Decode from Base64
+                    byte[] decodedBytes = Convert.FromBase64String(base64EncodedJson);
+                    string decodedJson = Encoding.UTF8.GetString(decodedBytes);
+
+                    // Verify the decoded string is valid JSON
+                    JObject.Parse(decodedJson);
+
+                    return decodedJson;
                 }
-                catch (JsonReaderException)
+                catch (FormatException)
                 {
-                    throw new InvalidOperationException("Invalid Firebase Service Account JSON format in production.");
+                    throw new InvalidOperationException("Invalid Base64 encoding for Firebase Service Account JSON.");
+                }
+                catch (Newtonsoft.Json.JsonReaderException)
+                {
+                    throw new InvalidOperationException("Decoded Firebase Service Account JSON is not in a valid format.");
                 }
             }
 
