@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace Application.Services
 {
@@ -15,11 +17,30 @@ namespace Application.Services
         private readonly StorageClient _storageClient;
         private readonly string _bucketName;
 
-        public FirebaseImageService()
+        public FirebaseImageService(IConfiguration configuration)
         {
             _bucketName = "flipbook-firebase.appspot.com";
-            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS",
-                Path.Combine(Directory.GetCurrentDirectory(), "Config", "firebase-credentials.json"));
+
+            // Retrieve service account JSON from configuration
+            var firebaseServiceAccountJson = configuration["Firebase:ServiceAccountJson"];
+
+            if (!string.IsNullOrEmpty(firebaseServiceAccountJson))
+            {
+                // Ensure Config directory exists
+                var configPath = Path.Combine(Directory.GetCurrentDirectory(), "Config");
+                Directory.CreateDirectory(configPath);
+
+                // Path for credentials file
+                var credentialsPath = Path.Combine(configPath, "firebase-credentials.json");
+
+                // Write service account JSON to file
+                File.WriteAllText(credentialsPath, firebaseServiceAccountJson);
+
+                // Set environment variable to credentials file
+                Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialsPath);
+            }
+
+            // Create storage client
             _storageClient = StorageClient.Create();
         }
 

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,32 +21,23 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddUserSecrets<Program>(); // Load user secrets
 
 
-// Read Firebase credentials from configuration
-var firebaseServiceAccountJson = builder.Configuration["Firebase:ServiceAccountJson"];
-
+var firebaseServiceAccountJson = builder.Configuration.GetFirebaseServiceAccountJson(builder.Environment);
 if (!string.IsNullOrEmpty(firebaseServiceAccountJson))
 {
     try
     {
-        // Ensure Firebase is initialized only once
         if (FirebaseApp.DefaultInstance == null)
         {
             FirebaseApp.Create(new AppOptions()
             {
                 Credential = GoogleCredential.FromJson(firebaseServiceAccountJson)
             });
-
-            Console.WriteLine("Firebase successfully initialized.");
         }
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"Error initializing Firebase: {ex.Message}");
+        Console.WriteLine($"Firebase initialization error: {ex.Message}");
     }
-}
-else
-{
-    Console.WriteLine("Firebase service account JSON not found in configuration.");
 }
 
 builder.Services.AddControllers();
