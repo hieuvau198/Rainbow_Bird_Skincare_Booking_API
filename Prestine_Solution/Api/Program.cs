@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Application.Mappings;
 using Application.Services;
 using Application.Utils;
+using Azure.Identity;
 using Domain.Interfaces;
 using Google.Apis.Auth.OAuth2;
 using Infrastructure.Persistence;
@@ -13,6 +14,16 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+// Add services to handle Firebase credentials
+builder.Services.AddSingleton<IFirebaseCredentialProvider>(sp =>
+{
+    var configuration = sp.GetRequiredService<IConfiguration>();
+    var environment = sp.GetRequiredService<IHostEnvironment>();
+
+    return new FirebaseCredentialProvider(configuration, environment);
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
