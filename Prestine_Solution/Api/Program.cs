@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Application.Mappings;
 using Application.Services;
 using Application.Utils;
+using Azure.Identity;
 using Domain.Interfaces;
 using Google.Apis.Auth.OAuth2;
 using Infrastructure.Persistence;
@@ -13,6 +14,27 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add Key Vault configuration if in production
+if (!builder.Environment.IsDevelopment())
+{
+    var keyVaultUrl = builder.Configuration["KeyVaultUrl"];
+    if (!string.IsNullOrEmpty(keyVaultUrl))
+    {
+        builder.Configuration.AddAzureKeyVault(
+            new Uri(keyVaultUrl),
+            new DefaultAzureCredential());
+    }
+}
+
+// Add services to handle Firebase credentials
+builder.Services.AddSingleton<IFirebaseCredentialProvider>(sp =>
+{
+    var configuration = sp.GetRequiredService<IConfiguration>();
+    var environment = sp.GetRequiredService<IHostEnvironment>();
+
+    return new FirebaseCredentialProvider(configuration, environment);
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -64,6 +86,8 @@ builder.Services.AddAuthentication(options =>
 })// Add to existing authentication configuration
 .AddGoogle(options =>
 {
+    // In development, these come from User Secrets
+    // In production, they come from Key Vault
     options.ClientId = builder.Configuration["Google:ClientId"];
     options.ClientSecret = builder.Configuration["Google:ClientSecret"];
 })
