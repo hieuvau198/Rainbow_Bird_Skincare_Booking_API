@@ -26,21 +26,21 @@ namespace Api.Controllers
             // Try direct configuration first
             var firebaseServiceAccountJson = _configuration["Firebase:ServiceAccountJson"];
 
-            // If empty, try nested configuration
-            if (string.IsNullOrEmpty(firebaseServiceAccountJson))
-            {
-                var serviceAccountSection = _configuration.GetSection("Firebase:ServiceAccount");
-                if (serviceAccountSection.Exists())
-                {
-                    var serviceAccountDict = serviceAccountSection.GetChildren()
-                        .ToDictionary(
-                            x => char.ToLowerInvariant(x.Key[0]) + x.Key.Substring(1),
-                            x => x.Value
-                        );
+            //// If empty, try nested configuration
+            //if (string.IsNullOrEmpty(firebaseServiceAccountJson))
+            //{
+            //    var serviceAccountSection = _configuration.GetSection("Firebase:ServiceAccount");
+            //    if (serviceAccountSection.Exists())
+            //    {
+            //        var serviceAccountDict = serviceAccountSection.GetChildren()
+            //            .ToDictionary(
+            //                x => char.ToLowerInvariant(x.Key[0]) + x.Key.Substring(1),
+            //                x => x.Value
+            //            );
 
-                    firebaseServiceAccountJson = JsonConvert.SerializeObject(serviceAccountDict);
-                }
-            }
+            //        firebaseServiceAccountJson = JsonConvert.SerializeObject(serviceAccountDict);
+            //    }
+            //}
 
             // Check if Firebase credentials are correctly retrieved
             bool canCreateStorageClient = false;
