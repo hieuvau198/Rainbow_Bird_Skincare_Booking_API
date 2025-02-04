@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Google.Apis.Auth.OAuth2;
 
 namespace Application.Services
 {
@@ -24,16 +25,14 @@ namespace Application.Services
             // Retrieve service account JSON from configuration
             var firebaseServiceAccountJson = configuration["Firebase:ServiceAccountJson"];
 
-            if (!string.IsNullOrEmpty(firebaseServiceAccountJson))
+            if (string.IsNullOrEmpty(firebaseServiceAccountJson))
             {
-                // Create temp file for credentials
-                var tempPath = Path.GetTempFileName();
-                File.WriteAllText(tempPath, firebaseServiceAccountJson);
-                Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", tempPath);
+                throw new InvalidOperationException("Service account JSON is required.");
             }
 
-            // Create storage client
-            _storageClient = StorageClient.Create();
+            // Set up the Google credential from the service account
+            var googleCredential = GoogleCredential.FromJson(firebaseServiceAccountJson);
+            _storageClient = StorageClient.Create(googleCredential);
         }
 
         public async Task<string> UploadImageAsync(IFormFile image)
