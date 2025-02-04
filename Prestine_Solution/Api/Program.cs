@@ -1,9 +1,11 @@
+using Application.DTOs;
 using Application.Interfaces;
 using Application.Mappings;
 using Application.Services;
 using Application.Utils;
 using Azure.Identity;
 using Domain.Interfaces;
+using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Infrastructure.Persistence;
 using Infrastructure.Repositories;
@@ -18,14 +20,33 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddUserSecrets<Program>(); // Load user secrets
 
 
-// Add services to handle Firebase credentials
-builder.Services.AddSingleton<IFirebaseCredentialProvider>(sp =>
-{
-    var configuration = sp.GetRequiredService<IConfiguration>();
-    var environment = sp.GetRequiredService<IHostEnvironment>();
+// Read Firebase credentials from configuration
+var firebaseServiceAccountJson = builder.Configuration["Firebase:ServiceAccountJson"];
 
-    return new FirebaseCredentialProvider(configuration, environment);
-});
+if (!string.IsNullOrEmpty(firebaseServiceAccountJson))
+{
+    try
+    {
+        // Ensure Firebase is initialized only once
+        if (FirebaseApp.DefaultInstance == null)
+        {
+            FirebaseApp.Create(new AppOptions()
+            {
+                Credential = GoogleCredential.FromJson(firebaseServiceAccountJson)
+            });
+
+            Console.WriteLine("Firebase successfully initialized.");
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error initializing Firebase: {ex.Message}");
+    }
+}
+else
+{
+    Console.WriteLine("Firebase service account JSON not found in configuration.");
+}
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
