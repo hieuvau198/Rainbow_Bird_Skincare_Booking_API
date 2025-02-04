@@ -56,11 +56,11 @@ namespace Api.Controllers
                     // Attempt to create a StorageClient
                     var storageClient = StorageClient.Create(credential);
                     canCreateStorageClient = true;
-                    firebaseMessage = "Firebase StorageClient was created successfully!";
+                    firebaseMessage = $"Firebase StorageClient was created successfully!\n firebaseServiceAccountJson: {firebaseServiceAccountJson}";
                 }
                 catch (Exception ex)
                 {
-                    firebaseMessage = $"Failed to create StorageClient: {ex.Message}";
+                    firebaseMessage = $"Failed to create StorageClient: {ex.Message}\n firebaseServiceAccountJson: {firebaseServiceAccountJson}";
                 }
             }
 
