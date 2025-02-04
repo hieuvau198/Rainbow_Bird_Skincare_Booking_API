@@ -32,7 +32,7 @@ namespace Application.Services
             }
             else
             {
-                return _configuration["FirebaseServiceAccount"];
+                return _configuration["FIREBASE_SERVICE_ACCOUNT"];
             }
         }
     }

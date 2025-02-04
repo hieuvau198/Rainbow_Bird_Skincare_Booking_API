@@ -15,17 +15,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add Key Vault configuration if in production
-if (!builder.Environment.IsDevelopment())
-{
-    var keyVaultUrl = builder.Configuration["KeyVaultUrl"];
-    if (!string.IsNullOrEmpty(keyVaultUrl))
-    {
-        builder.Configuration.AddAzureKeyVault(
-            new Uri(keyVaultUrl),
-            new DefaultAzureCredential());
-    }
-}
 
 // Add services to handle Firebase credentials
 builder.Services.AddSingleton<IFirebaseCredentialProvider>(sp =>
@@ -86,8 +75,6 @@ builder.Services.AddAuthentication(options =>
 })// Add to existing authentication configuration
 .AddGoogle(options =>
 {
-    // In development, these come from User Secrets
-    // In production, they come from Key Vault
     options.ClientId = builder.Configuration["Google:ClientId"];
     options.ClientSecret = builder.Configuration["Google:ClientSecret"];
 })
