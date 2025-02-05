@@ -488,6 +488,9 @@ public partial class SkincareDbContext : DbContext
             entity.Property(e => e.Price)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("price");
+            entity.Property(e => e.ServiceImage)
+                .HasColumnType("NVARCHAR(MAX)")
+                .HasColumnName("service_image");
             entity.Property(e => e.ServiceName)
                 .HasMaxLength(100)
                 .HasColumnName("service_name");
