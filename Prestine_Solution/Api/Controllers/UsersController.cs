@@ -26,7 +26,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Policy = "StandardPolicy")]
+        [Authorize(Policy = "OpenPolicy")]
         public async Task<ActionResult<UserDto>> GetUser(int id)
         {
             try
