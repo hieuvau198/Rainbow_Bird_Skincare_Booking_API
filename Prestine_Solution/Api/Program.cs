@@ -134,8 +134,9 @@ builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<ITherapistService, TherapistService>();
     builder.Services.AddScoped<ITherapistProfileService, TherapistProfileService>();
+    builder.Services.AddScoped<IServiceService, ServiceService>();
 
-    builder.Services.AddScoped<IImageService, FirebaseImageService>();
+builder.Services.AddScoped<IImageService, FirebaseImageService>();
 
 builder.Services.AddScoped<GoogleTokenValidator>();
 
