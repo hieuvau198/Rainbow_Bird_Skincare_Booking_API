@@ -10,6 +10,7 @@ public partial class Service
     public string ServiceName { get; set; } = null!;
 
     public string? Description { get; set; }
+    public string? ServiceImage { get; set; }
 
     public decimal Price { get; set; }
 
