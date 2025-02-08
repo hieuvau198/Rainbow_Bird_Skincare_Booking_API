@@ -135,6 +135,9 @@ builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<ITherapistService, TherapistService>();
     builder.Services.AddScoped<ITherapistProfileService, TherapistProfileService>();
     builder.Services.AddScoped<IServiceService, ServiceService>();
+    builder.Services.AddScoped<IWorkingDayService, WorkingDayService>();
+    builder.Services.AddScoped<ITimeSlotService, TimeSlotService>();
+    builder.Services.AddScoped<ITherapistAvailabilityService, TherapistAvailabilityService>();
 
 builder.Services.AddScoped<IImageService, FirebaseImageService>();
 
