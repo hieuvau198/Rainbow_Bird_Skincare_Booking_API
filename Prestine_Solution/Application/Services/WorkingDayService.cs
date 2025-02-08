@@ -6,26 +6,38 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using AutoMapper;
 
 namespace Application.Services
 {
     public class WorkingDayService : IWorkingDayService
     {
         private readonly IGenericRepository<WorkingDay> _repository;
-        private readonly ITimeSlotService _timeSlotService;
+        private readonly IGenericRepository<TimeSlot> _timeSlotRepository;
+        private readonly IMapper _mapper;
 
         public WorkingDayService(
             IGenericRepository<WorkingDay> repository,
-            ITimeSlotService timeSlotService)
+            IGenericRepository<TimeSlot> timeSlotRepository,
+            IMapper mapper)
         {
             _repository = repository;
-            _timeSlotService = timeSlotService;
+            _timeSlotRepository = timeSlotRepository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<WorkingDayDto>> GetAllWorkingDaysAsync()
         {
+            // Eagerly load time slots for all working days
             var workingDays = await _repository.GetAllAsync();
-            return workingDays.Select(MapToDto);
+            var timeSlots = await _timeSlotRepository.GetAllAsync();
+
+            foreach (var workingDay in workingDays)
+            {
+                workingDay.TimeSlots = timeSlots.Where(t => t.WorkingDayId == workingDay.WorkingDayId).ToList();
+            }
+
+            return _mapper.Map<IEnumerable<WorkingDayDto>>(workingDays);
         }
 
         public async Task<WorkingDayDto> GetWorkingDayByIdAsync(int id)
@@ -34,42 +46,41 @@ namespace Application.Services
             if (workingDay == null)
                 throw new KeyNotFoundException($"Working day with ID {id} not found");
 
-            return MapToDto(workingDay);
+            // Eagerly load related time slots
+            var timeSlots = await _timeSlotRepository.GetAllAsync(t => t.WorkingDayId == id);
+            workingDay.TimeSlots = timeSlots.ToList();
+
+            return _mapper.Map<WorkingDayDto>(workingDay);
         }
 
         public async Task<WorkingDayDto> GetWorkingDayByNameAsync(string dayName)
         {
             var workingDays = await _repository.GetAllAsync();
-            var workingDay = workingDays.FirstOrDefault(w => w.DayName.ToLower() == dayName.ToLower());
+            var workingDay = workingDays.FirstOrDefault(w => w.DayName.Equals(dayName, StringComparison.OrdinalIgnoreCase));
 
             if (workingDay == null)
                 throw new KeyNotFoundException($"Working day {dayName} not found");
 
-            return MapToDto(workingDay);
+            // Eagerly load related time slots
+            var timeSlots = await _timeSlotRepository.GetAllAsync(t => t.WorkingDayId == workingDay.WorkingDayId);
+            workingDay.TimeSlots = timeSlots.ToList();
+
+            return _mapper.Map<WorkingDayDto>(workingDay);
         }
 
         public async Task<WorkingDayDto> CreateWorkingDayAsync(CreateWorkingDayDto createDto)
         {
-            // Validate time range
             if (createDto.EndTime <= createDto.StartTime)
                 throw new InvalidOperationException("End time must be after start time");
 
-            // Check if day already exists
             if (await IsWorkingDayExistsAsync(createDto.DayName))
                 throw new InvalidOperationException($"Working day {createDto.DayName} already exists");
 
-            var workingDay = new WorkingDay
-            {
-                DayName = createDto.DayName,
-                StartTime = createDto.StartTime,
-                EndTime = createDto.EndTime,
-                SlotDurationMinutes = createDto.SlotDurationMinutes,
-                IsActive = createDto.IsActive,
-                CreatedAt = DateTime.UtcNow
-            };
+            var workingDay = _mapper.Map<WorkingDay>(createDto);
+            workingDay.CreatedAt = DateTime.UtcNow;
 
             await _repository.CreateAsync(workingDay);
-            return MapToDto(workingDay);
+            return _mapper.Map<WorkingDayDto>(workingDay);
         }
 
         public async Task UpdateWorkingDayAsync(int id, UpdateWorkingDayDto updateDto)
@@ -78,19 +89,8 @@ namespace Application.Services
             if (workingDay == null)
                 throw new KeyNotFoundException($"Working day with ID {id} not found");
 
-            if (updateDto.StartTime.HasValue)
-                workingDay.StartTime = updateDto.StartTime.Value;
+            _mapper.Map(updateDto, workingDay);
 
-            if (updateDto.EndTime.HasValue)
-                workingDay.EndTime = updateDto.EndTime.Value;
-
-            if (updateDto.SlotDurationMinutes.HasValue)
-                workingDay.SlotDurationMinutes = updateDto.SlotDurationMinutes.Value;
-
-            if (updateDto.IsActive.HasValue)
-                workingDay.IsActive = updateDto.IsActive.Value;
-
-            // Validate time range
             if (workingDay.EndTime <= workingDay.StartTime)
                 throw new InvalidOperationException("End time must be after start time");
 
@@ -109,22 +109,7 @@ namespace Application.Services
         public async Task<bool> IsWorkingDayExistsAsync(string dayName)
         {
             var workingDays = await _repository.GetAllAsync();
-            return workingDays.Any(w => w.DayName.ToLower() == dayName.ToLower());
-        }
-
-        private WorkingDayDto MapToDto(WorkingDay workingDay)
-        {
-            return new WorkingDayDto
-            {
-                WorkingDayId = workingDay.WorkingDayId,
-                DayName = workingDay.DayName,
-                StartTime = workingDay.StartTime,
-                EndTime = workingDay.EndTime,
-                SlotDurationMinutes = workingDay.SlotDurationMinutes,
-                IsActive = workingDay.IsActive,
-                CreatedAt = workingDay.CreatedAt,
-                TimeSlots = workingDay.TimeSlots.Select(_timeSlotService.MapToDto).ToList()
-            };
+            return workingDays.Any(w => w.DayName.Equals(dayName, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

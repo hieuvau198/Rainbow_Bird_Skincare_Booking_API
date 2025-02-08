@@ -15,7 +15,7 @@ namespace Application.DTOs
         public int SlotDurationMinutes { get; set; }
         public bool? IsActive { get; set; }
         public DateTime? CreatedAt { get; set; }
-        public ICollection<TimeSlotDto> TimeSlots { get; set; } = new List<TimeSlotDto>();
+        public List<int> TimeSlotIds { get; set; } = new List<int>();
     }
 
     public class CreateWorkingDayDto

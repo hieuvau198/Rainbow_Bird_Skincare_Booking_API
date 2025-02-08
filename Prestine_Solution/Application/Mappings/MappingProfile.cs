@@ -1,11 +1,6 @@
 ﻿using Application.DTOs;
 using AutoMapper;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Mappings
 {
@@ -13,43 +8,90 @@ namespace Application.Mappings
     {
         public MappingProfile()
         {
-            // Entity to DTO
+            // Existing mappings...
             CreateMap<TherapistProfile, TherapistProfileDto>();
-
-            // CreateDTO to Entity
             CreateMap<CreateTherapistProfileDto, TherapistProfile>()
                 .ForMember(dest => dest.ProfileId, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.ProfileImage, opt => opt.Ignore()); // We handle image separately
+                .ForMember(dest => dest.ProfileImage, opt => opt.Ignore());
 
-            // UpdateDTO to Entity
             CreateMap<UpdateTherapistProfileDto, TherapistProfile>()
                 .ForMember(dest => dest.ProfileId, opt => opt.Ignore())
                 .ForMember(dest => dest.TherapistId, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.ProfileImage, opt => opt.Ignore()) // We handle image separately
+                .ForMember(dest => dest.ProfileImage, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            // Entity to DTO
             CreateMap<Service, ServiceDto>();
-
-            // CreateDTO to Entity
             CreateMap<CreateServiceDto, Service>()
                 .ForMember(dest => dest.ServiceId, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.ServiceImage, opt => opt.Ignore()) // We handle image separately
+                .ForMember(dest => dest.ServiceImage, opt => opt.Ignore())
                 .ForMember(dest => dest.Bookings, opt => opt.Ignore())
                 .ForMember(dest => dest.QuizRecommendations, opt => opt.Ignore());
 
-            // UpdateDTO to Entity
             CreateMap<UpdateServiceDto, Service>()
                 .ForMember(dest => dest.ServiceId, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.ServiceImage, opt => opt.Ignore()) // We handle image separately
+                .ForMember(dest => dest.ServiceImage, opt => opt.Ignore())
                 .ForMember(dest => dest.Bookings, opt => opt.Ignore())
                 .ForMember(dest => dest.QuizRecommendations, opt => opt.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // TherapistAvailability mappings
+            CreateMap<TherapistAvailability, TherapistAvailabilityDto>();
+
+            CreateMap<CreateTherapistAvailabilityDto, TherapistAvailability>()
+                .ForMember(dest => dest.AvailabilityId, opt => opt.Ignore())
+                .ForMember(dest => dest.Therapist, opt => opt.Ignore())
+                .ForMember(dest => dest.Slot, opt => opt.Ignore());
+
+            CreateMap<UpdateTherapistAvailabilityDto, TherapistAvailability>()
+                .ForMember(dest => dest.AvailabilityId, opt => opt.Ignore())
+                .ForMember(dest => dest.TherapistId, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Therapist, opt => opt.Ignore())
+                .ForMember(dest => dest.Slot, opt => opt.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // TimeSlot mappings
+            CreateMap<TimeSlot, TimeSlotDto>()
+                .ForMember(dest => dest.WorkingDayId, opt => opt.MapFrom(src => src.WorkingDayId)); // Map WorkingDayId directly
+                                                                                                    // No mapping for WorkingDay reference anymore
+
+            CreateMap<CreateTimeSlotDto, TimeSlot>()
+                .ForMember(dest => dest.SlotId, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
+                .ForMember(dest => dest.TherapistAvailabilities, opt => opt.Ignore())
+                .ForMember(dest => dest.WorkingDay, opt => opt.Ignore());
+
+            CreateMap<UpdateTimeSlotDto, TimeSlot>()
+                .ForMember(dest => dest.SlotId, opt => opt.Ignore())
+                .ForMember(dest => dest.WorkingDayId, opt => opt.Ignore()) // Prevent updating WorkingDayId
+                .ForMember(dest => dest.SlotNumber, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
+                .ForMember(dest => dest.TherapistAvailabilities, opt => opt.Ignore())
+                .ForMember(dest => dest.WorkingDay, opt => opt.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // WorkingDay mappings
+            CreateMap<WorkingDay, WorkingDayDto>()
+                .ForMember(dest => dest.TimeSlotIds, opt => opt.MapFrom(src => src.TimeSlots.Select(ts => ts.SlotId).ToList())); // Map TimeSlot IDs only
+
+            CreateMap<CreateWorkingDayDto, WorkingDay>()
+                .ForMember(dest => dest.WorkingDayId, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.TimeSlots, opt => opt.Ignore()); // Do not map TimeSlots during creation
+
+            CreateMap<UpdateWorkingDayDto, WorkingDay>()
+                .ForMember(dest => dest.WorkingDayId, opt => opt.Ignore())
+                .ForMember(dest => dest.DayName, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.TimeSlots, opt => opt.Ignore()) // Do not map TimeSlots during update
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }

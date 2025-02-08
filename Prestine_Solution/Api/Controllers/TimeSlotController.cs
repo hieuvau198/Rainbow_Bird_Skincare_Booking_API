@@ -9,26 +9,26 @@ namespace Api.Controllers
     [Route("api/[controller]")]
     public class TimeSlotController : ControllerBase
     {
-        private readonly ITimeSlotService _timeSlotService;
+        private readonly ITimeSlotService _service;
 
-        public TimeSlotController(ITimeSlotService timeSlotService)
+        public TimeSlotController(ITimeSlotService service)
         {
-            _timeSlotService = timeSlotService;
+            _service = service;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TimeSlotDto>>> GetAllTimeSlots()
+        public async Task<IActionResult> GetAll()
         {
-            var timeSlots = await _timeSlotService.GetAllTimeSlotsAsync();
+            var timeSlots = await _service.GetAllTimeSlotsAsync();
             return Ok(timeSlots);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TimeSlotDto>> GetTimeSlotById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             try
             {
-                var timeSlot = await _timeSlotService.GetTimeSlotByIdAsync(id);
+                var timeSlot = await _service.GetTimeSlotByIdAsync(id);
                 return Ok(timeSlot);
             }
             catch (KeyNotFoundException ex)
@@ -38,22 +38,19 @@ namespace Api.Controllers
         }
 
         [HttpGet("workingDay/{workingDayId}")]
-        public async Task<ActionResult<IEnumerable<TimeSlotDto>>> GetTimeSlotsByWorkingDay(int workingDayId)
+        public async Task<IActionResult> GetByWorkingDay(int workingDayId)
         {
-            var timeSlots = await _timeSlotService.GetTimeSlotsByWorkingDayAsync(workingDayId);
+            var timeSlots = await _service.GetTimeSlotsByWorkingDayAsync(workingDayId);
             return Ok(timeSlots);
         }
 
         [HttpPost]
-        public async Task<ActionResult<TimeSlotDto>> CreateTimeSlot(CreateTimeSlotDto createDto)
+        public async Task<IActionResult> Create([FromBody] CreateTimeSlotDto createDto)
         {
             try
             {
-                var timeSlot = await _timeSlotService.CreateTimeSlotAsync(createDto);
-                return CreatedAtAction(
-                    nameof(GetTimeSlotById),
-                    new { id = timeSlot.SlotId },
-                    timeSlot);
+                var timeSlot = await _service.CreateTimeSlotAsync(createDto);
+                return CreatedAtAction(nameof(GetById), new { id = timeSlot.SlotId }, timeSlot);
             }
             catch (KeyNotFoundException ex)
             {
@@ -66,11 +63,11 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTimeSlot(int id, UpdateTimeSlotDto updateDto)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateTimeSlotDto updateDto)
         {
             try
             {
-                await _timeSlotService.UpdateTimeSlotAsync(id, updateDto);
+                await _service.UpdateTimeSlotAsync(id, updateDto);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)
@@ -84,11 +81,11 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTimeSlot(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                await _timeSlotService.DeleteTimeSlotAsync(id);
+                await _service.DeleteTimeSlotAsync(id);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)

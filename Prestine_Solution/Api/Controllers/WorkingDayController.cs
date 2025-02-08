@@ -9,26 +9,26 @@ namespace Api.Controllers
     [Route("api/[controller]")]
     public class WorkingDayController : ControllerBase
     {
-        private readonly IWorkingDayService _workingDayService;
+        private readonly IWorkingDayService _service;
 
-        public WorkingDayController(IWorkingDayService workingDayService)
+        public WorkingDayController(IWorkingDayService service)
         {
-            _workingDayService = workingDayService;
+            _service = service;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<WorkingDayDto>>> GetAllWorkingDays()
+        public async Task<IActionResult> GetAll()
         {
-            var workingDays = await _workingDayService.GetAllWorkingDaysAsync();
+            var workingDays = await _service.GetAllWorkingDaysAsync();
             return Ok(workingDays);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<WorkingDayDto>> GetWorkingDayById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             try
             {
-                var workingDay = await _workingDayService.GetWorkingDayByIdAsync(id);
+                var workingDay = await _service.GetWorkingDayByIdAsync(id);
                 return Ok(workingDay);
             }
             catch (KeyNotFoundException ex)
@@ -38,11 +38,11 @@ namespace Api.Controllers
         }
 
         [HttpGet("byName/{dayName}")]
-        public async Task<ActionResult<WorkingDayDto>> GetWorkingDayByName(string dayName)
+        public async Task<IActionResult> GetByName(string dayName)
         {
             try
             {
-                var workingDay = await _workingDayService.GetWorkingDayByNameAsync(dayName);
+                var workingDay = await _service.GetWorkingDayByNameAsync(dayName);
                 return Ok(workingDay);
             }
             catch (KeyNotFoundException ex)
@@ -52,15 +52,12 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<WorkingDayDto>> CreateWorkingDay(CreateWorkingDayDto createDto)
+        public async Task<IActionResult> Create([FromBody] CreateWorkingDayDto createDto)
         {
             try
             {
-                var workingDay = await _workingDayService.CreateWorkingDayAsync(createDto);
-                return CreatedAtAction(
-                    nameof(GetWorkingDayById),
-                    new { id = workingDay.WorkingDayId },
-                    workingDay);
+                var workingDay = await _service.CreateWorkingDayAsync(createDto);
+                return CreatedAtAction(nameof(GetById), new { id = workingDay.WorkingDayId }, workingDay);
             }
             catch (InvalidOperationException ex)
             {
@@ -69,11 +66,11 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateWorkingDay(int id, UpdateWorkingDayDto updateDto)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateWorkingDayDto updateDto)
         {
             try
             {
-                await _workingDayService.UpdateWorkingDayAsync(id, updateDto);
+                await _service.UpdateWorkingDayAsync(id, updateDto);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)
@@ -87,11 +84,11 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteWorkingDay(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                await _workingDayService.DeleteWorkingDayAsync(id);
+                await _service.DeleteWorkingDayAsync(id);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)

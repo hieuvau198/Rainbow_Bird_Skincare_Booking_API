@@ -15,7 +15,6 @@ namespace Application.DTOs
         public int SlotNumber { get; set; }
         public bool? IsActive { get; set; }
         public DateTime? CreatedAt { get; set; }
-        public WorkingDayDto? WorkingDay { get; set; }
     }
 
     public class CreateTimeSlotDto

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using AutoMapper;
 
 namespace Application.Services
 {
@@ -13,19 +14,22 @@ namespace Application.Services
     {
         private readonly IGenericRepository<TimeSlot> _repository;
         private readonly IGenericRepository<WorkingDay> _workingDayRepository;
+        private readonly IMapper _mapper;
 
         public TimeSlotService(
             IGenericRepository<TimeSlot> repository,
-            IGenericRepository<WorkingDay> workingDayRepository)
+            IGenericRepository<WorkingDay> workingDayRepository,
+            IMapper mapper)
         {
             _repository = repository;
             _workingDayRepository = workingDayRepository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<TimeSlotDto>> GetAllTimeSlotsAsync()
         {
             var timeSlots = await _repository.GetAllAsync();
-            return timeSlots.Select(MapToDto);
+            return _mapper.Map<IEnumerable<TimeSlotDto>>(timeSlots);
         }
 
         public async Task<TimeSlotDto> GetTimeSlotByIdAsync(int id)
@@ -34,15 +38,15 @@ namespace Application.Services
             if (timeSlot == null)
                 throw new KeyNotFoundException($"Time slot with ID {id} not found");
 
-            return MapToDto(timeSlot);
+            return _mapper.Map<TimeSlotDto>(timeSlot);
         }
 
         public async Task<IEnumerable<TimeSlotDto>> GetTimeSlotsByWorkingDayAsync(int workingDayId)
         {
             var timeSlots = await _repository.GetAllAsync();
-            return timeSlots.Where(t => t.WorkingDayId == workingDayId)
-                          .OrderBy(t => t.SlotNumber)
-                          .Select(MapToDto);
+            var filtered = timeSlots.Where(t => t.WorkingDayId == workingDayId)
+                                  .OrderBy(t => t.SlotNumber);
+            return _mapper.Map<IEnumerable<TimeSlotDto>>(filtered);
         }
 
         public async Task<TimeSlotDto> CreateTimeSlotAsync(CreateTimeSlotDto createDto)
@@ -60,18 +64,11 @@ namespace Application.Services
             if (createDto.StartTime < workingDay.StartTime || createDto.EndTime > workingDay.EndTime)
                 throw new InvalidOperationException("Time slot must be within working day hours");
 
-            var timeSlot = new TimeSlot
-            {
-                WorkingDayId = createDto.WorkingDayId,
-                StartTime = createDto.StartTime,
-                EndTime = createDto.EndTime,
-                SlotNumber = createDto.SlotNumber,
-                IsActive = createDto.IsActive,
-                CreatedAt = DateTime.UtcNow
-            };
+            var timeSlot = _mapper.Map<TimeSlot>(createDto);
+            timeSlot.CreatedAt = DateTime.UtcNow;
 
             await _repository.CreateAsync(timeSlot);
-            return MapToDto(timeSlot);
+            return _mapper.Map<TimeSlotDto>(timeSlot);
         }
 
         public async Task UpdateTimeSlotAsync(int id, UpdateTimeSlotDto updateDto)
@@ -84,14 +81,7 @@ namespace Application.Services
             if (workingDay == null)
                 throw new KeyNotFoundException($"Working day with ID {timeSlot.WorkingDayId} not found");
 
-            if (updateDto.StartTime.HasValue)
-                timeSlot.StartTime = updateDto.StartTime.Value;
-
-            if (updateDto.EndTime.HasValue)
-                timeSlot.EndTime = updateDto.EndTime.Value;
-
-            if (updateDto.IsActive.HasValue)
-                timeSlot.IsActive = updateDto.IsActive.Value;
+            _mapper.Map(updateDto, timeSlot);
 
             // Validate time range
             if (timeSlot.EndTime <= timeSlot.StartTime)
@@ -111,30 +101,6 @@ namespace Application.Services
                 throw new KeyNotFoundException($"Time slot with ID {id} not found");
 
             await _repository.DeleteAsync(timeSlot);
-        }
-
-        public TimeSlotDto MapToDto(TimeSlot timeSlot)
-        {
-            return new TimeSlotDto
-            {
-                SlotId = timeSlot.SlotId,
-                WorkingDayId = timeSlot.WorkingDayId,
-                StartTime = timeSlot.StartTime,
-                EndTime = timeSlot.EndTime,
-                SlotNumber = timeSlot.SlotNumber,
-                IsActive = timeSlot.IsActive,
-                CreatedAt = timeSlot.CreatedAt,
-                WorkingDay = timeSlot.WorkingDay != null ? new WorkingDayDto
-                {
-                    WorkingDayId = timeSlot.WorkingDay.WorkingDayId,
-                    DayName = timeSlot.WorkingDay.DayName,
-                    StartTime = timeSlot.WorkingDay.StartTime,
-                    EndTime = timeSlot.WorkingDay.EndTime,
-                    SlotDurationMinutes = timeSlot.WorkingDay.SlotDurationMinutes,
-                    IsActive = timeSlot.WorkingDay.IsActive,
-                    CreatedAt = timeSlot.WorkingDay.CreatedAt
-                } : null
-            };
         }
     }
 }

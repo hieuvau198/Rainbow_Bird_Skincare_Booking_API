@@ -16,6 +16,5 @@ namespace Application.Interfaces
         Task<TimeSlotDto> CreateTimeSlotAsync(CreateTimeSlotDto createDto);
         Task UpdateTimeSlotAsync(int id, UpdateTimeSlotDto updateDto);
         Task DeleteTimeSlotAsync(int id);
-        TimeSlotDto MapToDto(TimeSlot timeSlot);
     }
 }

@@ -6,66 +6,76 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using AutoMapper;
 
 namespace Application.Services
 {
     public class TherapistAvailabilityService : ITherapistAvailabilityService
     {
-        private readonly IGenericRepository<TherapistAvailability> _repository;
-        private readonly ITherapistService _therapistService;
-        private readonly ITimeSlotService _timeSlotService;
-        private readonly IWorkingDayService _workingDayService;
+        private readonly IGenericRepository<TherapistAvailability> _availabilityRepository;
+        private readonly IGenericRepository<Therapist> _therapistRepository;
+        private readonly IGenericRepository<TimeSlot> _timeSlotRepository;
+        private readonly IGenericRepository<WorkingDay> _workingDayRepository;
+        private readonly IMapper _mapper;
 
         public TherapistAvailabilityService(
-            IGenericRepository<TherapistAvailability> repository,
-            ITherapistService therapistService,
-            ITimeSlotService timeSlotService,
-            IWorkingDayService workingDayService)
+            IGenericRepository<TherapistAvailability> availabilityRepository,
+            IGenericRepository<Therapist> therapistRepository,
+            IGenericRepository<TimeSlot> timeSlotRepository,
+            IGenericRepository<WorkingDay> workingDayRepository,
+            IMapper mapper)
         {
-            _repository = repository;
-            _therapistService = therapistService;
-            _timeSlotService = timeSlotService;
-            _workingDayService = workingDayService;
+            _availabilityRepository = availabilityRepository;
+            _therapistRepository = therapistRepository;
+            _timeSlotRepository = timeSlotRepository;
+            _workingDayRepository = workingDayRepository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<TherapistAvailabilityDto>> GetAllAvailabilitiesAsync()
         {
-            var availabilities = await _repository.GetAllAsync();
-            return availabilities.Select(MapToDto);
+            var availabilities = await _availabilityRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<TherapistAvailabilityDto>>(availabilities);
         }
 
         public async Task<TherapistAvailabilityDto> GetAvailabilityByIdAsync(int id)
         {
-            var availability = await _repository.GetByIdAsync(id);
+            var availability = await _availabilityRepository.GetByIdAsync(id);
             if (availability == null)
                 throw new KeyNotFoundException($"Availability with ID {id} not found");
 
-            return MapToDto(availability);
+            return _mapper.Map<TherapistAvailabilityDto>(availability);
         }
 
         public async Task<IEnumerable<TherapistAvailabilityDto>> GetTherapistAvailabilitiesAsync(int therapistId, DateOnly? date = null)
         {
-            var availabilities = await _repository.GetAllAsync();
+            var availabilities = await _availabilityRepository.GetAllAsync();
             var filtered = availabilities.Where(a => a.TherapistId == therapistId);
 
             if (date.HasValue)
                 filtered = filtered.Where(a => a.WorkingDate == date.Value);
 
-            return filtered.Select(MapToDto);
+            return _mapper.Map<IEnumerable<TherapistAvailabilityDto>>(filtered);
         }
 
         public async Task<TherapistAvailabilityDto> CreateAvailabilityAsync(CreateTherapistAvailabilityDto createDto)
         {
             // Verify therapist exists
-            await _therapistService.GetTherapistByIdAsync(createDto.TherapistId);
+            var therapist = await _therapistRepository.GetByIdAsync(createDto.TherapistId);
+            if (therapist == null)
+                throw new KeyNotFoundException($"Therapist with ID {createDto.TherapistId} not found");
 
             // Verify time slot exists and is active
-            var timeSlot = await _timeSlotService.GetTimeSlotByIdAsync(createDto.SlotId);
+            var timeSlot = await _timeSlotRepository.GetByIdAsync(createDto.SlotId);
+            if (timeSlot == null)
+                throw new KeyNotFoundException($"TimeSlot with ID {createDto.SlotId} not found");
             if (timeSlot.IsActive != true)
                 throw new InvalidOperationException("Cannot create availability for inactive time slot");
 
             // Get working day for the slot to verify day matches
-            var workingDay = await _workingDayService.GetWorkingDayByIdAsync(timeSlot.WorkingDayId);
+            var workingDay = await _workingDayRepository.GetByIdAsync(timeSlot.WorkingDayId);
+            if (workingDay == null)
+                throw new KeyNotFoundException($"WorkingDay with ID {timeSlot.WorkingDayId} not found");
             if (!workingDay.IsActive == true)
                 throw new InvalidOperationException("Cannot create availability for inactive working day");
 
@@ -74,7 +84,7 @@ namespace Application.Services
                 throw new InvalidOperationException("Working day does not match the provided date");
 
             // Check if availability already exists
-            var existingAvailabilities = await _repository.GetAllAsync();
+            var existingAvailabilities = await _availabilityRepository.GetAllAsync();
             var exists = existingAvailabilities.Any(a =>
                 a.TherapistId == createDto.TherapistId &&
                 a.SlotId == createDto.SlotId &&
@@ -83,52 +93,31 @@ namespace Application.Services
             if (exists)
                 throw new InvalidOperationException("Availability already exists for this time slot and date");
 
-            var availability = new TherapistAvailability
-            {
-                TherapistId = createDto.TherapistId,
-                SlotId = createDto.SlotId,
-                WorkingDate = createDto.WorkingDate,
-                Status = "Available",
-                CreatedAt = DateTime.UtcNow
-            };
+            var availability = _mapper.Map<TherapistAvailability>(createDto);
+            availability.Status = "Available";
+            availability.CreatedAt = DateTime.UtcNow;
 
-            await _repository.CreateAsync(availability);
-            return MapToDto(availability);
+            await _availabilityRepository.CreateAsync(availability);
+            return _mapper.Map<TherapistAvailabilityDto>(availability);
         }
 
         public async Task UpdateAvailabilityAsync(int id, UpdateTherapistAvailabilityDto updateDto)
         {
-            var availability = await _repository.GetByIdAsync(id);
+            var availability = await _availabilityRepository.GetByIdAsync(id);
             if (availability == null)
                 throw new KeyNotFoundException($"Availability with ID {id} not found");
 
-            if (updateDto.Status != null)
-                availability.Status = updateDto.Status;
-
-            await _repository.UpdateAsync(availability);
+            _mapper.Map(updateDto, availability);
+            await _availabilityRepository.UpdateAsync(availability);
         }
 
         public async Task DeleteAvailabilityAsync(int id)
         {
-            var availability = await _repository.GetByIdAsync(id);
+            var availability = await _availabilityRepository.GetByIdAsync(id);
             if (availability == null)
                 throw new KeyNotFoundException($"Availability with ID {id} not found");
 
-            await _repository.DeleteAsync(availability);
-        }
-
-        private TherapistAvailabilityDto MapToDto(TherapistAvailability availability)
-        {
-            return new TherapistAvailabilityDto
-            {
-                AvailabilityId = availability.AvailabilityId,
-                TherapistId = availability.TherapistId,
-                SlotId = availability.SlotId,
-                WorkingDate = availability.WorkingDate,
-                Status = availability.Status,
-                CreatedAt = availability.CreatedAt,
-                Slot = availability.Slot != null ? _timeSlotService.MapToDto(availability.Slot) : null
-            };
+            await _availabilityRepository.DeleteAsync(availability);
         }
     }
 }
