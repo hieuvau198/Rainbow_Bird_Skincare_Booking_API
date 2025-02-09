@@ -40,9 +40,6 @@ if (!string.IsNullOrEmpty(firebaseServiceAccountJson))
     }
 }
 
-// Keep the Db alive despite free tier serverless
-builder.Services.AddHostedService<DatabaseKeepAliveService>();
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
