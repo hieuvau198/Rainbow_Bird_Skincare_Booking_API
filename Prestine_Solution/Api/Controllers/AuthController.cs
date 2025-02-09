@@ -1,7 +1,6 @@
 ﻿using Application.DTOs.Auth;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -21,79 +20,36 @@ namespace Api.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<AuthResponseDto>> Login([FromBody] LoginDto loginDto)
         {
-            try
-            {
-                var authResponse = await _authService.LoginAsync(loginDto);
-                return Ok(authResponse);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { message = ex.Message });
-            }
+            return Ok(await _authService.LoginAsync(loginDto));
         }
 
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<ActionResult<AuthResponseDto>> Register([FromBody] RegisterUserDto registerUserDto)
         {
-            try
-            {
-                var authResponse = await _authService.RegisterBasicUserAsync(registerUserDto);
-                return Ok(authResponse);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
-            }
+            return Ok(await _authService.RegisterBasicUserAsync(registerUserDto));
         }
 
         [HttpPost("refresh-token")]
         [AllowAnonymous]
         public async Task<ActionResult<AuthResponseDto>> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
         {
-            try
-            {
-                var authResponse = await _authService.RefreshTokenAsync(refreshTokenDto);
-                return Ok(authResponse);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { message = ex.Message });
-            }
+            return Ok(await _authService.RefreshTokenAsync(refreshTokenDto));
         }
 
         [HttpPost("logout")]
         [Authorize]
         public async Task<IActionResult> Logout()
         {
-            var username = User.Identity?.Name;
-            if (username == null)
-                return Unauthorized();
-
-            await _authService.LogoutAsync(username);
-            return Ok(new { message = "Logged out successfully" });
+            await _authService.LogoutAsync(User.Identity?.Name);
+            return Ok();
         }
+
         [HttpPost("google-login")]
         [AllowAnonymous]
         public async Task<ActionResult<AuthResponseDto>> GoogleLogin([FromBody] GoogleLoginDto googleLoginDto)
         {
-            try
-            {
-                var authResponse = await _authService.GoogleLoginAsync(googleLoginDto);
-                return Ok(authResponse);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            return Ok(await _authService.GoogleLoginAsync(googleLoginDto));
         }
     }
 }
