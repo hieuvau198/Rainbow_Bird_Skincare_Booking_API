@@ -323,7 +323,7 @@ BEGIN -- [System needs Category for Service]Service data
 		89.99,
 		60,
 		'Treatment Room 1',
-		'/images/services/deep-cleansing-facial.jpg'
+		'https://cdn.spafinder.com/2016/10/acne-deep-cleansing-facial.jpg'
 	),
 	(
 		'Advanced Hydration Therapy',
@@ -331,7 +331,7 @@ BEGIN -- [System needs Category for Service]Service data
 		129.99,
 		75,
 		'Treatment Room 2',
-		'/images/services/hydration-therapy.jpg'
+		'https://venusbeautycentury.com/wp-content/uploads/2024/09/hydrating-facial-venusbeauty-1024x683.jpg'
 	),
 	(
 		'Anti-Aging LED Light Therapy',
@@ -438,3 +438,8 @@ BEGIN -- [System needs Category for Service]Service data
 		'/images/services/premium-facial.jpg'
 	);
 END
+
+
+
+
+DELETE FROM [dbo].[Service];
