@@ -82,7 +82,7 @@ var key = Encoding.ASCII.GetBytes(
     builder.Configuration["Jwt:SecretKey"] ??
     throw new InvalidOperationException("JWT Secret Key is not configured"));
 
-// Add Google authentication along with JWT
+// Setup Key for Auth GG, JWT
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -110,7 +110,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
+// Setup Auth Policy
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("RestrictPolicy", policy =>
@@ -138,6 +138,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<IWorkingDayService, WorkingDayService>();
     builder.Services.AddScoped<ITimeSlotService, TimeSlotService>();
     builder.Services.AddScoped<ITherapistAvailabilityService, TherapistAvailabilityService>();
+    builder.Services.AddScoped<IQuizService, QuizService>();
 
 builder.Services.AddScoped<IImageService, FirebaseImageService>();
 
