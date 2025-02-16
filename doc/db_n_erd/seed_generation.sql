@@ -89,3 +89,50 @@ VALUES
     'Hydration',
     75
 );
+
+-- Begins here, Question seed data
+
+-- Questions for Skin Type Assessment (Quiz 1)
+INSERT INTO [dbo].[Question] ([quiz_id], [content], [points], [is_multiple_choice], [display_order])
+VALUES 
+(1, 'How does your skin feel a few hours after washing your face?', 20, 1, 1),
+(1, 'Which best describes your pore size?', 20, 1, 2),
+(1, 'How often does your skin look shiny throughout the day?', 20, 1, 3),
+(1, 'Do you experience tightness or flaking in your skin?', 20, 1, 4),
+(1, 'How does your skin react to new products?', 20, 1, 5);
+
+-- Questions for Skin Sensitivity Analysis (Quiz 2)
+INSERT INTO [dbo].[Question] ([quiz_id], [content], [points], [is_multiple_choice], [display_order])
+VALUES 
+(2, 'Does your skin often become red or irritated after using skincare products?', 16, 1, 1),
+(2, 'How does your skin react to sun exposure?', 16, 1, 2),
+(2, 'Do you experience burning or stinging sensations with certain products?', 16, 1, 3),
+(2, 'How does your skin react to temperature changes?', 16, 1, 4),
+(2, 'Do you have a history of skin allergies or reactions?', 16, 1, 5);
+
+-- Questions for Acne & Breakout Evaluation (Quiz 3)
+INSERT INTO [dbo].[Question] ([quiz_id], [content], [points], [is_multiple_choice], [display_order])
+VALUES 
+(3, 'How frequently do you experience breakouts?', 18, 1, 1),
+(3, 'What type of acne do you typically experience?', 18, 1, 2),
+(3, 'In which areas do you most commonly experience breakouts?', 18, 1, 3),
+(3, 'Do your breakouts leave marks or scars?', 18, 1, 4),
+(3, 'What triggers seem to cause your breakouts?', 18, 1, 5);
+
+-- Questions for Anti-Aging Skin Assessment (Quiz 4)
+INSERT INTO [dbo].[Question] ([quiz_id], [content], [points], [is_multiple_choice], [display_order])
+VALUES 
+(4, 'What are your primary aging concerns?', 17, 1, 1),
+(4, 'How visible are fine lines and wrinkles on your face?', 17, 1, 2),
+(4, 'How would you describe your skin''s elasticity?', 17, 1, 3),
+(4, 'Have you noticed any age spots or hyperpigmentation?', 17, 1, 4),
+(4, 'How would you rate your skin''s overall firmness?', 17, 1, 5);
+
+-- Questions for Skin Hydration Check (Quiz 5)
+INSERT INTO [dbo].[Question] ([quiz_id], [content], [points], [is_multiple_choice], [display_order])
+VALUES 
+(5, 'How does your skin feel after cleansing?', 15, 1, 1),
+(5, 'Do you experience dry patches on your skin?', 15, 1, 2),
+(5, 'How many glasses of water do you drink daily?', 15, 1, 3),
+(5, 'Does your skin absorb moisturizer quickly?', 15, 1, 4),
+(5, 'How does your skin react to humid vs dry environments?', 15, 1, 5);
