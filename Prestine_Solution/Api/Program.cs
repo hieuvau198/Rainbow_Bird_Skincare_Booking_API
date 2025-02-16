@@ -139,6 +139,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<ITimeSlotService, TimeSlotService>();
     builder.Services.AddScoped<ITherapistAvailabilityService, TherapistAvailabilityService>();
     builder.Services.AddScoped<IQuizService, QuizService>();
+    builder.Services.AddScoped<IQuestionService, QuestionService>();
 
 builder.Services.AddScoped<IImageService, FirebaseImageService>();
 

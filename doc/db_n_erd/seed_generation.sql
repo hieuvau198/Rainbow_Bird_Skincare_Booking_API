@@ -53,3 +53,39 @@ END
 
 CLOSE workingDayCursor;
 DEALLOCATE workingDayCursor;
+
+
+-- Begins here, Quiz seed data
+
+INSERT INTO [dbo].[Quiz] ([name], [description], [category], [total_points])
+VALUES 
+(
+    'Skin Type Assessment',
+    'A comprehensive quiz to determine your basic skin type (oily, dry, combination, or normal) and understand your skin''s natural characteristics.',
+    'Skin Type',
+    100
+),
+(
+    'Skin Sensitivity Analysis',
+    'Evaluate how sensitive your skin is to different factors including environmental conditions, products, and treatments to help prevent adverse reactions.',
+    'Sensitivity',
+    80
+),
+(
+    'Acne & Breakout Evaluation',
+    'Understand your acne patterns, triggers, and severity to help determine the most effective treatment approach for your skin concerns.',
+    'Acne',
+    90
+),
+(
+    'Anti-Aging Skin Assessment',
+    'Assess your skin''s aging concerns and determine which areas need the most attention in your anti-aging skincare routine.',
+    'Anti-Aging',
+    85
+),
+(
+    'Skin Hydration Check',
+    'Evaluate your skin''s moisture levels and barrier function to help optimize your hydration routine and product selection.',
+    'Hydration',
+    75
+);
