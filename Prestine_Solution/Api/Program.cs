@@ -121,31 +121,36 @@ builder.Services.AddAuthorization(options =>
         policy.RequireRole("Customer", "Staff", "Therapist", "Manager", "Admin"));
 });
 
-// Register DI for services such as Repositories, Application Services, etc
+#region Register DI for services such as Repositories, Application Services, etc
 builder.Services.AddScoped<DbContext, SkincareDbContext>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 
-    builder.Services.AddScoped<IUserRepository, UserRepository>();
-    builder.Services.AddScoped<ITherapistRepository, TherapistRepository>();
-    builder.Services.AddScoped<ITherapistProfileRepository, TherapistProfileRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITherapistRepository, TherapistRepository>();
+builder.Services.AddScoped<ITherapistProfileRepository, TherapistProfileRepository>();
 
-    builder.Services.AddScoped<IUserService, UserService>();
-    builder.Services.AddScoped<ITherapistService, TherapistService>();
-    builder.Services.AddScoped<ITherapistProfileService, TherapistProfileService>();
-    builder.Services.AddScoped<IServiceService, ServiceService>();
-    builder.Services.AddScoped<IWorkingDayService, WorkingDayService>();
-    builder.Services.AddScoped<ITimeSlotService, TimeSlotService>();
-    builder.Services.AddScoped<ITherapistAvailabilityService, TherapistAvailabilityService>();
-    builder.Services.AddScoped<IQuizService, QuizService>();
-    builder.Services.AddScoped<IQuestionService, QuestionService>();
-    builder.Services.AddScoped<ICustomerQuizService, CustomerQuizService>();
-    builder.Services.AddScoped<IAnswerService, AnswerService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITherapistService, TherapistService>();
+builder.Services.AddScoped<ITherapistProfileService, TherapistProfileService>();
+builder.Services.AddScoped<IServiceService, ServiceService>();
+builder.Services.AddScoped<IWorkingDayService, WorkingDayService>();
+builder.Services.AddScoped<ITimeSlotService, TimeSlotService>();
+builder.Services.AddScoped<ITherapistAvailabilityService, TherapistAvailabilityService>();
+builder.Services.AddScoped<IQuizService, QuizService>();
+builder.Services.AddScoped<IQuestionService, QuestionService>();
+builder.Services.AddScoped<ICustomerQuizService, CustomerQuizService>();
+builder.Services.AddScoped<IAnswerService, AnswerService>();
+builder.Services.AddScoped<IQuizRecommendationService, QuizRecommendationService>();
+builder.Services.AddScoped<ICustomerAnswerService, CustomerAnswerService>();
 
 builder.Services.AddScoped<IImageService, FirebaseImageService>();
 
 builder.Services.AddScoped<GoogleTokenValidator>();
+#endregion
+
+
 
 // Mapping
 builder.Services.AddAutoMapper(typeof(MappingProfile));

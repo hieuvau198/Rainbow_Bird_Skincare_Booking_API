@@ -169,6 +169,44 @@ namespace Application.Mappings
                 .ForMember(dest => dest.CustomerAnswers, opt => opt.Ignore())
                 .ForMember(dest => dest.Question, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            // QuizRecommendation mappings
+            CreateMap<QuizRecommendation, QuizRecommendationDto>();
+
+            CreateMap<CreateQuizRecommendationDto, QuizRecommendation>()
+                .ForMember(dest => dest.RecommendationId, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.IsActive, opt => opt.Ignore())
+                .ForMember(dest => dest.Quiz, opt => opt.Ignore())
+                .ForMember(dest => dest.Service, opt => opt.Ignore());
+
+            CreateMap<UpdateQuizRecommendationDto, QuizRecommendation>()
+                .ForMember(dest => dest.RecommendationId, opt => opt.Ignore())
+                .ForMember(dest => dest.QuizId, opt => opt.Ignore())
+                .ForMember(dest => dest.ServiceId, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Quiz, opt => opt.Ignore())
+                .ForMember(dest => dest.Service, opt => opt.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            // CustomerAnswer mappings
+            CreateMap<CustomerAnswer, CustomerAnswerDto>();
+
+            CreateMap<CreateCustomerAnswerDto, CustomerAnswer>()
+                .ForMember(dest => dest.CustomerAnswerId, opt => opt.Ignore())
+                .ForMember(dest => dest.AnsweredAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Answer, opt => opt.Ignore())
+                .ForMember(dest => dest.CustomerQuiz, opt => opt.Ignore())
+                .ForMember(dest => dest.Question, opt => opt.Ignore());
+
+            CreateMap<UpdateCustomerAnswerDto, CustomerAnswer>()
+                .ForMember(dest => dest.CustomerAnswerId, opt => opt.Ignore())
+                .ForMember(dest => dest.CustomerQuizId, opt => opt.Ignore())
+                .ForMember(dest => dest.QuestionId, opt => opt.Ignore())
+                .ForMember(dest => dest.AnswerId, opt => opt.Ignore())
+                .ForMember(dest => dest.AnsweredAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Answer, opt => opt.Ignore())
+                .ForMember(dest => dest.CustomerQuiz, opt => opt.Ignore())
+                .ForMember(dest => dest.Question, opt => opt.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }
