@@ -308,7 +308,7 @@ BEGIN -- [DONE] Answer data, 3-4 answer per question, total of 86
 	(25, 'No noticeable difference', 6);
 END
 
-BEGIN -- [System needs Category for Service]Service data
+BEGIN -- [Needs Category for Service] Service data
 	INSERT INTO [dbo].[Service] (
 		[service_name],
 		[description],
@@ -441,5 +441,7 @@ END
 
 
 
-
+-- Delete rows of table
 DELETE FROM [dbo].[Service];
+-- Reset int keys increment point
+DBCC CHECKIDENT ('A', RESEED, 0);
