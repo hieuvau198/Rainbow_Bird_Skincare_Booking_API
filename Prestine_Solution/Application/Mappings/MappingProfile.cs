@@ -207,6 +207,21 @@ namespace Application.Mappings
                 .ForMember(dest => dest.CustomerQuiz, opt => opt.Ignore())
                 .ForMember(dest => dest.Question, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            // Add these mappings to the existing MappingProfile class constructor
+            CreateMap<Payment, PaymentDto>();
+
+            CreateMap<CreatePaymentDto, Payment>()
+                .ForMember(dest => dest.PaymentId, opt => opt.Ignore())
+                .ForMember(dest => dest.PaymentDate, opt => opt.Ignore())
+                .ForMember(dest => dest.Bookings, opt => opt.Ignore());
+
+            CreateMap<UpdatePaymentDto, Payment>()
+                .ForMember(dest => dest.PaymentId, opt => opt.Ignore())
+                .ForMember(dest => dest.TotalAmount, opt => opt.Ignore())
+                .ForMember(dest => dest.Currency, opt => opt.Ignore())
+                .ForMember(dest => dest.PaymentMethod, opt => opt.Ignore())
+                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }
