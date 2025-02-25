@@ -146,16 +146,17 @@ builder.Services.AddScoped<IQuizRecommendationService, QuizRecommendationService
 builder.Services.AddScoped<ICustomerAnswerService, CustomerAnswerService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<ICancelBookingService, CancelBookingService>();
 
 builder.Services.AddScoped<IImageService, FirebaseImageService>();
 
 builder.Services.AddScoped<GoogleTokenValidator>();
 #endregion
 
-
-
-// Mapping
+#region Mapping DTOs with Entities
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+#endregion
+
 
 // Add CORS service and allow all origins for simplicity (you can restrict this to specific origins later)
 builder.Services.AddCors(options =>
