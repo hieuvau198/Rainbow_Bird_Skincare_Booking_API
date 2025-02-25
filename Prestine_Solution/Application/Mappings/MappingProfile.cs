@@ -294,6 +294,24 @@ namespace Application.Mappings
                 .ForMember(dest => dest.PolicyId, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // Customer mappings
+            CreateMap<Customer, CustomerDto>();
+
+            CreateMap<CreateCustomerDto, Customer>()
+                .ForMember(dest => dest.CustomerId, opt => opt.Ignore())
+                .ForMember(dest => dest.LastVisitAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
+                .ForMember(dest => dest.CustomerQuizzes, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore());
+
+            CreateMap<UpdateCustomerDto, Customer>()
+                .ForMember(dest => dest.CustomerId, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
+                .ForMember(dest => dest.CustomerQuizzes, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

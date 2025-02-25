@@ -152,6 +152,7 @@ builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ICancelBookingService, CancelBookingService>();
 builder.Services.AddScoped<ICancelPolicyService, CancelPolicyService>();
 builder.Services.AddScoped<IPaymentPolicyService, PaymentPolicyService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 
 builder.Services.AddScoped<IImageService, FirebaseImageService>();
 
