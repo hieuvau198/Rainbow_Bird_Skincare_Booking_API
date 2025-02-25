@@ -270,6 +270,18 @@ namespace Application.Mappings
                 .ForMember(dest => dest.CancelledAt, opt => opt.Ignore())
                 .ForMember(dest => dest.Booking, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // CancelPolicy mappings
+            CreateMap<CancelPolicy, CancelPolicyDto>();
+
+            CreateMap<CreateCancelPolicyDto, CancelPolicy>()
+                .ForMember(dest => dest.PolicyId, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore());
+
+            CreateMap<UpdateCancelPolicyDto, CancelPolicy>()
+                .ForMember(dest => dest.PolicyId, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }
