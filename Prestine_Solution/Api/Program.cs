@@ -77,6 +77,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<SkincareDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+#region JWT, GG, Auth Policy
 // Configure JWT Authentication
 var key = Encoding.ASCII.GetBytes(
     builder.Configuration["Jwt:SecretKey"] ??
@@ -120,6 +121,8 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("OpenPolicy", policy =>
         policy.RequireRole("Customer", "Staff", "Therapist", "Manager", "Admin"));
 });
+#endregion
+
 
 #region Register DI for services such as Repositories, Application Services, etc
 builder.Services.AddScoped<DbContext, SkincareDbContext>();
@@ -146,6 +149,9 @@ builder.Services.AddScoped<IQuizRecommendationService, QuizRecommendationService
 builder.Services.AddScoped<ICustomerAnswerService, CustomerAnswerService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<ICancelBookingService, CancelBookingService>();
+builder.Services.AddScoped<ICancelPolicyService, CancelPolicyService>();
+builder.Services.AddScoped<IPaymentPolicyService, PaymentPolicyService>();
 
 builder.Services.AddScoped<IImageService, FirebaseImageService>();
 
@@ -153,11 +159,12 @@ builder.Services.AddScoped<GoogleTokenValidator>();
 #endregion
 
 
-
-// Mapping
+#region Mapping DTOs with Entities
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+#endregion
 
-// Add CORS service and allow all origins for simplicity (you can restrict this to specific origins later)
+
+#region Add CORS service and allow all origins for simplicity
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -167,6 +174,8 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader(); // Allow any headers
     });
 });
+#endregion
+
 
 var app = builder.Build();
 
