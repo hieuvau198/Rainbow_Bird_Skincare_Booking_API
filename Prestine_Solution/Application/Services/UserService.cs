@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
@@ -13,107 +14,89 @@ namespace Application.Services
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IGenericRepository<User> _repository;
+        private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(
+            IGenericRepository<User> repository,
+            IMapper mapper)
         {
-            _userRepository = userRepository;
+            _repository = repository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
         {
-            var users = await _userRepository.GetAllAsync();
-            return users.Select(MapToDto);
+            var users = await _repository.GetAllAsync();
+            return _mapper.Map<IEnumerable<UserDto>>(users);
         }
 
         public async Task<UserDto> GetUserByIdAsync(int id)
         {
-            var user = await _userRepository.GetByIdAsync(id);
+            var user = await _repository.GetByIdAsync(id);
             if (user == null)
                 throw new KeyNotFoundException($"User with ID {id} not found");
 
-            return MapToDto(user);
+            return _mapper.Map<UserDto>(user);
         }
 
         public async Task<UserDto> GetUserByUsernameAsync(string username)
         {
-            var user = await _userRepository.GetByUsernameAsync(username);
+            var users = await _repository.GetAllAsync();
+            var user = users.FirstOrDefault(u => u.Username == username);
             if (user == null)
                 throw new KeyNotFoundException($"User with username {username} not found");
 
-            return MapToDto(user);
+            return _mapper.Map<UserDto>(user);
         }
 
         public async Task<UserDto> GetUserByEmailAsync(string email)
         {
-            var user = await _userRepository.GetByEmailAsync(email);
+            var users = await _repository.GetAllAsync();
+            var user = users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
             if (user == null)
                 throw new KeyNotFoundException($"User with email {email} not found");
 
-            return MapToDto(user);
+            return _mapper.Map<UserDto>(user);
         }
 
         public async Task<UserDto> CreateUserAsync(CreateUserDto createUserDto)
         {
-            if (await _userRepository.UsernameExistsAsync(createUserDto.Username))
+            // Check for existing username
+            var users = await _repository.GetAllAsync();
+            if (users.Any(u => u.Username == createUserDto.Username))
                 throw new InvalidOperationException("Username already exists");
 
-            if (await _userRepository.EmailExistsAsync(createUserDto.Email))
+            // Check for existing email
+            if (users.Any(u => u.Email.ToLower() == createUserDto.Email.ToLower()))
                 throw new InvalidOperationException("Email already exists");
 
-            var user = new User
-            {
-                Username = createUserDto.Username,
-                Password = BCrypt.Net.BCrypt.HashPassword(createUserDto.Password),
-                Email = createUserDto.Email,
-                Phone = createUserDto.Phone,
-                FullName = createUserDto.FullName,
-                Role = createUserDto.Role ?? UserRole.Customer,
-                CreatedAt = DateTime.UtcNow
-            };
+            var user = _mapper.Map<User>(createUserDto);
+            user.Password = BCrypt.Net.BCrypt.HashPassword(createUserDto.Password);
+            user.Role = createUserDto.Role ?? UserRole.Customer;
+            user.CreatedAt = DateTime.UtcNow;
 
-            await _userRepository.CreateAsync(user);
-            return MapToDto(user);
+            await _repository.CreateAsync(user);
+            return _mapper.Map<UserDto>(user);
         }
 
         public async Task UpdateUserAsync(int id, UpdateUserDto updateUserDto)
         {
-            var user = await _userRepository.GetByIdAsync(id);
+            var user = await _repository.GetByIdAsync(id);
             if (user == null)
                 throw new KeyNotFoundException($"User with ID {id} not found");
 
-            if (updateUserDto.Phone != null)
-                user.Phone = updateUserDto.Phone;
-            if (updateUserDto.FullName != null)
-                user.FullName = updateUserDto.FullName;
-            if (updateUserDto.Role != null)
-                user.Role = updateUserDto.Role;
-
-            await _userRepository.UpdateAsync(user);
+            _mapper.Map(updateUserDto, user);
+            await _repository.UpdateAsync(user);
         }
 
         public async Task DeleteUserAsync(int id)
         {
-            var user = await _userRepository.GetByIdAsync(id);
+            var user = await _repository.GetByIdAsync(id);
             if (user == null)
                 throw new KeyNotFoundException($"User with ID {id} not found");
 
-            await _userRepository.DeleteAsync(user);
-        }
-
-        public UserDto MapToDto(User user)
-        {
-            return new UserDto
-            {
-                UserId = user.UserId,
-                Username = user.Username,
-                Email = user.Email,
-                Phone = user.Phone,
-                FullName = user.FullName,
-                Role = user.Role,
-                CreatedAt = user.CreatedAt,
-                LastLoginAt = user.LastLoginAt
-            };
+            await _repository.DeleteAsync(user);
         }
     }
 }

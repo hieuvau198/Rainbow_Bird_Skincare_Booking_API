@@ -8,7 +8,111 @@ namespace Application.Mappings
     {
         public MappingProfile()
         {
-            // Existing mappings...
+                        
+            #region User mappings
+            CreateMap<User, UserDto>();
+
+            CreateMap<CreateUserDto, User>()
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.LastLoginAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Password, opt => opt.Ignore()) // Will be set manually with BCrypt
+                .ForMember(dest => dest.Staff, opt => opt.Ignore())
+                .ForMember(dest => dest.Customer, opt => opt.Ignore())
+                .ForMember(dest => dest.Therapist, opt => opt.Ignore());
+
+            CreateMap<UpdateUserDto, User>()
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.Username, opt => opt.Ignore())
+                .ForMember(dest => dest.Email, opt => opt.Ignore())
+                .ForMember(dest => dest.Password, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.LastLoginAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Staff, opt => opt.Ignore())
+                .ForMember(dest => dest.Customer, opt => opt.Ignore())
+                .ForMember(dest => dest.Therapist, opt => opt.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            #endregion
+
+            #region Customer mappings
+            CreateMap<Customer, CustomerDto>();
+
+            CreateMap<CreateCustomerDto, Customer>()
+                .ForMember(dest => dest.CustomerId, opt => opt.Ignore())
+                .ForMember(dest => dest.LastVisitAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
+                .ForMember(dest => dest.CustomerQuizzes, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore());
+
+            CreateMap<UpdateCustomerDto, Customer>()
+                .ForMember(dest => dest.CustomerId, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
+                .ForMember(dest => dest.CustomerQuizzes, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            #endregion
+
+            #region Manager mappings
+            CreateMap<Manager, ManagerDto>();
+
+            CreateMap<CreateManagerDto, Manager>()
+                .ForMember(dest => dest.ManagerId, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore());
+
+            CreateMap<UpdateManagerDto, Manager>()
+                .ForMember(dest => dest.ManagerId, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            #endregion
+
+            #region Staff mappings
+            CreateMap<Staff, StaffDto>();
+
+            CreateMap<CreateStaffDto, Staff>()
+                .ForMember(dest => dest.StaffId, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore());
+
+            CreateMap<UpdateStaffDto, Staff>()
+                .ForMember(dest => dest.StaffId, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            #endregion
+
+            #region Therapist mappings
+            CreateMap<Therapist, TherapistDto>();
+
+            CreateMap<CreateTherapistDto, Therapist>()
+                .ForMember(dest => dest.TherapistId, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore())
+                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
+                .ForMember(dest => dest.TherapistAvailabilities, opt => opt.Ignore())
+                .ForMember(dest => dest.TherapistProfile, opt => opt.Ignore());
+
+            CreateMap<CreateTherapistUserDto, Therapist>()
+                .ForMember(dest => dest.TherapistId, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore())
+                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
+                .ForMember(dest => dest.TherapistAvailabilities, opt => opt.Ignore())
+                .ForMember(dest => dest.TherapistProfile, opt => opt.Ignore());
+
+            CreateMap<UpdateTherapistDto, Therapist>()
+                .ForMember(dest => dest.TherapistId, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore())
+                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
+                .ForMember(dest => dest.TherapistAvailabilities, opt => opt.Ignore())
+                .ForMember(dest => dest.TherapistProfile, opt => opt.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            #endregion
+
+            #region TherapistProfile mappings
             CreateMap<TherapistProfile, TherapistProfileDto>();
             CreateMap<CreateTherapistProfileDto, TherapistProfile>()
                 .ForMember(dest => dest.ProfileId, opt => opt.Ignore())
@@ -24,23 +128,9 @@ namespace Application.Mappings
                 .ForMember(dest => dest.ProfileImage, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            CreateMap<Service, ServiceDto>();
-            CreateMap<CreateServiceDto, Service>()
-                .ForMember(dest => dest.ServiceId, opt => opt.Ignore())
-                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.ServiceImage, opt => opt.Ignore())
-                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
-                .ForMember(dest => dest.QuizRecommendations, opt => opt.Ignore());
+            #endregion
 
-            CreateMap<UpdateServiceDto, Service>()
-                .ForMember(dest => dest.ServiceId, opt => opt.Ignore())
-                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.ServiceImage, opt => opt.Ignore())
-                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
-                .ForMember(dest => dest.QuizRecommendations, opt => opt.Ignore())
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
-            // TherapistAvailability mappings
+            #region TherapistAvailability mappings
             CreateMap<TherapistAvailability, TherapistAvailabilityDto>();
 
             CreateMap<CreateTherapistAvailabilityDto, TherapistAvailability>()
@@ -56,7 +146,26 @@ namespace Application.Mappings
                 .ForMember(dest => dest.Slot, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            // TimeSlot mappings
+            #endregion
+
+            #region WorkingDay mappings
+            CreateMap<WorkingDay, WorkingDayDto>()
+                .ForMember(dest => dest.TimeSlotIds, opt => opt.MapFrom(src => src.TimeSlots.Select(ts => ts.SlotId).ToList())); // Map TimeSlot IDs only
+
+            CreateMap<CreateWorkingDayDto, WorkingDay>()
+                .ForMember(dest => dest.WorkingDayId, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.TimeSlots, opt => opt.Ignore()); // Do not map TimeSlots during creation
+
+            CreateMap<UpdateWorkingDayDto, WorkingDay>()
+                .ForMember(dest => dest.WorkingDayId, opt => opt.Ignore())
+                .ForMember(dest => dest.DayName, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.TimeSlots, opt => opt.Ignore()) // Do not map TimeSlots during update
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            #endregion
+
+            #region TimeSlot mappings
             CreateMap<TimeSlot, TimeSlotDto>()
                 .ForMember(dest => dest.WorkingDayId, opt => opt.MapFrom(src => src.WorkingDayId)); // Map WorkingDayId directly
                                                                                                     // No mapping for WorkingDay reference anymore
@@ -78,22 +187,28 @@ namespace Application.Mappings
                 .ForMember(dest => dest.WorkingDay, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            // WorkingDay mappings
-            CreateMap<WorkingDay, WorkingDayDto>()
-                .ForMember(dest => dest.TimeSlotIds, opt => opt.MapFrom(src => src.TimeSlots.Select(ts => ts.SlotId).ToList())); // Map TimeSlot IDs only
+            #endregion
 
-            CreateMap<CreateWorkingDayDto, WorkingDay>()
-                .ForMember(dest => dest.WorkingDayId, opt => opt.Ignore())
+            #region Service mappings
+            CreateMap<Service, ServiceDto>();
+            CreateMap<CreateServiceDto, Service>()
+                .ForMember(dest => dest.ServiceId, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.TimeSlots, opt => opt.Ignore()); // Do not map TimeSlots during creation
+                .ForMember(dest => dest.ServiceImage, opt => opt.Ignore())
+                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
+                .ForMember(dest => dest.QuizRecommendations, opt => opt.Ignore());
 
-            CreateMap<UpdateWorkingDayDto, WorkingDay>()
-                .ForMember(dest => dest.WorkingDayId, opt => opt.Ignore())
-                .ForMember(dest => dest.DayName, opt => opt.Ignore())
+            CreateMap<UpdateServiceDto, Service>()
+                .ForMember(dest => dest.ServiceId, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.TimeSlots, opt => opt.Ignore()) // Do not map TimeSlots during update
+                .ForMember(dest => dest.ServiceImage, opt => opt.Ignore())
+                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
+                .ForMember(dest => dest.QuizRecommendations, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            // Quiz mappings
+
+            #endregion
+
+            #region Quiz mappings
             CreateMap<Quiz, QuizDto>();
 
             CreateMap<CreateQuizDto, Quiz>()
@@ -111,7 +226,9 @@ namespace Application.Mappings
                 .ForMember(dest => dest.Questions, opt => opt.Ignore())
                 .ForMember(dest => dest.QuizRecommendations, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            // Question mappings
+            #endregion
+
+            #region Question mappings
             CreateMap<Question, QuestionDto>();
 
             CreateMap<CreateQuestionDto, Question>()
@@ -130,7 +247,9 @@ namespace Application.Mappings
                 .ForMember(dest => dest.CustomerAnswers, opt => opt.Ignore())
                 .ForMember(dest => dest.Quiz, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            // CustomerQuiz mappings
+            #endregion
+
+            #region CustomerQuiz mappings
             CreateMap<CustomerQuiz, CustomerQuizDto>();
 
             CreateMap<CreateCustomerQuizDto, CustomerQuiz>()
@@ -152,7 +271,10 @@ namespace Application.Mappings
                 .ForMember(dest => dest.CustomerAnswers, opt => opt.Ignore())
                 .ForMember(dest => dest.Quiz, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            // Answer mappings
+
+            #endregion
+
+            #region Answer mappings
             CreateMap<Answer, AnswerDto>();
 
             CreateMap<CreateAnswerDto, Answer>()
@@ -169,7 +291,10 @@ namespace Application.Mappings
                 .ForMember(dest => dest.CustomerAnswers, opt => opt.Ignore())
                 .ForMember(dest => dest.Question, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            // QuizRecommendation mappings
+
+            #endregion
+
+            #region QuizRecommendation mappings
             CreateMap<QuizRecommendation, QuizRecommendationDto>();
 
             CreateMap<CreateQuizRecommendationDto, QuizRecommendation>()
@@ -187,7 +312,10 @@ namespace Application.Mappings
                 .ForMember(dest => dest.Quiz, opt => opt.Ignore())
                 .ForMember(dest => dest.Service, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            // CustomerAnswer mappings
+
+            #endregion
+
+            #region CustomerAnswer mappings
             CreateMap<CustomerAnswer, CustomerAnswerDto>();
 
             CreateMap<CreateCustomerAnswerDto, CustomerAnswer>()
@@ -208,7 +336,9 @@ namespace Application.Mappings
                 .ForMember(dest => dest.Question, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            // Payment mappings
+            #endregion
+
+            #region Payment mappings
             CreateMap<Payment, PaymentDto>();
 
             CreateMap<CreatePaymentDto, Payment>()
@@ -224,7 +354,9 @@ namespace Application.Mappings
                 .ForMember(dest => dest.Bookings, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            // Booking mappings
+            #endregion
+
+            #region Booking mappings
             CreateMap<Booking, BookingDto>();
 
             CreateMap<CreateBookingDto, Booking>()
@@ -256,7 +388,9 @@ namespace Application.Mappings
                 .ForMember(dest => dest.CancelBooking, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            // CancelBooking mappings
+            #endregion
+
+            #region CancelBooking mappings
             CreateMap<CancelBooking, CancelBookingDto>();
 
             CreateMap<CreateCancelBookingDto, CancelBooking>()
@@ -271,7 +405,9 @@ namespace Application.Mappings
                 .ForMember(dest => dest.Booking, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            // CancelPolicy mappings
+            #endregion
+
+            #region CancelPolicy mappings
             CreateMap<CancelPolicy, CancelPolicyDto>();
 
             CreateMap<CreateCancelPolicyDto, CancelPolicy>()
@@ -283,7 +419,9 @@ namespace Application.Mappings
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            // PaymentPolicy mappings
+            #endregion
+
+            #region PaymentPolicy mappings
             CreateMap<PaymentPolicy, PaymentPolicyDto>();
 
             CreateMap<CreatePaymentPolicyDto, PaymentPolicy>()
@@ -295,23 +433,10 @@ namespace Application.Mappings
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            // Customer mappings
-            CreateMap<Customer, CustomerDto>();
+            #endregion
 
-            CreateMap<CreateCustomerDto, Customer>()
-                .ForMember(dest => dest.CustomerId, opt => opt.Ignore())
-                .ForMember(dest => dest.LastVisitAt, opt => opt.Ignore())
-                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
-                .ForMember(dest => dest.CustomerQuizzes, opt => opt.Ignore())
-                .ForMember(dest => dest.User, opt => opt.Ignore());
+            
 
-            CreateMap<UpdateCustomerDto, Customer>()
-                .ForMember(dest => dest.CustomerId, opt => opt.Ignore())
-                .ForMember(dest => dest.UserId, opt => opt.Ignore())
-                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
-                .ForMember(dest => dest.CustomerQuizzes, opt => opt.Ignore())
-                .ForMember(dest => dest.User, opt => opt.Ignore())
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

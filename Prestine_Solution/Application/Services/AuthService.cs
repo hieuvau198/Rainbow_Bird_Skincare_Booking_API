@@ -6,6 +6,7 @@ using Application.DTOs;
 using Application.DTOs.Auth;
 using Application.Interfaces;
 using Application.Utils;
+using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
@@ -19,19 +20,19 @@ namespace Application.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
-        private readonly IUserService _userService;
         private readonly GoogleTokenValidator _googleTokenValidator;
+        private readonly IMapper _mapper;
 
         public AuthService(
             IUserRepository userRepository,
             IConfiguration configuration,
             GoogleTokenValidator googleTokenValidator,
-            IUserService userService)
+            IMapper mapper)
         {
             _userRepository = userRepository;
             _configuration = configuration;
             _googleTokenValidator = googleTokenValidator;
-            _userService = userService;
+            _mapper = mapper;
             var token = new JwtSecurityToken();
         }
 
@@ -58,7 +59,7 @@ namespace Application.Services
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
                 AccessTokenExpiration = accessTokenExpiration,
-                User = _userService.MapToDto(user)
+                User = _mapper.Map<UserDto>(user)
             };
         }
 
@@ -89,7 +90,7 @@ namespace Application.Services
                 AccessToken = newAccessToken,
                 RefreshToken = newRefreshToken,
                 AccessTokenExpiration = accessTokenExpiration,
-                User = _userService.MapToDto(user)
+                User = _mapper.Map<UserDto>(user)
             };
         }
 
@@ -203,7 +204,7 @@ namespace Application.Services
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
                 AccessTokenExpiration = accessTokenExpiration,
-                User = MapToDto(user)
+                User = _mapper.Map<UserDto>(user)
             };
         }
         
@@ -250,24 +251,8 @@ namespace Application.Services
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
                 AccessTokenExpiration = accessTokenExpiration,
-                User = MapToDto(user)
+                User = _mapper.Map<UserDto>(user)
             };
         }
-
-        private UserDto MapToDto(User user)
-        {
-            return new UserDto
-            {
-                UserId = user.UserId,
-                Username = user.Username,
-                Email = user.Email,
-                Phone = user.Phone,
-                FullName = user.FullName,
-                Role = user.Role,
-                CreatedAt = user.CreatedAt,
-                LastLoginAt = user.LastLoginAt
-            };
-        }
-
     }
 }

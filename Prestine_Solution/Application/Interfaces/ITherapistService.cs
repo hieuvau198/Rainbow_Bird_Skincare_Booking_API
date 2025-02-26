@@ -12,6 +12,7 @@ namespace Application.Interfaces
         Task<IEnumerable<TherapistDto>> GetAllTherapistsAsync();
         Task<TherapistDto> GetTherapistByIdAsync(int id);
         Task<TherapistDto> CreateTherapistAsync(CreateTherapistDto createTherapistDto);
+        Task<TherapistDto> CreateTherapistWithUserAsync(CreateTherapistUserDto createDto);
         Task UpdateTherapistAsync(int id, UpdateTherapistDto updateTherapistDto);
         Task DeleteTherapistAsync(int id);
     }

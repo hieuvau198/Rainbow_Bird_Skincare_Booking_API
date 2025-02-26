@@ -26,61 +26,36 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TherapistDto>> GetTherapist(int id)
         {
-            try
-            {
-                var therapist = await _therapistService.GetTherapistByIdAsync(id);
-                return Ok(therapist);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            var therapist = await _therapistService.GetTherapistByIdAsync(id);
+            return Ok(therapist);
         }
 
         [HttpPost]
         public async Task<ActionResult<TherapistDto>> CreateTherapist(CreateTherapistDto createTherapistDto)
         {
-            try
-            {
-                var therapist = await _therapistService.CreateTherapistAsync(createTherapistDto);
-                return CreatedAtAction(nameof(GetTherapist), new { id = therapist.TherapistId }, therapist);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            var therapist = await _therapistService.CreateTherapistAsync(createTherapistDto);
+            return CreatedAtAction(nameof(GetTherapist), new { id = therapist.TherapistId }, therapist);
+        }
+
+        [HttpPost("with-user")]
+        public async Task<ActionResult<TherapistDto>> CreateTherapistWithUser(CreateTherapistUserDto createTherapistUserDto)
+        {
+            var therapist = await _therapistService.CreateTherapistWithUserAsync(createTherapistUserDto);
+            return CreatedAtAction(nameof(GetTherapist), new { id = therapist.TherapistId }, therapist);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTherapist(int id, UpdateTherapistDto updateTherapistDto)
         {
-            try
-            {
-                await _therapistService.UpdateTherapistAsync(id, updateTherapistDto);
-                return NoContent();
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            await _therapistService.UpdateTherapistAsync(id, updateTherapistDto);
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTherapist(int id)
         {
-            try
-            {
-                await _therapistService.DeleteTherapistAsync(id);
-                return NoContent();
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            await _therapistService.DeleteTherapistAsync(id);
+            return NoContent();
         }
     }
 }
