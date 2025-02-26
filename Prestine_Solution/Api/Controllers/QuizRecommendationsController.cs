@@ -34,6 +34,12 @@ namespace Api.Controllers
             return Ok(await _service.GetRecommendationsByQuizIdAsync(quizId));
         }
 
+        [HttpGet("quiz/{quizId}/score/{score}")]
+        public async Task<ActionResult<IEnumerable<QuizRecommendationDto>>> GetRecommendationsByScore(int quizId, int score)
+        {
+            return Ok(await _service.GetRecommendationsByScoreAsync(quizId, score));
+        }
+
         [HttpGet("service/{serviceId}")]
         public async Task<ActionResult<IEnumerable<QuizRecommendationDto>>> GetRecommendationsByServiceId(int serviceId)
         {

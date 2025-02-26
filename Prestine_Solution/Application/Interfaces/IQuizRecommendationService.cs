@@ -12,6 +12,7 @@ namespace Application.Interfaces
         Task<IEnumerable<QuizRecommendationDto>> GetAllRecommendationsAsync();
         Task<QuizRecommendationDto> GetRecommendationByIdAsync(int id);
         Task<IEnumerable<QuizRecommendationDto>> GetRecommendationsByQuizIdAsync(int quizId);
+        Task<IEnumerable<QuizRecommendationDto>> GetRecommendationsByScoreAsync(int quizId, int score);
         Task<IEnumerable<QuizRecommendationDto>> GetRecommendationsByServiceIdAsync(int serviceId);
         Task<QuizRecommendationDto> CreateRecommendationAsync(CreateQuizRecommendationDto createDto);
         Task UpdateRecommendationAsync(int id, UpdateQuizRecommendationDto updateDto);

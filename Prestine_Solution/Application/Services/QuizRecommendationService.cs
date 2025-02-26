@@ -46,6 +46,17 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<QuizRecommendationDto>>(filtered);
         }
 
+        public async Task<IEnumerable<QuizRecommendationDto>> GetRecommendationsByScoreAsync(int quizId, int score)
+        {
+            var recommendations = await _repository.GetAllAsync();
+            var filtered = recommendations
+                .Where(r => r.QuizId == quizId && r.MinScore <= score && r.MaxScore >= score && r.IsActive == true)
+                .ToList();
+
+            return _mapper.Map<IEnumerable<QuizRecommendationDto>>(filtered);
+        }
+
+
         public async Task<IEnumerable<QuizRecommendationDto>> GetRecommendationsByServiceIdAsync(int serviceId)
         {
             var recommendations = await _repository.GetAllAsync();
