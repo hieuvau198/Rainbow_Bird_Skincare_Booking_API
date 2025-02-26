@@ -51,6 +51,13 @@ namespace Api.Controllers
             return CreatedAtAction(nameof(GetCustomerById), new { id = customer.CustomerId }, customer);
         }
 
+        [HttpPost("with-user")]
+        public async Task<ActionResult<CustomerDto>> CreateCustomerWithUser([FromBody] CreateCustomerUserDto createCustomerUserDto)
+        {
+            var customer = await _customerService.CreateCustomerWithUserAsync(createCustomerUserDto);
+            return CreatedAtAction(nameof(GetCustomerById), new { id = customer.CustomerId }, customer);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCustomer(int id, [FromBody] UpdateCustomerDto updateDto)
         {
