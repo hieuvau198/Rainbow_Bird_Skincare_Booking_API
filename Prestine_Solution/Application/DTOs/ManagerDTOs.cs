@@ -21,6 +21,18 @@ namespace Application.DTOs
         public string? Responsibilities { get; set; }
         public DateTime? HireDate { get; set; }
     }
+    public class CreateManagerUserDto
+    {
+        public string Username { get; set; } = null!;
+        public string Password { get; set; } = null!;
+        public string Email { get; set; } = null!;
+        public string? Phone { get; set; }
+        public string FullName { get; set; } = null!;
+        public string? Department { get; set; }
+        public string? Responsibilities { get; set; }
+        public DateTime? HireDate { get; set; }
+    }
+
     public class UpdateManagerDto
     {
         public string? Department { get; set; }
