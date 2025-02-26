@@ -42,6 +42,8 @@ if (!string.IsNullOrEmpty(firebaseServiceAccountJson))
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+#region Add Sign-in UI for Swagger page
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
@@ -72,10 +74,13 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+#endregion
 
-// Register the DbContext
+#region Register DbContext
 builder.Services.AddDbContext<SkincareDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+#endregion
 
 #region JWT, GG, Auth Policy
 // Configure JWT Authentication
@@ -123,7 +128,6 @@ builder.Services.AddAuthorization(options =>
 });
 #endregion
 
-
 #region Register DI for services such as Repositories, Application Services, etc
 builder.Services.AddScoped<DbContext, SkincareDbContext>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
@@ -154,17 +158,16 @@ builder.Services.AddScoped<ICancelPolicyService, CancelPolicyService>();
 builder.Services.AddScoped<IPaymentPolicyService, PaymentPolicyService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IStaffService, StaffService>();
+builder.Services.AddScoped<IManagerService, ManagerService>();
 
 builder.Services.AddScoped<IImageService, FirebaseImageService>();
 
 builder.Services.AddScoped<GoogleTokenValidator>();
 #endregion
 
-
 #region Mapping DTOs with Entities
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 #endregion
-
 
 #region Add CORS service and allow all origins for simplicity
 builder.Services.AddCors(options =>
@@ -181,7 +184,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-app.UseCors("AllowAll"); // Enable CORS policy globally
+app.UseCors("AllowAll"); // Enable CORS allowance
 
 // Enable Swagger UI for both development and production environments
 app.UseSwagger();
@@ -198,7 +201,6 @@ if (!app.Environment.IsDevelopment())
 
 }
 
-// Configure the HTTP request pipeline
 app.UseAuthentication();
 
 app.UseAuthorization();

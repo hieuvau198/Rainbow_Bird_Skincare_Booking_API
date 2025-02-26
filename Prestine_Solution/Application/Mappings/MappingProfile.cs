@@ -68,6 +68,11 @@ namespace Application.Mappings
                 .ForMember(dest => dest.ManagerId, opt => opt.Ignore())
                 .ForMember(dest => dest.User, opt => opt.Ignore());
 
+            CreateMap<CreateManagerUserDto, Manager>()
+                .ForMember(dest => dest.ManagerId, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore());
+
             CreateMap<UpdateManagerDto, Manager>()
                 .ForMember(dest => dest.ManagerId, opt => opt.Ignore())
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
