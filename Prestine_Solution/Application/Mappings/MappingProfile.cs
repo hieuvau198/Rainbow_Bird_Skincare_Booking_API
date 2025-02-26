@@ -45,6 +45,13 @@ namespace Application.Mappings
                 .ForMember(dest => dest.CustomerQuizzes, opt => opt.Ignore())
                 .ForMember(dest => dest.User, opt => opt.Ignore());
 
+            CreateMap<CreateCustomerUserDto, Customer>()
+                .ForMember(dest => dest.CustomerId, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore())
+                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
+                .ForMember(dest => dest.CustomerQuizzes, opt => opt.Ignore());
+
             CreateMap<UpdateCustomerDto, Customer>()
                 .ForMember(dest => dest.CustomerId, opt => opt.Ignore())
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
@@ -61,6 +68,11 @@ namespace Application.Mappings
                 .ForMember(dest => dest.ManagerId, opt => opt.Ignore())
                 .ForMember(dest => dest.User, opt => opt.Ignore());
 
+            CreateMap<CreateManagerUserDto, Manager>()
+                .ForMember(dest => dest.ManagerId, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore());
+
             CreateMap<UpdateManagerDto, Manager>()
                 .ForMember(dest => dest.ManagerId, opt => opt.Ignore())
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
@@ -74,6 +86,11 @@ namespace Application.Mappings
 
             CreateMap<CreateStaffDto, Staff>()
                 .ForMember(dest => dest.StaffId, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore());
+
+            CreateMap<CreateStaffUserDto, Staff>()
+                .ForMember(dest => dest.StaffId, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
                 .ForMember(dest => dest.User, opt => opt.Ignore());
 
             CreateMap<UpdateStaffDto, Staff>()
