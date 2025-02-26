@@ -14,6 +14,17 @@ namespace Application.DTOs
         public string? Schedule { get; set; }
         public decimal? Rating { get; set; }
     }
+    public class CreateTherapistUserDto
+    {
+        public string Username { get; set; } = null!;
+        public string Password { get; set; } = null!;
+        public string Email { get; set; } = null!;
+        public string? Phone { get; set; }
+        public string FullName { get; set; } = null!;
+        public bool? IsAvailable { get; set; }
+        public string? Schedule { get; set; }
+        public decimal? Rating { get; set; }
+    }
 
     public class CreateTherapistDto
     {

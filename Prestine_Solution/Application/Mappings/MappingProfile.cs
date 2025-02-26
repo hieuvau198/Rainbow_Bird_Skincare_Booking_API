@@ -94,6 +94,14 @@ namespace Application.Mappings
                 .ForMember(dest => dest.TherapistAvailabilities, opt => opt.Ignore())
                 .ForMember(dest => dest.TherapistProfile, opt => opt.Ignore());
 
+            CreateMap<CreateTherapistUserDto, Therapist>()
+                .ForMember(dest => dest.TherapistId, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore())
+                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
+                .ForMember(dest => dest.TherapistAvailabilities, opt => opt.Ignore())
+                .ForMember(dest => dest.TherapistProfile, opt => opt.Ignore());
+
             CreateMap<UpdateTherapistDto, Therapist>()
                 .ForMember(dest => dest.TherapistId, opt => opt.Ignore())
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
