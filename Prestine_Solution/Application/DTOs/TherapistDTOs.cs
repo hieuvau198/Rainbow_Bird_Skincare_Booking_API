@@ -18,13 +18,15 @@ namespace Application.DTOs
     public class CreateTherapistDto
     {
         public int UserId { get; set; }
-        public bool IsAvailable { get; set; } = true;
+        public bool? IsAvailable { get; set; }
         public string? Schedule { get; set; }
+        public decimal? Rating { get; set; }
     }
 
     public class UpdateTherapistDto
     {
         public bool? IsAvailable { get; set; }
         public string? Schedule { get; set; }
+        public decimal? Rating { get; set; }
     }
 }
