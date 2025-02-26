@@ -2,6 +2,7 @@
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -14,13 +15,16 @@ namespace Application.Services
     public class CustomerService : ICustomerService
     {
         private readonly IGenericRepository<Customer> _repository;
+        private readonly IGenericRepository<User> _userRepository;
         private readonly IMapper _mapper;
 
         public CustomerService(
             IGenericRepository<Customer> repository,
+            IGenericRepository<User> userRepository,
             IMapper mapper)
         {
             _repository = repository;
+            _userRepository = userRepository;
             _mapper = mapper;
         }
 
@@ -55,6 +59,37 @@ namespace Application.Services
             var customer = _mapper.Map<Customer>(createDto);
 
             await _repository.CreateAsync(customer);
+            return _mapper.Map<CustomerDto>(customer);
+        }
+        public async Task<CustomerDto> CreateCustomerWithUserAsync(CreateCustomerUserDto createDto)
+        {
+            var users = await _userRepository.GetAllAsync();
+            if (users.Any(u => u.Email.ToLower() == createDto.Email.ToLower()))
+                throw new InvalidOperationException("A user with this email already exists.");
+
+            var user = new User
+            {
+                Username = createDto.Username,
+                Password = BCrypt.Net.BCrypt.HashPassword(createDto.Password),
+                Email = createDto.Email,
+                Phone = createDto.Phone,
+                FullName = createDto.FullName,
+                Role = UserRole.Customer,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _userRepository.CreateAsync(user);
+
+            var customer = new Customer
+            {
+                UserId = user.UserId,
+                Preferences = createDto.Preferences,
+                MedicalHistory = createDto.MedicalHistory,
+                LastVisitAt = createDto.LastVisitAt
+            };
+
+            await _repository.CreateAsync(customer);
+
             return _mapper.Map<CustomerDto>(customer);
         }
 
