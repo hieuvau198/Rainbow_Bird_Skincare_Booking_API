@@ -17,6 +17,6 @@ namespace Application.Interfaces
         Task<UserDto> CreateUserAsync(CreateUserDto createUserDto);
         Task UpdateUserAsync(int id, UpdateUserDto updateUserDto);
         Task DeleteUserAsync(int id);
-        UserDto MapToDto(User user);
+        //UserDto MapToDto(User user); => ref => Auth service, therapist service
     }
 }

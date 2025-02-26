@@ -8,7 +8,44 @@ namespace Application.Mappings
     {
         public MappingProfile()
         {
-            // Existing mappings...
+            // User mappings
+            CreateMap<User, UserDto>();
+
+            CreateMap<CreateUserDto, User>()
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.LastLoginAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Password, opt => opt.Ignore()) // Will be set manually with BCrypt
+                .ForMember(dest => dest.Staff, opt => opt.Ignore())
+                .ForMember(dest => dest.Customer, opt => opt.Ignore())
+                .ForMember(dest => dest.Therapist, opt => opt.Ignore());
+
+            CreateMap<UpdateUserDto, User>()
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.Username, opt => opt.Ignore())
+                .ForMember(dest => dest.Email, opt => opt.Ignore())
+                .ForMember(dest => dest.Password, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.LastLoginAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Staff, opt => opt.Ignore())
+                .ForMember(dest => dest.Customer, opt => opt.Ignore())
+                .ForMember(dest => dest.Therapist, opt => opt.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // Staff mappings
+            CreateMap<Staff, StaffDto>();
+
+            CreateMap<CreateStaffDto, Staff>()
+                .ForMember(dest => dest.StaffId, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore());
+
+            CreateMap<UpdateStaffDto, Staff>()
+                .ForMember(dest => dest.StaffId, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.User, opt => opt.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // Therapist mappings
             CreateMap<TherapistProfile, TherapistProfileDto>();
             CreateMap<CreateTherapistProfileDto, TherapistProfile>()
                 .ForMember(dest => dest.ProfileId, opt => opt.Ignore())

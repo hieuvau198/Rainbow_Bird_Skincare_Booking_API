@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using System;
@@ -12,85 +13,54 @@ namespace Application.Services
 {
     public class TherapistService : ITherapistService
     {
-        private readonly ITherapistRepository _therapistRepository;
-        private readonly IUserService _userService;
+        private readonly IGenericRepository<Therapist> _repository;
+        private readonly IMapper _mapper;
 
-        public TherapistService(ITherapistRepository therapistRepository, IUserService userService)
+        public TherapistService(IGenericRepository<Therapist> repository, IMapper mapper)
         {
-            _therapistRepository = therapistRepository;
-            _userService = userService;
+            _repository = repository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<TherapistDto>> GetAllTherapistsAsync()
         {
-            var therapists = await _therapistRepository.GetAllAsync();
-            return therapists.Select(MapToDto);
+            var therapists = await _repository.GetAllAsync();
+            return _mapper.Map<IEnumerable<TherapistDto>>(therapists);
         }
 
         public async Task<TherapistDto> GetTherapistByIdAsync(int id)
         {
-            var therapist = await _therapistRepository.GetByIdAsync(id);
+            var therapist = await _repository.GetByIdAsync(id);
             if (therapist == null)
                 throw new KeyNotFoundException($"Therapist with ID {id} not found");
 
-            return MapToDto(therapist);
+            return _mapper.Map<TherapistDto>(therapist);
         }
 
-        public async Task<TherapistDto> CreateTherapistAsync(CreateTherapistDto createTherapistDto)
+        public async Task<TherapistDto> CreateTherapistAsync(CreateTherapistDto createDto)
         {
-            // Check if user exists
-            var user = await _userService.GetUserByIdAsync(createTherapistDto.UserId);
-
-            // Check if therapist already exists for this user
-            var existingTherapist = await _therapistRepository.GetByUserIdAsync(createTherapistDto.UserId);
-            if (existingTherapist != null)
-                throw new InvalidOperationException($"Therapist already exists for user with ID {createTherapistDto.UserId}");
-
-            var therapist = new Therapist
-            {
-                UserId = createTherapistDto.UserId,
-                IsAvailable = createTherapistDto.IsAvailable,
-                Schedule = createTherapistDto.Schedule
-            };
-
-            await _therapistRepository.CreateAsync(therapist);
-            return MapToDto(therapist);
+            var therapist = _mapper.Map<Therapist>(createDto);
+            await _repository.CreateAsync(therapist);
+            return _mapper.Map<TherapistDto>(therapist);
         }
 
-        public async Task UpdateTherapistAsync(int id, UpdateTherapistDto updateTherapistDto)
+        public async Task UpdateTherapistAsync(int id, UpdateTherapistDto updateDto)
         {
-            var therapist = await _therapistRepository.GetByIdAsync(id);
+            var therapist = await _repository.GetByIdAsync(id);
             if (therapist == null)
                 throw new KeyNotFoundException($"Therapist with ID {id} not found");
 
-            if (updateTherapistDto.IsAvailable.HasValue)
-                therapist.IsAvailable = updateTherapistDto.IsAvailable;
-            if (updateTherapistDto.Schedule != null)
-                therapist.Schedule = updateTherapistDto.Schedule;
-
-            await _therapistRepository.UpdateAsync(therapist);
+            _mapper.Map(updateDto, therapist);
+            await _repository.UpdateAsync(therapist);
         }
 
         public async Task DeleteTherapistAsync(int id)
         {
-            var therapist = await _therapistRepository.GetByIdAsync(id);
+            var therapist = await _repository.GetByIdAsync(id);
             if (therapist == null)
                 throw new KeyNotFoundException($"Therapist with ID {id} not found");
 
-            await _therapistRepository.DeleteAsync(therapist);
-        }
-
-        private TherapistDto MapToDto(Therapist therapist)
-        {
-            return new TherapistDto
-            {
-                TherapistId = therapist.TherapistId,
-                UserId = therapist.UserId,
-                IsAvailable = therapist.IsAvailable,
-                Schedule = therapist.Schedule,
-                Rating = therapist.Rating,
-                User = _userService.MapToDto(therapist.User)
-            };
+            await _repository.DeleteAsync(therapist);
         }
     }
 }
