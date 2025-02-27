@@ -8,7 +8,8 @@ namespace Application.Mappings
     {
         public TherapistProfileMappingProfile()
         {
-            CreateMap<TherapistProfile, TherapistProfileDto>();
+            CreateMap<TherapistProfile, TherapistProfileDto>()
+                .ForMember(dest => dest.Therapist, opt => opt.MapFrom(src => src.Therapist));
 
             CreateMap<CreateTherapistProfileDto, TherapistProfile>()
                 .ForMember(dest => dest.ProfileId, opt => opt.Ignore())

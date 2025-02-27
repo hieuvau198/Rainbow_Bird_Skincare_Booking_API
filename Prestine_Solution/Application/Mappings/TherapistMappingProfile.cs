@@ -11,7 +11,7 @@ namespace Application.Mappings
             //CreateMap<Therapist, TherapistDto>(); // did not setup the mapping for TherapistDto : UserDto User to Therapist : User User
 
             CreateMap<Therapist, TherapistDto>()
-    .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User));
+                .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User));
 
             CreateMap<CreateTherapistDto, Therapist>()
                 .ForMember(dest => dest.TherapistId, opt => opt.Ignore())

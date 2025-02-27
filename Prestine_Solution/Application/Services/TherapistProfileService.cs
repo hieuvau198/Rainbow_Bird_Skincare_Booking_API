@@ -26,7 +26,11 @@ namespace Application.Services
             _imageService = imageService;
             _mapper = mapper;
         }
-
+        public async Task<IEnumerable<TherapistProfileDto>> GetAllProfilesAsync()
+        {
+            var profiles = await _repository.GetAllAsync(t => t.Therapist, t => t.Therapist.User);
+            return _mapper.Map<IEnumerable<TherapistProfileDto>>(profiles);
+        }
         public async Task<TherapistProfileDto> GetProfileByTherapistIdAsync(int therapistId)
         {
             var profiles = await _repository.GetAllAsync();
@@ -102,10 +106,6 @@ namespace Application.Services
 
             await _repository.DeleteAsync(profile);
         }
-        public async Task<IEnumerable<TherapistProfileDto>> GetAllProfilesAsync()
-        {
-            var profiles = await _repository.GetAllAsync();
-            return _mapper.Map<IEnumerable<TherapistProfileDto>>(profiles);
-        }
+        
     }
 }

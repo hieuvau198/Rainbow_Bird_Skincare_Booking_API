@@ -30,13 +30,13 @@ namespace Application.Services
 
         public async Task<IEnumerable<TherapistDto>> GetAllTherapistsAsync()
         {
-            var therapists = await _repository.GetAllAsync();
+            var therapists = await _repository.GetAllAsync(t => t.User);
             return _mapper.Map<IEnumerable<TherapistDto>>(therapists);
         }
 
         public async Task<TherapistDto> GetTherapistByIdAsync(int id)
         {
-            var therapist = await _repository.GetByIdAsync(id);
+            var therapist = await _repository.GetByIdAsync(id, t => t.User);
             if (therapist == null)
                 throw new KeyNotFoundException($"Therapist with ID {id} not found");
 

@@ -22,6 +22,7 @@ namespace Application.DTOs
         public bool? AcceptsNewClients { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public TherapistDto Therapist { get; set; } = null!;
     }
 
     public class CreateTherapistProfileDto
