@@ -35,32 +35,6 @@ namespace Application.Mappings
 
             #endregion
 
-            #region Customer mappings
-            CreateMap<Customer, CustomerDto>();
-
-            CreateMap<CreateCustomerDto, Customer>()
-                .ForMember(dest => dest.CustomerId, opt => opt.Ignore())
-                .ForMember(dest => dest.LastVisitAt, opt => opt.Ignore())
-                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
-                .ForMember(dest => dest.CustomerQuizzes, opt => opt.Ignore())
-                .ForMember(dest => dest.User, opt => opt.Ignore());
-
-            CreateMap<CreateCustomerUserDto, Customer>()
-                .ForMember(dest => dest.CustomerId, opt => opt.Ignore())
-                .ForMember(dest => dest.UserId, opt => opt.Ignore())
-                .ForMember(dest => dest.User, opt => opt.Ignore())
-                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
-                .ForMember(dest => dest.CustomerQuizzes, opt => opt.Ignore());
-
-            CreateMap<UpdateCustomerDto, Customer>()
-                .ForMember(dest => dest.CustomerId, opt => opt.Ignore())
-                .ForMember(dest => dest.UserId, opt => opt.Ignore())
-                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
-                .ForMember(dest => dest.CustomerQuizzes, opt => opt.Ignore())
-                .ForMember(dest => dest.User, opt => opt.Ignore())
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            #endregion
-
             #region Manager mappings
             CreateMap<Manager, ManagerDto>();
 
@@ -102,7 +76,9 @@ namespace Application.Mappings
             #endregion
 
             #region Therapist mappings
-            CreateMap<Therapist, TherapistDto>();
+            CreateMap<Therapist, TherapistDto>()
+                .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User));
+
 
             CreateMap<CreateTherapistDto, Therapist>()
                 .ForMember(dest => dest.TherapistId, opt => opt.Ignore())
