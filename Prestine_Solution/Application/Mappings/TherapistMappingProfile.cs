@@ -8,8 +8,6 @@ namespace Application.Mappings
     {
         public TherapistMappingProfile()
         {
-            //CreateMap<Therapist, TherapistDto>(); // did not setup the mapping for TherapistDto : UserDto User to Therapist : User User
-
             CreateMap<Therapist, TherapistDto>()
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User));
 

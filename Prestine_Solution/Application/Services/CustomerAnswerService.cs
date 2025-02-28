@@ -26,7 +26,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<CustomerAnswerDto>> GetAllCustomerAnswersAsync()
         {
-            var answers = await _repository.GetAllAsync();
+            var answers = await _repository.GetAllAsync(t => t.Answer, t => t.CustomerQuiz, t => t.Answer.Question);
             return _mapper.Map<IEnumerable<CustomerAnswerDto>>(answers);
         }
 

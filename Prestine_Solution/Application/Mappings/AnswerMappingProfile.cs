@@ -8,7 +8,8 @@ namespace Application.Mappings
     {
         public AnswerMappingProfile()
         {
-            CreateMap<Answer, AnswerDto>();
+            CreateMap<Answer, AnswerDto>()
+                .ForMember(dest => dest.Question, opt => opt.MapFrom(src => src.Question));
 
             CreateMap<CreateAnswerDto, Answer>()
                 .ForMember(dest => dest.AnswerId, opt => opt.Ignore())

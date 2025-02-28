@@ -15,7 +15,6 @@ namespace Application.DTOs
         public int? PointsEarned { get; set; }
         public DateTime? AnsweredAt { get; set; }
         public CustomerQuizDto CustomerQuiz { get; set; } = null!;
-        public QuestionDto Question { get; set; } = null!;
         public AnswerDto Answer { get; set; } = null!;
     }
 

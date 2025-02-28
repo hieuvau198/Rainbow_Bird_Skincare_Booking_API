@@ -8,7 +8,10 @@ namespace Application.Mappings
     {
         public CustomerAnswerMappingProfile()
         {
-            CreateMap<CustomerAnswer, CustomerAnswerDto>();
+            CreateMap<CustomerAnswer, CustomerAnswerDto>()
+                .ForMember(dest => dest.Answer, opt => opt.MapFrom(src => src.Answer))
+                .ForPath(dest => dest.Answer.Question, opt => opt.MapFrom(src => src.Answer.Question)) // Use ForPath for nested properties
+                .ForMember(dest => dest.CustomerQuiz, opt => opt.MapFrom(src => src.CustomerQuiz));
 
             CreateMap<CreateCustomerAnswerDto, CustomerAnswer>()
                 .ForMember(dest => dest.CustomerAnswerId, opt => opt.Ignore())
