@@ -26,7 +26,12 @@ namespace Application.Services
 
         public async Task<IEnumerable<CustomerAnswerDto>> GetAllCustomerAnswersAsync()
         {
-            var answers = await _repository.GetAllAsync(t => t.Answer, t => t.CustomerQuiz, t => t.Answer.Question);
+            // ✅ Corrected `GetAllAsync` usage (includes must be separate from predicate)
+            var answers = await _repository.GetAllAsync(null,
+                t => t.Answer,
+                t => t.CustomerQuiz,
+                t => t.Answer.Question);
+
             return _mapper.Map<IEnumerable<CustomerAnswerDto>>(answers);
         }
 
@@ -41,19 +46,18 @@ namespace Application.Services
 
         public async Task<IEnumerable<CustomerAnswerDto>> GetAnswersByCustomerQuizIdAsync(int customerQuizId)
         {
-            var answers = await _repository.GetAllAsync();
-            var filtered = answers.Where(a => a.CustomerQuizId == customerQuizId)
-                                .OrderBy(a => a.AnsweredAt);
-            return _mapper.Map<IEnumerable<CustomerAnswerDto>>(filtered);
+            // ✅ Optimized: Filtering now happens at the database level
+            var answers = await _repository.GetAllAsync(a => a.CustomerQuizId == customerQuizId);
+            return _mapper.Map<IEnumerable<CustomerAnswerDto>>(answers.OrderBy(a => a.AnsweredAt));
         }
 
         public async Task<IEnumerable<CustomerAnswerDto>> GetAnswersByQuestionIdAsync(int questionId)
         {
-            var answers = await _repository.GetAllAsync();
-            var filtered = answers.Where(a => a.QuestionId == questionId)
-                                .OrderBy(a => a.AnsweredAt);
-            return _mapper.Map<IEnumerable<CustomerAnswerDto>>(filtered);
+            // ✅ Optimized: Filtering now happens at the database level
+            var answers = await _repository.GetAllAsync(a => a.QuestionId == questionId);
+            return _mapper.Map<IEnumerable<CustomerAnswerDto>>(answers.OrderBy(a => a.AnsweredAt));
         }
+
 
         public async Task<CustomerAnswerDto> CreateCustomerAnswerAsync(CreateCustomerAnswerDto createDto)
         {

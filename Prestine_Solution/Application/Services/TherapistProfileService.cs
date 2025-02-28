@@ -34,13 +34,34 @@ namespace Application.Services
 
         public async Task<IEnumerable<TherapistProfileDto>> GetAllProfilesWithReferenceAsync()
         {
-            var profiles = await _repository.GetAllAsync(t => t.Therapist, t => t.Therapist.User);
+            var profiles = await _repository.GetAllAsync(null, t => t.Therapist, t => t.Therapist.User);
             return _mapper.Map<IEnumerable<TherapistProfileDto>>(profiles);
+        }
+        
+        public async Task<TherapistProfileDto> GetProfileByProfileIdAsync(int profileId)
+        {
+            var profile = await _repository.GetByIdAsync(profileId);
+
+            if (profile == null)
+                throw new KeyNotFoundException($"Profile not found for Profile ID: {profileId}");
+
+            return _mapper.Map<TherapistProfileDto>(profile);
+        }
+
+        public async Task<TherapistProfileDto> GetProfileWithReferenceByProfileIdAsync(int profileId)
+        {
+            var profile = await _repository.GetByIdAsync(profileId, p => p.Therapist, p => p.Therapist.User);
+
+            if (profile == null)
+                throw new KeyNotFoundException($"Profile not found for Profile ID: {profileId}");
+
+            return _mapper.Map<TherapistProfileDto>(profile);
         }
 
         public async Task<TherapistProfileDto> GetProfileByTherapistIdAsync(int therapistId)
         {
-            var profile = await _repository.GetByIdAsync(therapistId);
+            var profile = await _repository.FindAsync(p => p.TherapistId == therapistId);
+
             if (profile == null)
                 throw new KeyNotFoundException($"Profile not found for therapist ID: {therapistId}");
 
@@ -49,7 +70,12 @@ namespace Application.Services
 
         public async Task<TherapistProfileDto> GetProfileWithReferenceByTherapistIdAsync(int therapistId)
         {
-            var profile = await _repository.GetByIdAsync(therapistId, p => p.Therapist, p => p.Therapist.User);
+            var profile = await _repository.FindAsync(
+                p => p.TherapistId == therapistId,
+                p => p.Therapist,
+                p => p.Therapist.User
+            );
+
             if (profile == null)
                 throw new KeyNotFoundException($"Profile not found for therapist ID: {therapistId}");
 
@@ -104,6 +130,7 @@ namespace Application.Services
             await _repository.UpdateAsync(existingProfile);
             return _mapper.Map<TherapistProfileDto>(existingProfile);
         }
+        
         public async Task DeleteProfileAsync(int therapistId)
         {
             var profiles = await _repository.GetAllAsync();

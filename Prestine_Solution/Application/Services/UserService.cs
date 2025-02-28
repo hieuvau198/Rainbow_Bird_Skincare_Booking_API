@@ -42,8 +42,8 @@ namespace Application.Services
 
         public async Task<UserDto> GetUserByUsernameAsync(string username)
         {
-            var users = await _repository.GetAllAsync();
-            var user = users.FirstOrDefault(u => u.Username == username);
+            var user = await _repository.FindAsync(u => u.Username == username); // ✅ Filtering in DB
+
             if (user == null)
                 throw new KeyNotFoundException($"User with username {username} not found");
 
@@ -52,13 +52,14 @@ namespace Application.Services
 
         public async Task<UserDto> GetUserByEmailAsync(string email)
         {
-            var users = await _repository.GetAllAsync();
-            var user = users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+            var user = await _repository.FindAsync(u => u.Email.ToLower() == email.ToLower()); // ✅ Filtering in DB
+
             if (user == null)
                 throw new KeyNotFoundException($"User with email {email} not found");
 
             return _mapper.Map<UserDto>(user);
         }
+
 
         public async Task<UserDto> CreateUserAsync(CreateUserDto createUserDto)
         {
