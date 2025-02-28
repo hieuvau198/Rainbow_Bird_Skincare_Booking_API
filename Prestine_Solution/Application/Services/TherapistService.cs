@@ -30,7 +30,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<TherapistDto>> GetTherapistsAsync()
         {
-            var therapists = await _repository.GetAllAsync(t => t.User);
+            var therapists = await _repository.GetAllAsync();
             return _mapper.Map<IEnumerable<TherapistDto>>(therapists);
         }
 
