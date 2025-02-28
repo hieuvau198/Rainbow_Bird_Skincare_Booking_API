@@ -166,7 +166,28 @@ builder.Services.AddScoped<GoogleTokenValidator>();
 #endregion
 
 #region Mapping DTOs with Entities
-builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddAutoMapper(
+                               typeof(UserMappingProfile),
+                               typeof(CustomerMappingProfile),
+                               typeof(ManagerMappingProfile),
+                               typeof(StaffMappingProfile),
+                               typeof(TherapistMappingProfile),
+                               typeof(TherapistProfileMappingProfile),
+                               typeof(TherapistAvailabilityMappingProfile),
+                               typeof(WorkingDayMappingProfile),
+                               typeof(TimeSlotMappingProfile),
+                               typeof(ServiceMappingProfile),
+                               typeof(QuizMappingProfile),
+                               typeof(QuestionMappingProfile),
+                               typeof(CustomerQuizMappingProfile),
+                               typeof(AnswerMappingProfile),
+                               typeof(QuizRecommendationMappingProfile),
+                               typeof(CustomerAnswerMappingProfile),
+                               typeof(PaymentMappingProfile),
+                               typeof(BookingMappingProfile),
+                               typeof(CancelBookingMappingProfile),
+                               typeof(CancelPolicyMappingProfile),
+                               typeof(PaymentPolicyMappingProfile));
 #endregion
 
 #region Add CORS service and allow all origins for simplicity
