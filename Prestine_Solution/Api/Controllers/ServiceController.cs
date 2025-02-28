@@ -23,6 +23,28 @@ namespace Api.Controllers
             return Ok(await _serviceService.GetAllServicesAsync());
         }
 
+        [HttpGet("filter")]
+        //[Authorize(Policy = "OpenPolicy")]
+        public async Task<IActionResult> GetServices(
+            [FromQuery] string serviceName = null,
+            [FromQuery] decimal? minPrice = null,
+            [FromQuery] decimal? maxPrice = null,
+            [FromQuery] string sortBy = "price",
+            [FromQuery] string order = "asc",
+            [FromQuery] int page = 1,
+            [FromQuery] int size = 10)
+        {
+            var services = await _serviceService.GetServicesAsync(serviceName, minPrice, maxPrice, sortBy, order, page, size);
+
+            return Ok(new
+            {
+                totalItems = services.Count(),
+                currentPage = page,
+                pageSize = size,
+                data = services
+            });
+        }
+
         [HttpGet("{serviceId}")]
         //[Authorize(Policy = "OpenPolicy")]
         public async Task<ActionResult<ServiceDto>> GetService(int serviceId)
@@ -30,6 +52,27 @@ namespace Api.Controllers
             var service = await _serviceService.GetServiceByIdAsync(serviceId);
             return service != null ? Ok(service) : NotFound();
         }
+
+        //[HttpGet]
+        //public async Task<IActionResult> GetServices(
+        //    [FromQuery] string serviceName = null,
+        //    [FromQuery] decimal? minPrice = null,
+        //    [FromQuery] decimal? maxPrice = null,
+        //    [FromQuery] string sortBy = "price",
+        //    [FromQuery] string order = "asc",
+        //    [FromQuery] int page = 1,
+        //    [FromQuery] int size = 10)
+        //{
+        //    var services = await _serviceService.GetServicesAsync(serviceName, minPrice, maxPrice, sortBy, order, page, size);
+
+        //    return Ok(new
+        //    {
+        //        totalItems = services.Count(),
+        //        currentPage = page,
+        //        pageSize = size,
+        //        data = services
+        //    });
+        //}
 
         [HttpPost]
         //[Authorize(Policy = "StandardPolicy")]
