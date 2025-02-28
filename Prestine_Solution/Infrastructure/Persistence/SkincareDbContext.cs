@@ -63,6 +63,11 @@ public partial class SkincareDbContext : DbContext
 
     public virtual DbSet<WorkingDay> WorkingDays { get; set; }
 
+    public virtual DbSet<Blog> Blogs { get; set; }
+
+    public virtual DbSet<News> News { get; set; }
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Answer>(entity =>
@@ -676,10 +681,7 @@ public partial class SkincareDbContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("username");
 
-        });
-
-        // Seed Data for User entity
-        
+        });        
 
         modelBuilder.Entity<WorkingDay>(entity =>
         {
@@ -701,6 +703,72 @@ public partial class SkincareDbContext : DbContext
                 .HasColumnName("is_active");
             entity.Property(e => e.SlotDurationMinutes).HasColumnName("slot_duration_minutes");
             entity.Property(e => e.StartTime).HasColumnName("start_time");
+        });
+
+        modelBuilder.Entity<Blog>(entity =>
+        {
+            entity.HasKey(e => e.BlogId).HasName("PK_Blog");
+            entity.ToTable("Blog");
+
+            entity.Property(e => e.BlogId).HasColumnName("blog_id");
+            entity.Property(e => e.Title)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasColumnName("title");
+            entity.Property(e => e.Content)
+                .IsRequired()
+                .HasColumnName("content");
+            entity.Property(e => e.ImageUrl)
+                .HasMaxLength(500)
+                .HasColumnName("image_url");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.AuthorId)
+                .HasColumnName("author_id");
+
+            entity.HasOne(d => d.Author)
+                .WithMany()
+                .HasForeignKey(d => d.AuthorId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_Blog_Author");
+        });
+
+        modelBuilder.Entity<News>(entity =>
+        {
+            entity.HasKey(e => e.NewsId).HasName("PK_News");
+            entity.ToTable("News");
+
+            entity.Property(e => e.NewsId).HasColumnName("news_id");
+            entity.Property(e => e.Title)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasColumnName("title");
+            entity.Property(e => e.Content)
+                .IsRequired()
+                .HasColumnName("content");
+            entity.Property(e => e.ImageUrl)
+                .HasMaxLength(500)
+                .HasColumnName("image_url");
+            entity.Property(e => e.PublishedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("published_at");
+            entity.Property(e => e.IsPublished)
+                .HasDefaultValue(false)
+                .HasColumnName("is_published");
+            entity.Property(e => e.PublisherId)
+                .HasColumnName("publisher_id");
+
+            entity.HasOne(d => d.Publisher)
+                .WithMany()
+                .HasForeignKey(d => d.PublisherId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_News_Publisher");
         });
 
         OnModelCreatingPartial(modelBuilder);

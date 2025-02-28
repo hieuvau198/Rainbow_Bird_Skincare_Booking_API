@@ -60,16 +60,13 @@ namespace Application.Services
             return _mapper.Map<UserDto>(user);
         }
 
-
         public async Task<UserDto> CreateUserAsync(CreateUserDto createUserDto)
         {
-            // Check for existing username
-            var users = await _repository.GetAllAsync();
-            if (users.Any(u => u.Username == createUserDto.Username))
+            // Optimized: Use ExistsAsync instead of fetching all users
+            if (await _repository.ExistsAsync(u => u.Username == createUserDto.Username))
                 throw new InvalidOperationException("Username already exists");
 
-            // Check for existing email
-            if (users.Any(u => u.Email.ToLower() == createUserDto.Email.ToLower()))
+            if (await _repository.ExistsAsync(u => u.Email.ToLower() == createUserDto.Email.ToLower()))
                 throw new InvalidOperationException("Email already exists");
 
             var user = _mapper.Map<User>(createUserDto);
