@@ -43,11 +43,13 @@ namespace Application.Services
 
         public async Task<IEnumerable<TimeSlotDto>> GetTimeSlotsByWorkingDayAsync(int workingDayId)
         {
-            var timeSlots = await _repository.GetAllAsync();
-            var filtered = timeSlots.Where(t => t.WorkingDayId == workingDayId)
-                                  .OrderBy(t => t.SlotNumber);
-            return _mapper.Map<IEnumerable<TimeSlotDto>>(filtered);
+            var timeSlots = await _repository.GetAllAsync(
+                t => t.WorkingDayId == workingDayId // ✅ Filtering happens in the database
+            );
+
+            return _mapper.Map<IEnumerable<TimeSlotDto>>(timeSlots.OrderBy(t => t.SlotNumber));
         }
+
 
         public async Task<TimeSlotDto> CreateTimeSlotAsync(CreateTimeSlotDto createDto)
         {

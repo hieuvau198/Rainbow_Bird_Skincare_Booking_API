@@ -25,19 +25,14 @@ namespace Infrastructure.Repositories
             return _dbSet.AsNoTracking();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
-        {
-            return await _dbSet.AsNoTracking().ToListAsync();
-        }
-
-        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate)
-        {
-            return await _dbSet.AsNoTracking().Where(predicate).ToListAsync();
-        }
-
-        public async Task<IEnumerable<T>> GetAllAsync(params Expression<Func<T, object>>[] includes)
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? predicate = null, params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> query = _dbSet.AsNoTracking();
+
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
+            }
 
             foreach (var include in includes)
             {
@@ -67,11 +62,18 @@ namespace Infrastructure.Repositories
                 : await _dbSet.FindAsync(id);
         }
 
-        public async Task<T?> GetByIdAsync(int id)
+        public async Task<T?> FindAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
         {
-            return await _dbSet.FindAsync(id);
+            IQueryable<T> query = _dbSet;
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.AsNoTracking().FirstOrDefaultAsync(predicate);
         }
-        
+
         public async Task<T> CreateAsync(T entity)
         {
             await _dbSet.AddAsync(entity);

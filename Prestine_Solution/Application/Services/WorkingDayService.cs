@@ -28,42 +28,33 @@ namespace Application.Services
 
         public async Task<IEnumerable<WorkingDayDto>> GetAllWorkingDaysAsync()
         {
-            // Eagerly load time slots for all working days
-            var workingDays = await _repository.GetAllAsync();
-            var timeSlots = await _timeSlotRepository.GetAllAsync();
-
-            foreach (var workingDay in workingDays)
-            {
-                workingDay.TimeSlots = timeSlots.Where(t => t.WorkingDayId == workingDay.WorkingDayId).ToList();
-            }
-
+            // ✅ Fetch all working days with time slots in a single query
+            var workingDays = await _repository.GetAllAsync(null, w => w.TimeSlots);
             return _mapper.Map<IEnumerable<WorkingDayDto>>(workingDays);
         }
 
         public async Task<WorkingDayDto> GetWorkingDayByIdAsync(int id)
         {
-            var workingDay = await _repository.GetByIdAsync(id);
+            // ✅ Fetch the working day with time slots in one query
+            var workingDay = await _repository.GetByIdAsync(id, w => w.TimeSlots);
+
             if (workingDay == null)
                 throw new KeyNotFoundException($"Working day with ID {id} not found");
-
-            // Eagerly load related time slots
-            var timeSlots = await _timeSlotRepository.GetAllAsync(t => t.WorkingDayId == id);
-            workingDay.TimeSlots = timeSlots.ToList();
 
             return _mapper.Map<WorkingDayDto>(workingDay);
         }
 
         public async Task<WorkingDayDto> GetWorkingDayByNameAsync(string dayName)
         {
-            var workingDays = await _repository.GetAllAsync();
-            var workingDay = workingDays.FirstOrDefault(w => w.DayName.Equals(dayName, StringComparison.OrdinalIgnoreCase));
+            // ✅ Fetch the working day by name with time slots in one query
+            var workingDay = await _repository.FindAsync(
+                w => w.DayName != null && w.DayName.Equals(dayName, StringComparison.OrdinalIgnoreCase),
+                w => w.TimeSlots
+            );
+
 
             if (workingDay == null)
                 throw new KeyNotFoundException($"Working day {dayName} not found");
-
-            // Eagerly load related time slots
-            var timeSlots = await _timeSlotRepository.GetAllAsync(t => t.WorkingDayId == workingDay.WorkingDayId);
-            workingDay.TimeSlots = timeSlots.ToList();
 
             return _mapper.Map<WorkingDayDto>(workingDay);
         }
@@ -108,8 +99,8 @@ namespace Application.Services
 
         public async Task<bool> IsWorkingDayExistsAsync(string dayName)
         {
-            var workingDays = await _repository.GetAllAsync();
-            return workingDays.Any(w => w.DayName.Equals(dayName, StringComparison.OrdinalIgnoreCase));
+            // ✅ Check if a working day exists without loading all data
+            return await _repository.ExistsAsync(w => w.DayName != null && w.DayName.Equals(dayName, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

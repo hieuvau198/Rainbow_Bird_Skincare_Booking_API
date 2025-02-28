@@ -33,6 +33,22 @@ namespace API.Controllers
             return Ok(profiles);
         }
 
+        [HttpGet("profile/{profileId}")]
+        //[Authorize(Policy = "OpenPolicy")]
+        public async Task<ActionResult<TherapistProfileDto>> GetProfileByProfileId(int profileId)
+        {
+            var profile = await _profileService.GetProfileByProfileIdAsync(profileId);
+            return Ok(profile);
+        }
+
+        [HttpGet("profile/{profileId}/with-reference")]
+        //[Authorize(Policy = "OpenPolicy")]
+        public async Task<ActionResult<TherapistProfileDto>> GetProfileWithReferenceByProfileId(int profileId)
+        {
+            var profile = await _profileService.GetProfileWithReferenceByProfileIdAsync(profileId);
+            return Ok(profile);
+        }
+
         [HttpGet("{therapistId}")]
         //[Authorize(Policy = "OpenPolicy")]
         public async Task<ActionResult<TherapistProfileDto>> GetProfile(int therapistId)
