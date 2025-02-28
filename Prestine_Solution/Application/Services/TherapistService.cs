@@ -40,7 +40,7 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<TherapistDto>>(therapists);
         }
 
-        public async Task<TherapistDto> GetByIdAsync(int id)
+        public async Task<TherapistDto> GetTherapistByIdAsync(int id)
         {
             var therapist = await _repository.GetByIdAsync(id);
             if (therapist == null)
@@ -49,7 +49,7 @@ namespace Application.Services
             return _mapper.Map<TherapistDto>(therapist);
         }
 
-        public async Task<TherapistDto> GetByIdWithReferenceAsync(int id)
+        public async Task<TherapistDto> GetTherapistByIdWithReferenceAsync(int id)
         {
             var therapist = await _repository.GetByIdAsync(id, t => t.User);
             if (therapist == null)

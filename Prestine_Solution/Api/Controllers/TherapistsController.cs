@@ -33,14 +33,14 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TherapistDto>> GetTherapist(int id)
         {
-            var therapist = await _therapistService.GetByIdAsync(id);
+            var therapist = await _therapistService.GetTherapistByIdAsync(id);
             return Ok(therapist);
         }
 
         [HttpGet("with-reference/{id}")]
         public async Task<ActionResult<TherapistDto>> GetTherapistWithReference(int id)
         {
-            var therapist = await _therapistService.GetByIdWithReferenceAsync(id);
+            var therapist = await _therapistService.GetTherapistByIdWithReferenceAsync(id);
             return Ok(therapist);
         }
 

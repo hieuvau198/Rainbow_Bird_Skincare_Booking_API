@@ -56,27 +56,22 @@ namespace Infrastructure.Repositories
                 query = query.Include(include);
             }
 
-            return await query.AsNoTracking().FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
+            var keyProperty = _context.Model.FindEntityType(typeof(T))?
+                .FindPrimaryKey()?.Properties.FirstOrDefault()?.Name;
+
+            if (string.IsNullOrEmpty(keyProperty))
+                throw new InvalidOperationException($"Primary key not found for entity {typeof(T).Name}");
+
+            return includes.Length > 0
+                ? await query.AsNoTracking().FirstOrDefaultAsync(e => EF.Property<int>(e, keyProperty) == id)
+                : await _dbSet.FindAsync(id);
         }
 
         public async Task<T?> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
         }
-        //public virtual async Task<IEnumerable<T>> GetAllAsync()
-        //{
-        //    return await _dbSet.ToListAsync();
-        //}
-
-        //public virtual async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate)
-        //{
-        //    return await _dbSet.Where(predicate).ToListAsync();
-        //}
-
-        //public virtual async Task<T?> GetByIdAsync(int id)
-        //{
-        //    return await _dbSet.FindAsync(id);
-        //}
+        
         public async Task<T> CreateAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
