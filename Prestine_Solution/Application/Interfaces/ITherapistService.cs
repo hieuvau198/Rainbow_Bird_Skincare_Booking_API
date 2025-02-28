@@ -9,8 +9,10 @@ namespace Application.Interfaces
 {
     public interface ITherapistService
     {
-        Task<IEnumerable<TherapistDto>> GetAllTherapistsAsync();
+        Task<IEnumerable<TherapistDto>> GetTherapistsAsync();
+        Task<IEnumerable<TherapistDto>> GetTherapistsWithReferenceAsync();
         Task<TherapistDto> GetTherapistByIdAsync(int id);
+        Task<TherapistDto> GetTherapistByIdWithReferenceAsync(int id);
         Task<TherapistDto> CreateTherapistAsync(CreateTherapistDto createTherapistDto);
         Task<TherapistDto> CreateTherapistWithUserAsync(CreateTherapistUserDto createDto);
         Task UpdateTherapistAsync(int id, UpdateTherapistDto updateTherapistDto);

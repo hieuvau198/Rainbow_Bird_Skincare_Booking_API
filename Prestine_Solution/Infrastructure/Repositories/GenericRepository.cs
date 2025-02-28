@@ -20,19 +20,24 @@ namespace Infrastructure.Repositories
             _dbSet = context.Set<T>();
         }
 
-        public virtual async Task<IEnumerable<T>> GetAllAsync()
+        public IQueryable<T> GetAllAsQueryable()
         {
-            return await _dbSet.ToListAsync();
+            return _dbSet.AsNoTracking();
         }
 
-        public virtual async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate)
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return await _dbSet.Where(predicate).ToListAsync();
+            return await _dbSet.AsNoTracking().ToListAsync();
         }
 
-        public virtual async Task<IEnumerable<T>> GetAllAsync(params Expression<Func<T, object>>[] includes)
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate)
         {
-            IQueryable<T> query = _dbSet;
+            return await _dbSet.AsNoTracking().Where(predicate).ToListAsync();
+        }
+
+        public async Task<IEnumerable<T>> GetAllAsync(params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _dbSet.AsNoTracking();
 
             foreach (var include in includes)
             {
@@ -42,7 +47,7 @@ namespace Infrastructure.Repositories
             return await query.ToListAsync();
         }
 
-        public virtual async Task<T?> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes)
+        public async Task<T?> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> query = _dbSet;
 
@@ -51,31 +56,49 @@ namespace Infrastructure.Repositories
                 query = query.Include(include);
             }
 
-            return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
+            var keyProperty = _context.Model.FindEntityType(typeof(T))?
+                .FindPrimaryKey()?.Properties.FirstOrDefault()?.Name;
+
+            if (string.IsNullOrEmpty(keyProperty))
+                throw new InvalidOperationException($"Primary key not found for entity {typeof(T).Name}");
+
+            return includes.Length > 0
+                ? await query.AsNoTracking().FirstOrDefaultAsync(e => EF.Property<int>(e, keyProperty) == id)
+                : await _dbSet.FindAsync(id);
         }
 
-        public virtual async Task<T?> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
         }
-
-        public virtual async Task<T> CreateAsync(T entity)
+        
+        public async Task<T> CreateAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
             await _context.SaveChangesAsync();
             return entity;
         }
 
-        public virtual async Task UpdateAsync(T entity)
+        public async Task UpdateAsync(T entity)
         {
             _dbSet.Update(entity);
             await _context.SaveChangesAsync();
         }
 
-        public virtual async Task DeleteAsync(T entity)
+        public async Task DeleteAsync(T entity)
         {
             _dbSet.Remove(entity);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.AsNoTracking().AnyAsync(predicate);
+        }
+
+        public async Task<int> CountAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.AsNoTracking().CountAsync(predicate);
         }
     }
 }

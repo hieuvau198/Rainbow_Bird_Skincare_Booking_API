@@ -13,6 +13,7 @@ namespace Application.DTOs
         public string? Department { get; set; }
         public string? Responsibilities { get; set; }
         public DateTime? HireDate { get; set; }
+        public UserDto User { get; set; } = null!;
     }
     public class CreateManagerDto
     {

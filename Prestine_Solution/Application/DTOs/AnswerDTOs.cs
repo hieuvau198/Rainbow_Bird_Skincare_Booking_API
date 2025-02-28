@@ -14,6 +14,7 @@ namespace Application.DTOs
         public int? Points { get; set; }
         public bool? IsActive { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public QuestionDto Question { get; set; } = null!;
     }
 
     public class CreateAnswerDto

@@ -20,7 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddUserSecrets<Program>(); // Load user secrets
 
-
+#region Config Firebase Storage
 var firebaseServiceAccountJson = builder.Configuration.GetFirebaseServiceAccountJson(builder.Environment);
 if (!string.IsNullOrEmpty(firebaseServiceAccountJson))
 {
@@ -39,6 +39,8 @@ if (!string.IsNullOrEmpty(firebaseServiceAccountJson))
         Console.WriteLine($"Firebase initialization error: {ex.Message}");
     }
 }
+
+#endregion
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -77,6 +79,7 @@ builder.Services.AddSwaggerGen(c =>
 #endregion
 
 #region Register DbContext
+
 builder.Services.AddDbContext<SkincareDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -135,8 +138,6 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<ITherapistRepository, TherapistRepository>();
-builder.Services.AddScoped<ITherapistProfileRepository, TherapistProfileRepository>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITherapistService, TherapistService>();

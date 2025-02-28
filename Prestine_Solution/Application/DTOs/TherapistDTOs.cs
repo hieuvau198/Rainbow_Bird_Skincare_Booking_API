@@ -13,7 +13,7 @@ namespace Application.DTOs
         public bool? IsAvailable { get; set; }
         public string? Schedule { get; set; }
         public decimal? Rating { get; set; }
-        public UserDto User { get; set; } = null!; // Done, for get info from Therapist : User User
+        public UserDto User { get; set; } = null!; 
     }
     public class CreateTherapistUserDto
     {

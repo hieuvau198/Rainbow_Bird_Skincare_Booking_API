@@ -19,7 +19,14 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TherapistDto>>> GetAllTherapists()
         {
-            var therapists = await _therapistService.GetAllTherapistsAsync();
+            var therapists = await _therapistService.GetTherapistsAsync();
+            return Ok(therapists);
+        }
+
+        [HttpGet("with-reference")]
+        public async Task<ActionResult<IEnumerable<TherapistDto>>> GetAllTherapistsWithReference()
+        {
+            var therapists = await _therapistService.GetTherapistsWithReferenceAsync();
             return Ok(therapists);
         }
 
@@ -27,6 +34,13 @@ namespace Api.Controllers
         public async Task<ActionResult<TherapistDto>> GetTherapist(int id)
         {
             var therapist = await _therapistService.GetTherapistByIdAsync(id);
+            return Ok(therapist);
+        }
+
+        [HttpGet("with-reference/{id}")]
+        public async Task<ActionResult<TherapistDto>> GetTherapistWithReference(int id)
+        {
+            var therapist = await _therapistService.GetTherapistByIdWithReferenceAsync(id);
             return Ok(therapist);
         }
 

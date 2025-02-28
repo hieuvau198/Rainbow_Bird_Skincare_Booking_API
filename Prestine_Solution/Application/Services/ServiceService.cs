@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
 {
@@ -41,6 +42,40 @@ namespace Application.Services
         public async Task<IEnumerable<ServiceDto>> GetAllServicesAsync()
         {
             var services = await _repository.GetAllAsync();
+            return _mapper.Map<IEnumerable<ServiceDto>>(services);
+        }
+
+        public async Task<IEnumerable<ServiceDto>> GetServicesAsync(
+            string serviceName = null,
+            decimal? minPrice = null,
+            decimal? maxPrice = null,
+            string sortBy = "price",
+            string order = "asc",
+            int page = 1,
+            int size = 10)
+        {
+            var query = _repository.GetAllAsQueryable();
+
+            if (!string.IsNullOrEmpty(serviceName))
+                query = query.Where(s => s.ServiceName.Contains(serviceName));
+
+            if (minPrice.HasValue)
+                query = query.Where(s => s.Price >= minPrice.Value);
+
+            if (maxPrice.HasValue)
+                query = query.Where(s => s.Price <= maxPrice.Value);
+
+            query = sortBy.ToLower() switch
+            {
+                "price" => order.ToLower() == "desc" ? query.OrderByDescending(s => s.Price) : query.OrderBy(s => s.Price),
+                "name" => order.ToLower() == "desc" ? query.OrderByDescending(s => s.ServiceName) : query.OrderBy(s => s.ServiceName),
+                "createdAt" => order.ToLower() == "desc" ? query.OrderByDescending(s => s.CreatedAt) : query.OrderBy(s => s.CreatedAt),
+                _ => query.OrderBy(s => s.ServiceId)
+            };
+
+            var totalItems = await _repository.CountAsync(x => true);
+            var services = await query.Skip((page - 1) * size).Take(size).ToListAsync();
+
             return _mapper.Map<IEnumerable<ServiceDto>>(services);
         }
 

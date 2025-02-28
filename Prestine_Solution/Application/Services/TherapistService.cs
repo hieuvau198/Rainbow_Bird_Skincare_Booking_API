@@ -28,13 +28,28 @@ namespace Application.Services
             _userRepository = userRepository;
         }
 
-        public async Task<IEnumerable<TherapistDto>> GetAllTherapistsAsync()
+        public async Task<IEnumerable<TherapistDto>> GetTherapistsAsync()
+        {
+            var therapists = await _repository.GetAllAsync(t => t.User);
+            return _mapper.Map<IEnumerable<TherapistDto>>(therapists);
+        }
+
+        public async Task<IEnumerable<TherapistDto>> GetTherapistsWithReferenceAsync()
         {
             var therapists = await _repository.GetAllAsync(t => t.User);
             return _mapper.Map<IEnumerable<TherapistDto>>(therapists);
         }
 
         public async Task<TherapistDto> GetTherapistByIdAsync(int id)
+        {
+            var therapist = await _repository.GetByIdAsync(id);
+            if (therapist == null)
+                throw new KeyNotFoundException($"Therapist with ID {id} not found");
+
+            return _mapper.Map<TherapistDto>(therapist);
+        }
+
+        public async Task<TherapistDto> GetTherapistByIdWithReferenceAsync(int id)
         {
             var therapist = await _repository.GetByIdAsync(id, t => t.User);
             if (therapist == null)

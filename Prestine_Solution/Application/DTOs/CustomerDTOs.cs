@@ -13,6 +13,7 @@ namespace Application.DTOs
         public string? Preferences { get; set; }
         public string? MedicalHistory { get; set; }
         public DateTime? LastVisitAt { get; set; }
+        public UserDto User { get; set; } = null!;
     }
 
     public class CreateCustomerDto
