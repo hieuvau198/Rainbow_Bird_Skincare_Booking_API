@@ -160,6 +160,8 @@ builder.Services.AddScoped<IPaymentPolicyService, PaymentPolicyService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IStaffService, StaffService>();
 builder.Services.AddScoped<IManagerService, ManagerService>();
+builder.Services.AddScoped<IBlogService, BlogService>();
+builder.Services.AddScoped<INewsService, NewsService>();
 
 builder.Services.AddScoped<IImageService, FirebaseImageService>();
 
