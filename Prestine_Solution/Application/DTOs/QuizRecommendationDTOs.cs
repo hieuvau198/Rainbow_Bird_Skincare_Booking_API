@@ -15,6 +15,7 @@ namespace Application.DTOs
         public int? MaxScore { get; set; }
         public bool? IsActive { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public QuizDto Quiz { get; set; } = null!;
     }
 
     public class CreateQuizRecommendationDto

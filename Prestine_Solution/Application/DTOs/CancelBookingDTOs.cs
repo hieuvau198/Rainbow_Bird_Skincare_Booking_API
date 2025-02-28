@@ -13,6 +13,7 @@ namespace Application.DTOs
         public DateTime? CancelledAt { get; set; }
         public string? Reason { get; set; }
         public bool? IsRefunded { get; set; }
+        public BookingDto Booking { get; set; } = null!;
     }
 
     public class CreateCancelBookingDto

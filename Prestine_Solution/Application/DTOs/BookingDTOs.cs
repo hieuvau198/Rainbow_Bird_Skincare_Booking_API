@@ -18,6 +18,11 @@ namespace Application.DTOs
         public string? Status { get; set; }
         public string? Notes { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public CustomerDto Customer { get; set; } = null!;
+        public TherapistDto Therapist { get; set; } = null!;
+        public ServiceDto Service { get; set; } = null!;
+        public TimeSlotDto TimeSlot { get; set; } = null!;
+        public PaymentDto Payment { get; set; } = null!;
     }
 
     public class CreateBookingDto
