@@ -10,8 +10,10 @@ namespace Application.Interfaces
     public interface ITherapistProfileService
     {
         Task<IEnumerable<TherapistProfileDto>> GetAllProfilesAsync();
+        Task<TherapistProfileDto> GetProfileByProfileIdAsync(int profileId); 
         Task<TherapistProfileDto> GetProfileByTherapistIdAsync(int therapistId);
         Task<IEnumerable<TherapistProfileDto>> GetAllProfilesWithReferenceAsync();
+        Task<TherapistProfileDto> GetProfileWithReferenceByProfileIdAsync(int profileId);
         Task<TherapistProfileDto> GetProfileWithReferenceByTherapistIdAsync(int therapistId);
         Task<TherapistProfileDto> CreateProfileAsync(int therapistId, CreateTherapistProfileDto dto);
         Task<TherapistProfileDto> UpdateProfileAsync(int therapistId, UpdateTherapistProfileDto dto);

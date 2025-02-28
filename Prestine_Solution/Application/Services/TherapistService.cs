@@ -36,7 +36,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<TherapistDto>> GetTherapistsWithReferenceAsync()
         {
-            var therapists = await _repository.GetAllAsync(t => t.User);
+            var therapists = await _repository.GetAllAsync(null, t => t.User);
             return _mapper.Map<IEnumerable<TherapistDto>>(therapists);
         }
 
