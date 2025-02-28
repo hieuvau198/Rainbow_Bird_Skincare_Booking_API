@@ -28,14 +28,28 @@ namespace Application.Services
         }
         public async Task<IEnumerable<TherapistProfileDto>> GetAllProfilesAsync()
         {
+            var profiles = await _repository.GetAllAsync();
+            return _mapper.Map<IEnumerable<TherapistProfileDto>>(profiles);
+        }
+
+        public async Task<IEnumerable<TherapistProfileDto>> GetAllProfilesWithReferenceAsync()
+        {
             var profiles = await _repository.GetAllAsync(t => t.Therapist, t => t.Therapist.User);
             return _mapper.Map<IEnumerable<TherapistProfileDto>>(profiles);
         }
+
         public async Task<TherapistProfileDto> GetProfileByTherapistIdAsync(int therapistId)
         {
-            var profiles = await _repository.GetAllAsync();
-            var profile = profiles.FirstOrDefault(p => p.TherapistId == therapistId);
+            var profile = await _repository.GetByIdAsync(therapistId);
+            if (profile == null)
+                throw new KeyNotFoundException($"Profile not found for therapist ID: {therapistId}");
 
+            return _mapper.Map<TherapistProfileDto>(profile);
+        }
+
+        public async Task<TherapistProfileDto> GetProfileWithReferenceByTherapistIdAsync(int therapistId)
+        {
+            var profile = await _repository.GetByIdAsync(therapistId, p => p.Therapist, p => p.Therapist.User);
             if (profile == null)
                 throw new KeyNotFoundException($"Profile not found for therapist ID: {therapistId}");
 

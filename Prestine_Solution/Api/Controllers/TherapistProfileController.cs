@@ -25,11 +25,27 @@ namespace API.Controllers
             return Ok(profiles);
         }
 
+        [HttpGet("with-reference")]
+        //[Authorize(Policy = "OpenPolicy")]
+        public async Task<ActionResult<IEnumerable<TherapistProfileDto>>> GetAllProfilesWithReference()
+        {
+            var profiles = await _profileService.GetAllProfilesWithReferenceAsync();
+            return Ok(profiles);
+        }
+
         [HttpGet("{therapistId}")]
         //[Authorize(Policy = "OpenPolicy")]
         public async Task<ActionResult<TherapistProfileDto>> GetProfile(int therapistId)
         {
             var profile = await _profileService.GetProfileByTherapistIdAsync(therapistId);
+            return Ok(profile);
+        }
+
+        [HttpGet("{therapistId}/with-reference")]
+        //[Authorize(Policy = "OpenPolicy")]
+        public async Task<ActionResult<TherapistProfileDto>> GetProfileWithReference(int therapistId)
+        {
+            var profile = await _profileService.GetProfileWithReferenceByTherapistIdAsync(therapistId);
             return Ok(profile);
         }
 
