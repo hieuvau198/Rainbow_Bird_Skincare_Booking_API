@@ -25,7 +25,7 @@ namespace Api.Controllers
         }
 
         // Get All - With References
-        [HttpGet("with-references")]
+        [HttpGet("with-reference")]
         public async Task<ActionResult<IEnumerable<QuizRecommendationDto>>> GetAllRecommendationsWithReferences()
         {
             return Ok(await _service.GetAllRecommendationsAsync(true));
@@ -39,7 +39,7 @@ namespace Api.Controllers
         }
 
         // Get By ID - With References
-        [HttpGet("{id}/with-references")]
+        [HttpGet("{id}/with-reference")]
         public async Task<ActionResult<QuizRecommendationDto>> GetRecommendationByIdWithReferences(int id)
         {
             return Ok(await _service.GetRecommendationByIdAsync(id, true));
@@ -53,7 +53,7 @@ namespace Api.Controllers
         }
 
         // Get By Quiz ID - With References
-        [HttpGet("quiz/{quizId}/with-references")]
+        [HttpGet("quiz/{quizId}/with-reference")]
         public async Task<ActionResult<IEnumerable<QuizRecommendationDto>>> GetRecommendationsByQuizIdWithReferences(int quizId)
         {
             return Ok(await _service.GetRecommendationsByQuizIdAsync(quizId, true));
@@ -67,7 +67,7 @@ namespace Api.Controllers
         }
 
         // Get By Score - With References
-        [HttpGet("quiz/{quizId}/score/{score}/with-references")]
+        [HttpGet("quiz/{quizId}/score/{score}/with-reference")]
         public async Task<ActionResult<IEnumerable<QuizRecommendationDto>>> GetRecommendationsByScoreWithReferences(int quizId, int score)
         {
             return Ok(await _service.GetRecommendationsByScoreAsync(quizId, score, true));
@@ -81,7 +81,7 @@ namespace Api.Controllers
         }
 
         // Get By Service ID - With References
-        [HttpGet("service/{serviceId}/with-references")]
+        [HttpGet("service/{serviceId}/with-reference")]
         public async Task<ActionResult<IEnumerable<QuizRecommendationDto>>> GetRecommendationsByServiceIdWithReferences(int serviceId)
         {
             return Ok(await _service.GetRecommendationsByServiceIdAsync(serviceId, true));
@@ -95,7 +95,7 @@ namespace Api.Controllers
         }
 
         // Get Active Recommendations - With References
-        [HttpGet("active/with-references")]
+        [HttpGet("active/with-reference")]
         public async Task<ActionResult<IEnumerable<QuizRecommendationDto>>> GetActiveRecommendationsWithReferences()
         {
             return Ok(await _service.GetActiveRecommendationsAsync(true));
