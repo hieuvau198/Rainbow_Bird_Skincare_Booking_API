@@ -6,7 +6,7 @@ using Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Application.Services
@@ -24,46 +24,63 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<QuizRecommendationDto>> GetAllRecommendationsAsync()
+        // Helper method to determine whether to include related entities
+        private static Expression<Func<QuizRecommendation, object>>[] GetIncludes(bool includeReferences)
         {
-            var recommendations = await _repository.GetAllAsync();
+            return includeReferences
+                ? new Expression<Func<QuizRecommendation, object>>[] { r => r.Quiz, r => r.Service }
+                : Array.Empty<Expression<Func<QuizRecommendation, object>>>();
+        }
+
+        // Get All - Option to include related entities
+        public async Task<IEnumerable<QuizRecommendationDto>> GetAllRecommendationsAsync(bool includeReferences = false)
+        {
+            var recommendations = await _repository.GetAllAsync(null, GetIncludes(includeReferences));
             return _mapper.Map<IEnumerable<QuizRecommendationDto>>(recommendations);
         }
 
-        public async Task<QuizRecommendationDto> GetRecommendationByIdAsync(int id)
+        // Get by ID - Optionally includes related entities
+        public async Task<QuizRecommendationDto> GetRecommendationByIdAsync(int id, bool includeReferences = false)
         {
-            var recommendation = await _repository.GetByIdAsync(id);
+            var recommendation = await _repository.GetByIdAsync(id, GetIncludes(includeReferences));
             if (recommendation == null)
                 throw new KeyNotFoundException($"QuizRecommendation with ID {id} not found");
 
             return _mapper.Map<QuizRecommendationDto>(recommendation);
         }
 
-        public async Task<IEnumerable<QuizRecommendationDto>> GetRecommendationsByQuizIdAsync(int quizId)
+        // Get by Quiz ID - Filters by quizId, optionally includes related entities
+        public async Task<IEnumerable<QuizRecommendationDto>> GetRecommendationsByQuizIdAsync(int quizId, bool includeReferences = false)
         {
-            var recommendations = await _repository.GetAllAsync();
-            var filtered = recommendations.Where(r => r.QuizId == quizId);
-            return _mapper.Map<IEnumerable<QuizRecommendationDto>>(filtered);
+            var recommendations = await _repository.GetAllAsync(r => r.QuizId == quizId, GetIncludes(includeReferences));
+            return _mapper.Map<IEnumerable<QuizRecommendationDto>>(recommendations);
         }
 
-        public async Task<IEnumerable<QuizRecommendationDto>> GetRecommendationsByScoreAsync(int quizId, int score)
+        // Get by Score (Filters by active status as well)
+        public async Task<IEnumerable<QuizRecommendationDto>> GetRecommendationsByScoreAsync(int quizId, int score, bool includeReferences = false)
         {
-            var recommendations = await _repository.GetAllAsync();
-            var filtered = recommendations
-                .Where(r => r.QuizId == quizId && r.MinScore <= score && r.MaxScore >= score && r.IsActive == true)
-                .ToList();
+            var recommendations = await _repository.GetAllAsync(
+                r => r.QuizId == quizId && r.MinScore <= score && r.MaxScore >= score && r.IsActive == true,
+                GetIncludes(includeReferences));
 
-            return _mapper.Map<IEnumerable<QuizRecommendationDto>>(filtered);
+            return _mapper.Map<IEnumerable<QuizRecommendationDto>>(recommendations);
         }
 
-
-        public async Task<IEnumerable<QuizRecommendationDto>> GetRecommendationsByServiceIdAsync(int serviceId)
+        // Get by Service ID - Filters by serviceId, optionally includes related entities
+        public async Task<IEnumerable<QuizRecommendationDto>> GetRecommendationsByServiceIdAsync(int serviceId, bool includeReferences = false)
         {
-            var recommendations = await _repository.GetAllAsync();
-            var filtered = recommendations.Where(r => r.ServiceId == serviceId);
-            return _mapper.Map<IEnumerable<QuizRecommendationDto>>(filtered);
+            var recommendations = await _repository.GetAllAsync(r => r.ServiceId == serviceId, GetIncludes(includeReferences));
+            return _mapper.Map<IEnumerable<QuizRecommendationDto>>(recommendations);
         }
 
+        // Get Active Recommendations - Filters by IsActive, optionally includes related entities
+        public async Task<IEnumerable<QuizRecommendationDto>> GetActiveRecommendationsAsync(bool includeReferences = false)
+        {
+            var recommendations = await _repository.GetAllAsync(r => r.IsActive == true, GetIncludes(includeReferences));
+            return _mapper.Map<IEnumerable<QuizRecommendationDto>>(recommendations);
+        }
+
+        // Create Recommendation
         public async Task<QuizRecommendationDto> CreateRecommendationAsync(CreateQuizRecommendationDto createDto)
         {
             var recommendation = _mapper.Map<QuizRecommendation>(createDto);
@@ -74,6 +91,7 @@ namespace Application.Services
             return _mapper.Map<QuizRecommendationDto>(recommendation);
         }
 
+        // Update Recommendation
         public async Task UpdateRecommendationAsync(int id, UpdateQuizRecommendationDto updateDto)
         {
             var recommendation = await _repository.GetByIdAsync(id);
@@ -84,6 +102,7 @@ namespace Application.Services
             await _repository.UpdateAsync(recommendation);
         }
 
+        // Delete Recommendation
         public async Task DeleteRecommendationAsync(int id)
         {
             var recommendation = await _repository.GetByIdAsync(id);
@@ -91,13 +110,6 @@ namespace Application.Services
                 throw new KeyNotFoundException($"QuizRecommendation with ID {id} not found");
 
             await _repository.DeleteAsync(recommendation);
-        }
-
-        public async Task<IEnumerable<QuizRecommendationDto>> GetActiveRecommendationsAsync()
-        {
-            var recommendations = await _repository.GetAllAsync();
-            var filtered = recommendations.Where(r => r.IsActive == true);
-            return _mapper.Map<IEnumerable<QuizRecommendationDto>>(filtered);
         }
     }
 }
