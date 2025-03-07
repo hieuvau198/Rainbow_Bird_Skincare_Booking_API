@@ -24,6 +24,8 @@ namespace Application.Mappings
                 .ForMember(dest => dest.Booking, opt => opt.Ignore())
                 .ForMember(dest => dest.CustomerFeedbackAnswers, opt => opt.Ignore());
 
+            CreateMap<CreateCustomerFeedbackAnswerDto, CustomerFeedbackAnswer>();
+
             // Map from update DTO to entity
             CreateMap<UpdateCustomerFeedbackDto, CustomerFeedback>()
                 .ForMember(dest => dest.CustomerFeedbackId, opt => opt.Ignore())

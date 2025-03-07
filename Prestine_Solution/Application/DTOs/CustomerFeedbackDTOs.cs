@@ -27,10 +27,16 @@ namespace Application.DTOs
     public class CreateCustomerFeedbackDto
     {
         public int BookingId { get; set; }
-        public List<CreateCustomerFeedbackAnswerDto> Answers { get; set; } = new List<CreateCustomerFeedbackAnswerDto>();
+        public List<CreateCustomerFeedbackAnswerBasicDto> Answers { get; set; } = new List<CreateCustomerFeedbackAnswerBasicDto>();
     }
 
-    
+    public class CreateCustomerFeedbackAnswerBasicDto
+    {
+        public string? AnswerText { get; set; }
+        public int? SelectedAnswerOptionId { get; set; }
+    }
+
+
 
     public class UpdateCustomerFeedbackDto
     {
