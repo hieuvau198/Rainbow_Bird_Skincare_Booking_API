@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 
 namespace Domain.Entities;
-public partial class Review
+public partial class CustomerRating
 {
-    public int ReviewId { get; set; }
+    public int RatingId { get; set; }
 
     public int BookingId { get; set; }
 
-    public int? Rating { get; set; }
+    public int RatingValue { get; set; }
 
-    public string? Feedback { get; set; }
+    public string? ExperienceImageUrl { get; set; }
+
+    public string? Comment { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 

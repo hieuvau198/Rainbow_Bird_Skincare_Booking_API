@@ -185,7 +185,7 @@ namespace Application.Services
                 Email = registerUserDto.Email,
                 Phone = registerUserDto.Phone,
                 FullName = registerUserDto.FullName ?? registerUserDto.Username,
-                Role = UserRole.Customer,
+                Role = (int?)UserRole.Customer,
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -227,7 +227,7 @@ namespace Application.Services
                 {
                     Email = payload.Email,
                     FullName = payload.Name,
-                    Role = UserRole.Customer,
+                    Role = (int?)UserRole.Customer,
                     CreatedAt = DateTime.UtcNow
                 };
 

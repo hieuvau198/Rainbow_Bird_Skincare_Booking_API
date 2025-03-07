@@ -162,6 +162,11 @@ builder.Services.AddScoped<IStaffService, StaffService>();
 builder.Services.AddScoped<IManagerService, ManagerService>();
 builder.Services.AddScoped<IBlogService, BlogService>();
 builder.Services.AddScoped<INewsService, NewsService>();
+builder.Services.AddScoped<ICustomerRatingService, CustomerRatingService>();
+builder.Services.AddScoped<IFeedbackQuestionService, FeedbackQuestionService>();
+builder.Services.AddScoped<IFeedbackAnswerService, FeedbackAnswerService>();
+builder.Services.AddScoped<ICustomerFeedbackService, CustomerFeedbackService>();
+builder.Services.AddScoped<ICustomerFeedbackAnswerService, CustomerFeedbackAnswerService>();
 
 builder.Services.AddScoped<IImageService, FirebaseImageService>();
 
@@ -190,7 +195,12 @@ builder.Services.AddAutoMapper(
                                typeof(BookingMappingProfile),
                                typeof(CancelBookingMappingProfile),
                                typeof(CancelPolicyMappingProfile),
-                               typeof(PaymentPolicyMappingProfile));
+                               typeof(PaymentPolicyMappingProfile),
+                               typeof(CustomerRatingMappingProfile),
+                               typeof(FeedbackQuestionMappingProfile),
+                               typeof(FeedbackAnswerMappingProfile),
+                               typeof(CustomerFeedbackMappingProfile),
+                               typeof(CustomerFeedbackAnswerMappingProfile));
 #endregion
 
 #region Add CORS service and allow all origins for simplicity
