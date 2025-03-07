@@ -76,7 +76,7 @@ namespace Application.Services
                 Email = createDto.Email,
                 Phone = createDto.Phone,
                 FullName = createDto.FullName,
-                Role = UserRole.Manager,
+                Role = (int?)UserRole.Manager,
                 CreatedAt = DateTime.UtcNow
             };
 

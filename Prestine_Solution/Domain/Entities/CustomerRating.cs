@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 namespace Domain.Entities;
-
 public partial class CustomerRating
 {
     public int RatingId { get; set; }

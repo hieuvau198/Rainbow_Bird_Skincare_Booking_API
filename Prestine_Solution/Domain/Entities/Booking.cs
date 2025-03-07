@@ -29,6 +29,10 @@ public partial class Booking
 
     public virtual Customer Customer { get; set; } = null!;
 
+    public virtual ICollection<CustomerFeedback> CustomerFeedbacks { get; set; } = new List<CustomerFeedback>();
+
+    public virtual ICollection<CustomerRating> CustomerRatings { get; set; } = new List<CustomerRating>();
+
     public virtual Payment? Payment { get; set; }
 
     public virtual Review? Review { get; set; }

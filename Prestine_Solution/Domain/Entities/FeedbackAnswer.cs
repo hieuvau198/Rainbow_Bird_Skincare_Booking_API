@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 namespace Domain.Entities;
-
 public partial class FeedbackAnswer
 {
     public int AnswerOptionId { get; set; }
