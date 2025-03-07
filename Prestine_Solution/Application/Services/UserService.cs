@@ -71,7 +71,7 @@ namespace Application.Services
 
             var user = _mapper.Map<User>(createUserDto);
             user.Password = BCrypt.Net.BCrypt.HashPassword(createUserDto.Password);
-            user.Role = createUserDto.Role ?? UserRole.Customer;
+            user.Role = (int?)(createUserDto.Role ?? UserRole.Customer);
             user.CreatedAt = DateTime.UtcNow;
 
             await _repository.CreateAsync(user);

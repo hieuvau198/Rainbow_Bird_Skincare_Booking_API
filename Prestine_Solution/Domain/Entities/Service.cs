@@ -10,7 +10,6 @@ public partial class Service
     public string ServiceName { get; set; } = null!;
 
     public string? Description { get; set; }
-    public string? ServiceImage { get; set; }
 
     public decimal Price { get; set; }
 
@@ -23,6 +22,12 @@ public partial class Service
     public bool? IsActive { get; set; }
 
     public DateTime? CreatedAt { get; set; }
+
+    public string? ServiceImage { get; set; }
+
+    public int? RatingCount { get; set; }
+
+    public decimal? Rating { get; set; }
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 

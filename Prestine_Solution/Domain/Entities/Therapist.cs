@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 namespace Domain.Entities;
-
 public partial class Therapist
 {
     public int TherapistId { get; set; }
@@ -14,6 +13,8 @@ public partial class Therapist
     public string? Schedule { get; set; }
 
     public decimal? Rating { get; set; }
+
+    public int? RatingCount { get; set; }
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 

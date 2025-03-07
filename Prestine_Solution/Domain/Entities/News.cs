@@ -1,18 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+public partial class News
 {
-    public class News
-    {
-        public int NewsId { get; set; }
-        public string Title { get; set; } = null!;
-        public string Content { get; set; } = null!;
-        public string? ImageUrl { get; set; }  // Optional news image
-        public DateTime PublishedAt { get; set; } = DateTime.UtcNow;
-        public bool IsPublished { get; set; } = false;
+    public int NewsId { get; set; }
 
-        // Foreign Key: User who published the news
-        public int PublisherId { get; set; }
-        public virtual User Publisher { get; set; } = null!;
-    }
+    public string Title { get; set; } = null!;
+
+    public string Content { get; set; } = null!;
+
+    public string? ImageUrl { get; set; }
+
+    public DateTime PublishedAt { get; set; }
+
+    public bool IsPublished { get; set; }
+
+    public int PublisherId { get; set; }
+
+    public virtual User Publisher { get; set; } = null!;
 }

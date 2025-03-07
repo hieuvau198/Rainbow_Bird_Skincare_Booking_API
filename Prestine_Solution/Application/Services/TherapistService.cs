@@ -79,7 +79,7 @@ namespace Application.Services
                 Email = createDto.Email,
                 Phone = createDto.Phone,
                 FullName = createDto.FullName,
-                Role = UserRole.Therapist,
+                Role = (int?)UserRole.Therapist,
                 CreatedAt = DateTime.UtcNow
             };
 

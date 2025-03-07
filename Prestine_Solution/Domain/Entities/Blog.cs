@@ -1,18 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+public partial class Blog
 {
-    public class Blog
-    {
-        public int BlogId { get; set; }
-        public string Title { get; set; } = null!;
-        public string Content { get; set; } = null!;
-        public string? ImageUrl { get; set; }  // Optional blog image
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; }
+    public int BlogId { get; set; }
 
-        // Foreign Key: User who created the blog
-        public int AuthorId { get; set; }
-        public virtual User Author { get; set; } = null!;
-    }
+    public string Title { get; set; } = null!;
+
+    public string Content { get; set; } = null!;
+
+    public string? ImageUrl { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
+
+    public int AuthorId { get; set; }
+
+    public virtual User Author { get; set; } = null!;
 }

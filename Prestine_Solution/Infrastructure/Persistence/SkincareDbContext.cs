@@ -21,6 +21,8 @@ public partial class SkincareDbContext : DbContext
 
     public virtual DbSet<Answer> Answers { get; set; }
 
+    public virtual DbSet<Blog> Blogs { get; set; }
+
     public virtual DbSet<Booking> Bookings { get; set; }
 
     public virtual DbSet<CancelBooking> CancelBookings { get; set; }
@@ -31,9 +33,21 @@ public partial class SkincareDbContext : DbContext
 
     public virtual DbSet<CustomerAnswer> CustomerAnswers { get; set; }
 
+    public virtual DbSet<CustomerFeedback> CustomerFeedbacks { get; set; }
+
+    public virtual DbSet<CustomerFeedbackAnswer> CustomerFeedbackAnswers { get; set; }
+
     public virtual DbSet<CustomerQuiz> CustomerQuizzes { get; set; }
 
+    public virtual DbSet<CustomerRating> CustomerRatings { get; set; }
+
+    public virtual DbSet<FeedbackAnswer> FeedbackAnswers { get; set; }
+
+    public virtual DbSet<FeedbackQuestion> FeedbackQuestions { get; set; }
+
     public virtual DbSet<Manager> Managers { get; set; }
+
+    public virtual DbSet<News> News { get; set; }
 
     public virtual DbSet<Payment> Payments { get; set; }
 
@@ -63,10 +77,6 @@ public partial class SkincareDbContext : DbContext
 
     public virtual DbSet<WorkingDay> WorkingDays { get; set; }
 
-    public virtual DbSet<Blog> Blogs { get; set; }
-
-    public virtual DbSet<News> News { get; set; }
-
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -75,6 +85,8 @@ public partial class SkincareDbContext : DbContext
             entity.HasKey(e => e.AnswerId).HasName("PK__Answer__33724318250B0AF4");
 
             entity.ToTable("Answer");
+
+            entity.HasIndex(e => e.QuestionId, "IX_Answer_question_id");
 
             entity.Property(e => e.AnswerId).HasColumnName("answer_id");
             entity.Property(e => e.Content).HasColumnName("content");
@@ -96,6 +108,32 @@ public partial class SkincareDbContext : DbContext
                 .HasConstraintName("FK__Answer__question__619B8048");
         });
 
+        modelBuilder.Entity<Blog>(entity =>
+        {
+            entity.ToTable("Blog");
+
+            entity.Property(e => e.BlogId).HasColumnName("blog_id");
+            entity.Property(e => e.AuthorId).HasColumnName("author_id");
+            entity.Property(e => e.Content).HasColumnName("content");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.ImageUrl)
+                .HasMaxLength(500)
+                .HasColumnName("image_url");
+            entity.Property(e => e.Title)
+                .HasMaxLength(255)
+                .HasColumnName("title");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+
+            entity.HasOne(d => d.Author).WithMany(p => p.Blogs)
+                .HasForeignKey(d => d.AuthorId)
+                .HasConstraintName("FK_Blog_Author");
+        });
+
         modelBuilder.Entity<Booking>(entity =>
         {
             entity.HasKey(e => e.BookingId).HasName("PK__Booking__5DE3A5B1E7F536B6");
@@ -107,6 +145,12 @@ public partial class SkincareDbContext : DbContext
             entity.HasIndex(e => e.BookingDate, "IX_Booking_Date");
 
             entity.HasIndex(e => e.TherapistId, "IX_Booking_Therapist");
+
+            entity.HasIndex(e => e.PaymentId, "IX_Booking_payment_id");
+
+            entity.HasIndex(e => e.ServiceId, "IX_Booking_service_id");
+
+            entity.HasIndex(e => e.SlotId, "IX_Booking_slot_id");
 
             entity.Property(e => e.BookingId).HasColumnName("booking_id");
             entity.Property(e => e.BookingDate).HasColumnName("booking_date");
@@ -220,6 +264,12 @@ public partial class SkincareDbContext : DbContext
 
             entity.ToTable("CustomerAnswer");
 
+            entity.HasIndex(e => e.AnswerId, "IX_CustomerAnswer_answer_id");
+
+            entity.HasIndex(e => e.CustomerQuizId, "IX_CustomerAnswer_customer_quiz_id");
+
+            entity.HasIndex(e => e.QuestionId, "IX_CustomerAnswer_question_id");
+
             entity.Property(e => e.CustomerAnswerId).HasColumnName("customer_answer_id");
             entity.Property(e => e.AnswerId).HasColumnName("answer_id");
             entity.Property(e => e.AnsweredAt)
@@ -248,6 +298,44 @@ public partial class SkincareDbContext : DbContext
                 .HasConstraintName("FK__CustomerA__quest__6C190EBB");
         });
 
+        modelBuilder.Entity<CustomerFeedback>(entity =>
+        {
+            entity.HasKey(e => e.CustomerFeedbackId).HasName("PK_Customer_Feedbacks");
+
+            entity.ToTable("CustomerFeedback");
+
+            entity.Property(e => e.CustomerFeedbackId).HasColumnName("customer_feedback_id");
+            entity.Property(e => e.BookingId).HasColumnName("booking_id");
+            entity.Property(e => e.SubmittedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("submitted_at");
+
+            entity.HasOne(d => d.Booking).WithMany(p => p.CustomerFeedbacks)
+                .HasForeignKey(d => d.BookingId)
+                .HasConstraintName("FK_Customer_Feedbacks_Booking");
+        });
+
+        modelBuilder.Entity<CustomerFeedbackAnswer>(entity =>
+        {
+            entity.HasKey(e => e.ResponseId).HasName("PK_Customer_Feedback_Answers");
+
+            entity.ToTable("CustomerFeedbackAnswer");
+
+            entity.Property(e => e.ResponseId).HasColumnName("response_id");
+            entity.Property(e => e.AnswerText).HasColumnName("answer_text");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CustomerFeedbackId).HasColumnName("customer_feedback_id");
+            entity.Property(e => e.SelectedAnswerOptionId).HasColumnName("selected_answer_option_id");
+
+            entity.HasOne(d => d.CustomerFeedback).WithMany(p => p.CustomerFeedbackAnswers)
+                .HasForeignKey(d => d.CustomerFeedbackId)
+                .HasConstraintName("FK_Customer_Feedback_Answers_Customer_Feedbacks");
+        });
+
         modelBuilder.Entity<CustomerQuiz>(entity =>
         {
             entity.HasKey(e => e.CustomerQuizId).HasName("PK__Customer__A70E104FCC2E841A");
@@ -255,6 +343,8 @@ public partial class SkincareDbContext : DbContext
             entity.ToTable("CustomerQuiz");
 
             entity.HasIndex(e => e.CustomerId, "IX_CustomerQuiz_Customer");
+
+            entity.HasIndex(e => e.QuizId, "IX_CustomerQuiz_quiz_id");
 
             entity.Property(e => e.CustomerQuizId).HasColumnName("customer_quiz_id");
             entity.Property(e => e.CompletedAt)
@@ -282,6 +372,70 @@ public partial class SkincareDbContext : DbContext
                 .HasConstraintName("FK__CustomerQ__quiz___66603565");
         });
 
+        modelBuilder.Entity<CustomerRating>(entity =>
+        {
+            entity.HasKey(e => e.RatingId).HasName("PK_Customer_Ratings");
+
+            entity.ToTable("CustomerRating");
+
+            entity.Property(e => e.RatingId).HasColumnName("rating_id");
+            entity.Property(e => e.BookingId).HasColumnName("booking_id");
+            entity.Property(e => e.Comment).HasColumnName("comment");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.ExperienceImageUrl)
+                .HasMaxLength(500)
+                .HasColumnName("experience_image_url");
+            entity.Property(e => e.RatingValue).HasColumnName("rating_value");
+
+            entity.HasOne(d => d.Booking).WithMany(p => p.CustomerRatings)
+                .HasForeignKey(d => d.BookingId)
+                .HasConstraintName("FK_Customer_Ratings_Booking");
+        });
+
+        modelBuilder.Entity<FeedbackAnswer>(entity =>
+        {
+            entity.HasKey(e => e.AnswerOptionId).HasName("PK_Feedback_Answers");
+
+            entity.ToTable("FeedbackAnswer");
+
+            entity.Property(e => e.AnswerOptionId).HasColumnName("answer_option_id");
+            entity.Property(e => e.AnswerText).HasColumnName("answer_text");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.FeedbackQuestionId).HasColumnName("feedback_question_id");
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+
+            entity.HasOne(d => d.FeedbackQuestion).WithMany(p => p.FeedbackAnswers)
+                .HasForeignKey(d => d.FeedbackQuestionId)
+                .HasConstraintName("FK_Feedback_Answers_Feedback_Questions");
+        });
+
+        modelBuilder.Entity<FeedbackQuestion>(entity =>
+        {
+            entity.HasKey(e => e.QuestionId).HasName("PK_Feedback_Questions");
+
+            entity.ToTable("FeedbackQuestion");
+
+            entity.Property(e => e.QuestionId).HasColumnName("question_id");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.QuestionText).HasColumnName("question_text");
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+        });
+
         modelBuilder.Entity<Manager>(entity =>
         {
             entity.HasKey(e => e.ManagerId).HasName("PK__Manager__5A6073FC39E06974");
@@ -304,6 +458,28 @@ public partial class SkincareDbContext : DbContext
                 .HasForeignKey<Manager>(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Manager__user_id__5165187F");
+        });
+
+        modelBuilder.Entity<News>(entity =>
+        {
+            entity.Property(e => e.NewsId).HasColumnName("news_id");
+            entity.Property(e => e.Content).HasColumnName("content");
+            entity.Property(e => e.ImageUrl)
+                .HasMaxLength(500)
+                .HasColumnName("image_url");
+            entity.Property(e => e.IsPublished).HasColumnName("is_published");
+            entity.Property(e => e.PublishedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("published_at");
+            entity.Property(e => e.PublisherId).HasColumnName("publisher_id");
+            entity.Property(e => e.Title)
+                .HasMaxLength(255)
+                .HasColumnName("title");
+
+            entity.HasOne(d => d.Publisher).WithMany(p => p.News)
+                .HasForeignKey(d => d.PublisherId)
+                .HasConstraintName("FK_News_Publisher");
         });
 
         modelBuilder.Entity<Payment>(entity =>
@@ -362,6 +538,8 @@ public partial class SkincareDbContext : DbContext
 
             entity.ToTable("Question");
 
+            entity.HasIndex(e => e.QuizId, "IX_Question_quiz_id");
+
             entity.Property(e => e.QuestionId).HasColumnName("question_id");
             entity.Property(e => e.Content).HasColumnName("content");
             entity.Property(e => e.CreatedAt)
@@ -415,6 +593,10 @@ public partial class SkincareDbContext : DbContext
             entity.HasKey(e => e.RecommendationId).HasName("PK__QuizReco__BCB11F4FB1377181");
 
             entity.ToTable("QuizRecommendation");
+
+            entity.HasIndex(e => e.QuizId, "IX_QuizRecommendation_quiz_id");
+
+            entity.HasIndex(e => e.ServiceId, "IX_QuizRecommendation_service_id");
 
             entity.Property(e => e.RecommendationId).HasColumnName("recommendation_id");
             entity.Property(e => e.CreatedAt)
@@ -489,9 +671,14 @@ public partial class SkincareDbContext : DbContext
             entity.Property(e => e.Price)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("price");
-            entity.Property(e => e.ServiceImage)
-                .HasColumnType("NVARCHAR(MAX)")
-                .HasColumnName("service_image");
+            entity.Property(e => e.Rating)
+                .HasDefaultValue(0m)
+                .HasColumnType("decimal(18, 0)")
+                .HasColumnName("rating");
+            entity.Property(e => e.RatingCount)
+                .HasDefaultValue(0)
+                .HasColumnName("rating_count");
+            entity.Property(e => e.ServiceImage).HasColumnName("service_image");
             entity.Property(e => e.ServiceName)
                 .HasMaxLength(100)
                 .HasColumnName("service_name");
@@ -536,6 +723,9 @@ public partial class SkincareDbContext : DbContext
             entity.Property(e => e.Rating)
                 .HasColumnType("decimal(3, 2)")
                 .HasColumnName("rating");
+            entity.Property(e => e.RatingCount)
+                .HasDefaultValue(0)
+                .HasColumnName("rating_count");
             entity.Property(e => e.Schedule).HasColumnName("schedule");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
@@ -552,6 +742,10 @@ public partial class SkincareDbContext : DbContext
             entity.ToTable("TherapistAvailability");
 
             entity.HasIndex(e => e.WorkingDate, "IX_TherapistAvailability_Date");
+
+            entity.HasIndex(e => e.SlotId, "IX_TherapistAvailability_slot_id");
+
+            entity.HasIndex(e => e.TherapistId, "IX_TherapistAvailability_therapist_id");
 
             entity.Property(e => e.AvailabilityId).HasColumnName("availability_id");
             entity.Property(e => e.CreatedAt)
@@ -598,9 +792,7 @@ public partial class SkincareDbContext : DbContext
             entity.Property(e => e.Education).HasColumnName("education");
             entity.Property(e => e.Languages).HasColumnName("languages");
             entity.Property(e => e.PersonalStatement).HasColumnName("personal_statement");
-            entity.Property(e => e.ProfileImage)
-                .HasColumnType("NVARCHAR(MAX)")
-                .HasColumnName("profile_image");
+            entity.Property(e => e.ProfileImage).HasColumnName("profile_image");
             entity.Property(e => e.Specialties).HasColumnName("specialties");
             entity.Property(e => e.TherapistId).HasColumnName("therapist_id");
             entity.Property(e => e.UpdatedAt)
@@ -620,6 +812,8 @@ public partial class SkincareDbContext : DbContext
             entity.HasKey(e => e.SlotId).HasName("PK__TimeSlot__971A01BB3891BB3F");
 
             entity.ToTable("TimeSlot");
+
+            entity.HasIndex(e => e.WorkingDayId, "IX_TimeSlot_working_day_id");
 
             entity.Property(e => e.SlotId).HasColumnName("slot_id");
             entity.Property(e => e.CreatedAt)
@@ -674,14 +868,11 @@ public partial class SkincareDbContext : DbContext
             entity.Property(e => e.Phone)
                 .HasMaxLength(20)
                 .HasColumnName("phone");
-            entity.Property(e => e.Role)
-                .HasConversion<int>()
-                .HasColumnName("role");
+            entity.Property(e => e.Role).HasColumnName("role");
             entity.Property(e => e.Username)
                 .HasMaxLength(50)
                 .HasColumnName("username");
-
-        });        
+        });
 
         modelBuilder.Entity<WorkingDay>(entity =>
         {
@@ -703,72 +894,6 @@ public partial class SkincareDbContext : DbContext
                 .HasColumnName("is_active");
             entity.Property(e => e.SlotDurationMinutes).HasColumnName("slot_duration_minutes");
             entity.Property(e => e.StartTime).HasColumnName("start_time");
-        });
-
-        modelBuilder.Entity<Blog>(entity =>
-        {
-            entity.HasKey(e => e.BlogId).HasName("PK_Blog");
-            entity.ToTable("Blog");
-
-            entity.Property(e => e.BlogId).HasColumnName("blog_id");
-            entity.Property(e => e.Title)
-                .IsRequired()
-                .HasMaxLength(255)
-                .HasColumnName("title");
-            entity.Property(e => e.Content)
-                .IsRequired()
-                .HasColumnName("content");
-            entity.Property(e => e.ImageUrl)
-                .HasMaxLength(500)
-                .HasColumnName("image_url");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
-            entity.Property(e => e.UpdatedAt)
-                .HasColumnType("datetime")
-                .HasColumnName("updated_at");
-            entity.Property(e => e.AuthorId)
-                .HasColumnName("author_id");
-
-            entity.HasOne(d => d.Author)
-                .WithMany()
-                .HasForeignKey(d => d.AuthorId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK_Blog_Author");
-        });
-
-        modelBuilder.Entity<News>(entity =>
-        {
-            entity.HasKey(e => e.NewsId).HasName("PK_News");
-            entity.ToTable("News");
-
-            entity.Property(e => e.NewsId).HasColumnName("news_id");
-            entity.Property(e => e.Title)
-                .IsRequired()
-                .HasMaxLength(255)
-                .HasColumnName("title");
-            entity.Property(e => e.Content)
-                .IsRequired()
-                .HasColumnName("content");
-            entity.Property(e => e.ImageUrl)
-                .HasMaxLength(500)
-                .HasColumnName("image_url");
-            entity.Property(e => e.PublishedAt)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("published_at");
-            entity.Property(e => e.IsPublished)
-                .HasDefaultValue(false)
-                .HasColumnName("is_published");
-            entity.Property(e => e.PublisherId)
-                .HasColumnName("publisher_id");
-
-            entity.HasOne(d => d.Publisher)
-                .WithMany()
-                .HasForeignKey(d => d.PublisherId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK_News_Publisher");
         });
 
         OnModelCreatingPartial(modelBuilder);

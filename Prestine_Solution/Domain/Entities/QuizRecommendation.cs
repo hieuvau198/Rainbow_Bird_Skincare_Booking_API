@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 namespace Domain.Entities;
-
 public partial class QuizRecommendation
 {
     public int RecommendationId { get; set; }
