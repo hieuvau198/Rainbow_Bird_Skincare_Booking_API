@@ -8,7 +8,9 @@ namespace Application.Mappings
     {
         public TherapistAvailabilityMappingProfile()
         {
-            CreateMap<TherapistAvailability, TherapistAvailabilityDto>();
+            CreateMap<TherapistAvailability, TherapistAvailabilityDto>()
+                .ForMember(dest => dest.TherapistName, opt =>
+                    opt.MapFrom(src => src.Therapist.User.FullName));
 
             CreateMap<CreateTherapistAvailabilityDto, TherapistAvailability>()
                 .ForMember(dest => dest.AvailabilityId, opt => opt.Ignore())
