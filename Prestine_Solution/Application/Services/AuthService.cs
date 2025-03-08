@@ -42,14 +42,13 @@ namespace Application.Services
             if (user == null || !VerifyPassword(loginDto.Password, user.Password))
                 throw new UnauthorizedAccessException("Invalid username or password");
 
-            // Update last login time
             user.LastLoginAt = DateTime.UtcNow;
             await _userRepository.UpdateAsync(user);
 
-            var (accessToken, accessTokenExpiration) = GenerateAccessToken(user);
+            var userDto = _mapper.Map<UserDto>(user);
+            var (accessToken, accessTokenExpiration) = GenerateAccessToken(userDto);
             var refreshToken = GenerateRefreshToken();
 
-            // Store refresh token (you might want to create a separate repository for this)
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
             await _userRepository.UpdateAsync(user);
@@ -77,10 +76,10 @@ namespace Application.Services
                 user.RefreshTokenExpiryTime <= DateTime.UtcNow)
                 throw new UnauthorizedAccessException("Invalid refresh token");
 
-            var (newAccessToken, accessTokenExpiration) = GenerateAccessToken(user);
+            var userDto = _mapper.Map<UserDto>(user);
+            var (newAccessToken, accessTokenExpiration) = GenerateAccessToken(userDto);
             var newRefreshToken = GenerateRefreshToken();
 
-            // Update refresh token
             user.RefreshToken = newRefreshToken;
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
             await _userRepository.UpdateAsync(user);
@@ -99,20 +98,21 @@ namespace Application.Services
             var user = await _userRepository.GetByUsernameAsync(username);
             if (user != null)
             {
-                // Invalidate refresh token
                 user.RefreshToken = null;
                 user.RefreshTokenExpiryTime = null;
                 await _userRepository.UpdateAsync(user);
             }
         }
 
-        private (string Token, DateTime Expiration) GenerateAccessToken(User user)
+        private (string Token, DateTime Expiration) GenerateAccessToken(UserDto userDto)
         {
+            var roleString = userDto.Role?.ToString() ?? "Customer"; // Default to "Customer" if Role is null
+
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role.ToString() ?? "Customer")
+                new Claim(ClaimTypes.Name, userDto.Username),
+                new Claim(ClaimTypes.Email, userDto.Email),
+                new Claim(ClaimTypes.Role, roleString) // Store role as string
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
@@ -155,7 +155,7 @@ namespace Application.Services
                 IssuerSigningKey = new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"] ??
                     throw new InvalidOperationException("JWT Secret Key is not configured"))),
-                ValidateLifetime = false, // We want to validate the token, even if it's expired
+                ValidateLifetime = false, 
                 ValidIssuer = _configuration["Jwt:Issuer"],
                 ValidAudience = _configuration["Jwt:Audience"]
             };
@@ -191,8 +191,8 @@ namespace Application.Services
 
             await _userRepository.CreateAsync(user);
 
-            // Automatically log in after registration
-            var (accessToken, accessTokenExpiration) = GenerateAccessToken(user);
+            var userDto = _mapper.Map<UserDto>(user);
+            var (accessToken, accessTokenExpiration) = GenerateAccessToken(userDto);
             var refreshToken = GenerateRefreshToken();
 
             user.RefreshToken = refreshToken;
@@ -208,11 +208,8 @@ namespace Application.Services
             };
         }
         
-        // IMPLEMENT OAUTH HERE
-
         public async Task<AuthResponseDto> GoogleLoginAsync(GoogleLoginDto googleLoginDto)
         {
-            // Validate Google token and get user details
             var payload = await _googleTokenValidator.ValidateTokenAsync(
                 googleLoginDto.IdToken,
                 googleLoginDto.ClientId
@@ -220,7 +217,6 @@ namespace Application.Services
 
             var user = await _userRepository.GetByEmailAsync(payload.Email);
 
-            // Auto-register user if not found
             if (user == null)
             {
                 user = new User
@@ -234,14 +230,13 @@ namespace Application.Services
                 await _userRepository.CreateAsync(user);
             }
 
-            // Update last login time
             user.LastLoginAt = DateTime.UtcNow;
             await _userRepository.UpdateAsync(user);
 
-            var (accessToken, accessTokenExpiration) = GenerateAccessToken(user);
+            var userDto = _mapper.Map<UserDto>(user);
+            var (accessToken, accessTokenExpiration) = GenerateAccessToken(userDto);
             var refreshToken = GenerateRefreshToken();
 
-            // Store refresh token
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
             await _userRepository.UpdateAsync(user);
