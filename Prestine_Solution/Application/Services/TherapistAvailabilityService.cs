@@ -15,26 +15,23 @@ namespace Application.Services
         private readonly IGenericRepository<TherapistAvailability> _availabilityRepository;
         private readonly IGenericRepository<Therapist> _therapistRepository;
         private readonly IGenericRepository<TimeSlot> _timeSlotRepository;
-        private readonly IGenericRepository<WorkingDay> _workingDayRepository;
         private readonly IMapper _mapper;
 
         public TherapistAvailabilityService(
             IGenericRepository<TherapistAvailability> availabilityRepository,
             IGenericRepository<Therapist> therapistRepository,
             IGenericRepository<TimeSlot> timeSlotRepository,
-            IGenericRepository<WorkingDay> workingDayRepository,
             IMapper mapper)
         {
             _availabilityRepository = availabilityRepository;
             _therapistRepository = therapistRepository;
             _timeSlotRepository = timeSlotRepository;
-            _workingDayRepository = workingDayRepository;
             _mapper = mapper;
         }
 
         public async Task<IEnumerable<TherapistAvailabilityDto>> GetAllAvailabilitiesAsync()
         {
-            var availabilities = await _availabilityRepository.GetAllAsync();
+            var availabilities = await _availabilityRepository.GetAllAsync(null, t => t.Therapist, u => u.Therapist.User);
             return _mapper.Map<IEnumerable<TherapistAvailabilityDto>>(availabilities);
         }
 

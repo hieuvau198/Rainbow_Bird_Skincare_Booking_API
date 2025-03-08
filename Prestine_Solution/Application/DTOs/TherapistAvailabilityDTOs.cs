@@ -14,6 +14,8 @@ namespace Application.DTOs
         public DateOnly WorkingDate { get; set; }
         public string? Status { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public string TherapistName { get; set; } = string.Empty; // New field
+
         public TherapistDto Therapist { get; set; } = null!;
     }
 
