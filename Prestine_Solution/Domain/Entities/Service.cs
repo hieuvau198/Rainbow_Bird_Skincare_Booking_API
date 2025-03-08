@@ -29,6 +29,12 @@ public partial class Service
 
     public decimal? Rating { get; set; }
 
+    public decimal? AverageReview { get; set; }
+
+    public string? ShortDescription { get; set; }
+
+    public int BookingNumber { get; set; }
+
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual ICollection<QuizRecommendation> QuizRecommendations { get; set; } = new List<QuizRecommendation>();

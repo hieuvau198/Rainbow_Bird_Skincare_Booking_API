@@ -154,14 +154,26 @@ public partial class SkincareDbContext : DbContext
 
             entity.Property(e => e.BookingId).HasColumnName("booking_id");
             entity.Property(e => e.BookingDate).HasColumnName("booking_date");
+            entity.Property(e => e.BookingFee)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("booking_fee");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
             entity.Property(e => e.CustomerId).HasColumnName("customer_id");
             entity.Property(e => e.Notes).HasColumnName("notes");
+            entity.Property(e => e.PaymentAmount)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("payment_amount");
             entity.Property(e => e.PaymentId).HasColumnName("payment_id");
+            entity.Property(e => e.PaymentStatus)
+                .HasMaxLength(50)
+                .HasColumnName("payment_status");
             entity.Property(e => e.ServiceId).HasColumnName("service_id");
+            entity.Property(e => e.ServicePrice)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("service_price");
             entity.Property(e => e.SlotId).HasColumnName("slot_id");
             entity.Property(e => e.Status)
                 .HasMaxLength(20)
@@ -500,9 +512,18 @@ public partial class SkincareDbContext : DbContext
             entity.Property(e => e.PaymentMethod)
                 .HasMaxLength(50)
                 .HasColumnName("payment_method");
+            entity.Property(e => e.Receiver)
+                .HasMaxLength(255)
+                .HasColumnName("receiver");
+            entity.Property(e => e.Sender)
+                .HasMaxLength(255)
+                .HasColumnName("sender");
             entity.Property(e => e.Status)
                 .HasMaxLength(20)
                 .HasColumnName("status");
+            entity.Property(e => e.Tax)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("tax");
             entity.Property(e => e.TotalAmount)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("total_amount");
@@ -652,6 +673,10 @@ public partial class SkincareDbContext : DbContext
             entity.ToTable("Service");
 
             entity.Property(e => e.ServiceId).HasColumnName("service_id");
+            entity.Property(e => e.AverageReview)
+                .HasColumnType("decimal(3, 2)")
+                .HasColumnName("average_review");
+            entity.Property(e => e.BookingNumber).HasColumnName("booking_number");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
@@ -682,6 +707,9 @@ public partial class SkincareDbContext : DbContext
             entity.Property(e => e.ServiceName)
                 .HasMaxLength(100)
                 .HasColumnName("service_name");
+            entity.Property(e => e.ShortDescription)
+                .HasMaxLength(255)
+                .HasColumnName("short_description");
         });
 
         modelBuilder.Entity<Staff>(entity =>

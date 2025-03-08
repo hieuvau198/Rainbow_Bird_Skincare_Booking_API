@@ -14,6 +14,9 @@ namespace Application.DTOs
         public string? PaymentMethod { get; set; }
         public string? Status { get; set; }
         public DateTime? PaymentDate { get; set; }
+        public decimal Tax { get; set; }
+        public string? Sender { get; set; }
+        public string? Receiver { get; set; }
     }
 
     public class CreatePaymentDto
@@ -22,6 +25,9 @@ namespace Application.DTOs
         public string? Currency { get; set; }
         public string? PaymentMethod { get; set; }
         public string? Status { get; set; }
+        public decimal Tax { get; set; }
+        public string? Sender { get; set; }
+        public string? Receiver { get; set; }
     }
 
     public class UpdatePaymentDto

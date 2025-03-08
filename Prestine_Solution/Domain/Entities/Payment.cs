@@ -17,5 +17,12 @@ public partial class Payment
 
     public DateTime? PaymentDate { get; set; }
 
+    public decimal Tax { get; set; }
+
+    public string? Sender { get; set; }
+
+    public string? Receiver { get; set; }
+
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 }
+

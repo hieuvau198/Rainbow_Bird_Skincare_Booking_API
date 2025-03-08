@@ -19,6 +19,9 @@ namespace Application.DTOs
         public string Location { get; set; }
         public bool IsActive { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public decimal? AverageReview { get; set; }
+        public string? ShortDescription { get; set; }
+        public int BookingNumber { get; set; }
     }
 
     public class CreateServiceDto
@@ -31,6 +34,7 @@ namespace Application.DTOs
         public int DurationMinutes { get; set; }
         public string Location { get; set; }
         public bool IsActive { get; set; }
+        public string? ShortDescription { get; set; } // New field
     }
 
     public class UpdateServiceDto
@@ -43,5 +47,7 @@ namespace Application.DTOs
         public int DurationMinutes { get; set; }
         public string Location { get; set; }
         public bool IsActive { get; set; }
+        public decimal? AverageReview { get; set; } // New field
+        public string? ShortDescription { get; set; } // New field
     }
 }

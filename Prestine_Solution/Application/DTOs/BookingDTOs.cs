@@ -18,12 +18,19 @@ namespace Application.DTOs
         public string? Status { get; set; }
         public string? Notes { get; set; }
         public DateTime? CreatedAt { get; set; }
-        public CustomerDto Customer { get; set; } = null!;
-        public TherapistDto Therapist { get; set; } = null!;
-        public ServiceDto Service { get; set; } = null!;
-        public TimeSlotDto TimeSlot { get; set; } = null!;
-        public PaymentDto Payment { get; set; } = null!;
+
+        public string? CustomerPhone { get; set; }
+        public string? CustomerEmail { get; set; }
+        public string? CustomerName { get; set; }
+        public string? CustomerNote { get; set; }
+        public string? Location { get; set; }
+        public decimal ServicePrice { get; set; }
+        public decimal BookingFee { get; set; }
+        public decimal? PaymentAmount { get; set; }
+        public string? PaymentStatus { get; set; }
+
     }
+
 
     public class CreateBookingDto
     {
@@ -34,12 +41,32 @@ namespace Application.DTOs
         public DateOnly BookingDate { get; set; }
         public string? Status { get; set; }
         public string? Notes { get; set; }
+
+        public string? CustomerPhone { get; set; }
+        public string? CustomerEmail { get; set; }
+        public string? CustomerName { get; set; }
+        public string? CustomerNote { get; set; }
+        public string? Location { get; set; }
+        public decimal ServicePrice { get; set; }
+        public decimal BookingFee { get; set; }
     }
+
 
     public class UpdateBookingDto
     {
         public string? Status { get; set; }
         public string? Notes { get; set; }
         public int? PaymentId { get; set; }
+
+        public string? CustomerPhone { get; set; }
+        public string? CustomerEmail { get; set; }
+        public string? CustomerName { get; set; }
+        public string? CustomerNote { get; set; }
+        public string? Location { get; set; }
+        public decimal? ServicePrice { get; set; }
+        public decimal? BookingFee { get; set; }
+        public decimal? PaymentAmount { get; set; }
+        public string? PaymentStatus { get; set; }
     }
+
 }

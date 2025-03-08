@@ -25,6 +25,14 @@ public partial class Booking
 
     public DateTime? CreatedAt { get; set; }
 
+    public decimal? ServicePrice { get; set; }
+
+    public decimal BookingFee { get; set; }
+
+    public decimal? PaymentAmount { get; set; }
+
+    public string? PaymentStatus { get; set; }
+
     public virtual CancelBooking? CancelBooking { get; set; }
 
     public virtual Customer Customer { get; set; } = null!;
