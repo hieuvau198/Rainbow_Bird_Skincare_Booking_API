@@ -58,6 +58,17 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<TherapistAvailabilityDto>>(filtered);
         }
 
+        public async Task<IEnumerable<TherapistAvailabilityDto>> GetAvailabilitiesBySlotIdAsync(int slotId, DateOnly? date = null)
+        {
+            var availabilities = await _availabilityRepository.GetAllAsync();
+            var filtered = availabilities.Where(a => a.SlotId == slotId);
+
+            if (date.HasValue)
+                filtered = filtered.Where(a => a.WorkingDate == date.Value);
+
+            return _mapper.Map<IEnumerable<TherapistAvailabilityDto>>(filtered);
+        }
+
         public async Task<TherapistAvailabilityDto> CreateAvailabilityAsync(CreateTherapistAvailabilityDto createDto)
         {
             // Verify therapist exists
@@ -65,23 +76,10 @@ namespace Application.Services
             if (therapist == null)
                 throw new KeyNotFoundException($"Therapist with ID {createDto.TherapistId} not found");
 
-            // Verify time slot exists and is active
+            // Verify time slot exists
             var timeSlot = await _timeSlotRepository.GetByIdAsync(createDto.SlotId);
             if (timeSlot == null)
                 throw new KeyNotFoundException($"TimeSlot with ID {createDto.SlotId} not found");
-            if (timeSlot.IsActive != true)
-                throw new InvalidOperationException("Cannot create availability for inactive time slot");
-
-            // Get working day for the slot to verify day matches
-            var workingDay = await _workingDayRepository.GetByIdAsync(timeSlot.WorkingDayId);
-            if (workingDay == null)
-                throw new KeyNotFoundException($"WorkingDay with ID {timeSlot.WorkingDayId} not found");
-            if (!workingDay.IsActive == true)
-                throw new InvalidOperationException("Cannot create availability for inactive working day");
-
-            // Verify the working day matches the date
-            if (workingDay.DayName.ToLower() != createDto.WorkingDate.DayOfWeek.ToString().ToLower())
-                throw new InvalidOperationException("Working day does not match the provided date");
 
             // Check if availability already exists
             var existingAvailabilities = await _availabilityRepository.GetAllAsync();
