@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using AutoMapper;
+using System.Linq.Expressions;
 
 namespace Application.Services
 {
@@ -57,13 +58,20 @@ namespace Application.Services
 
         public async Task<IEnumerable<TherapistAvailabilityDto>> GetAvailabilitiesBySlotIdAsync(int slotId, DateOnly? date = null)
         {
-            var availabilities = await _availabilityRepository.GetAllAsync();
-            var filtered = availabilities.Where(a => a.SlotId == slotId);
+            Expression<Func<TherapistAvailability, bool>> predicate;
 
             if (date.HasValue)
-                filtered = filtered.Where(a => a.WorkingDate == date.Value);
+                predicate = a => a.SlotId == slotId && a.WorkingDate == date.Value;
+            else
+                predicate = a => a.SlotId == slotId;
 
-            return _mapper.Map<IEnumerable<TherapistAvailabilityDto>>(filtered);
+            // Include Therapist and User to get access to the name
+            var availabilities = await _availabilityRepository.GetAllAsync(
+                predicate,
+                a => a.Therapist,
+                a => a.Therapist.User);
+
+            return _mapper.Map<IEnumerable<TherapistAvailabilityDto>>(availabilities);
         }
 
         public async Task<TherapistAvailabilityDto> CreateAvailabilityAsync(CreateTherapistAvailabilityDto createDto)
