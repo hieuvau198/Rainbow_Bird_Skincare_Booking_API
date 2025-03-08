@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.DTOs
 {
+    // TherapistAvailabilityDto.cs changes
     public class TherapistAvailabilityDto
     {
         public int AvailabilityId { get; set; }
@@ -14,9 +15,12 @@ namespace Application.DTOs
         public DateOnly WorkingDate { get; set; }
         public string? Status { get; set; }
         public DateTime? CreatedAt { get; set; }
-        public string TherapistName { get; set; } = string.Empty; // New field
+        public string TherapistName { get; set; } = string.Empty;
+        public decimal? TherapistRating { get; set; } // New field for rating
+        public int? TherapistRatingCount { get; set; } // New field for rating count
 
-        public TherapistDto Therapist { get; set; } = null!;
+        // Remove this line
+        // public TherapistDto Therapist { get; set; } = null!;
     }
 
     public class CreateTherapistAvailabilityDto
