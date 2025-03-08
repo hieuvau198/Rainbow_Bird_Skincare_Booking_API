@@ -161,7 +161,20 @@ public partial class SkincareDbContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
+            entity.Property(e => e.CustomerEmail)
+                .HasMaxLength(255)
+                .HasColumnName("customer_email");
             entity.Property(e => e.CustomerId).HasColumnName("customer_id");
+            entity.Property(e => e.CustomerName)
+                .HasMaxLength(255)
+                .HasColumnName("customer_name");
+            entity.Property(e => e.CustomerNote).HasColumnName("customer_note");
+            entity.Property(e => e.CustomerPhone)
+                .HasMaxLength(20)
+                .HasColumnName("customer_phone");
+            entity.Property(e => e.Location)
+                .HasMaxLength(255)
+                .HasColumnName("location");
             entity.Property(e => e.Notes).HasColumnName("notes");
             entity.Property(e => e.PaymentAmount)
                 .HasColumnType("decimal(10, 2)")

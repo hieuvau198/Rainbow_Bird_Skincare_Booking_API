@@ -33,6 +33,16 @@ public partial class Booking
 
     public string? PaymentStatus { get; set; }
 
+    public string? CustomerPhone { get; set; }
+
+    public string? CustomerEmail { get; set; }
+
+    public string? CustomerName { get; set; }
+
+    public string? CustomerNote { get; set; }
+
+    public string? Location { get; set; }
+
     public virtual CancelBooking? CancelBooking { get; set; }
 
     public virtual Customer Customer { get; set; } = null!;
