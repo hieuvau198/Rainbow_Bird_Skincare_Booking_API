@@ -6,6 +6,7 @@ using Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,7 +33,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<CustomerQuizDto>> GetAllCustomerQuizzesAsync()
         {
-            var customerQuizzes = await _repository.GetAllAsync();
+            var customerQuizzes = await _repository.GetAllAsync(null, t => t.Quiz, t => t.Customer, t => t.Customer.User);
             return _mapper.Map<IEnumerable<CustomerQuizDto>>(customerQuizzes);
         }
 
@@ -47,10 +48,15 @@ namespace Application.Services
 
         public async Task<IEnumerable<CustomerQuizDto>> GetCustomerQuizzesByCustomerIdAsync(int customerId)
         {
-            var customerQuizzes = await _repository.GetAllAsync();
-            var filtered = customerQuizzes.Where(cq => cq.CustomerId == customerId)
-                                        .OrderByDescending(cq => cq.StartedAt);
-            return _mapper.Map<IEnumerable<CustomerQuizDto>>(filtered);
+            var customerQuizzes = await _repository.GetAllAsync(
+                cq => cq.CustomerId == customerId, // Filter at DB level
+                cq => cq.Quiz,
+                cq => cq.Customer,
+                cq => cq.Customer.User
+            );
+
+            return _mapper.Map<IEnumerable<CustomerQuizDto>>(customerQuizzes.OrderByDescending(cq => cq.StartedAt));
+
         }
 
         public async Task<CustomerQuizDto> StartQuizAsync(CreateCustomerQuizDto createDto)
@@ -106,5 +112,38 @@ namespace Application.Services
                                         .OrderByDescending(cq => cq.CompletedAt);
             return _mapper.Map<IEnumerable<CustomerQuizDto>>(filtered);
         }
+
+        public Task<IEnumerable<CustomerQuizHistoryDto>> GetCustomerQuizHistoryAsync(int customerId)
+        {
+            throw new NotImplementedException();
+        }
+
+        //public async Task<IEnumerable<CustomerQuizHistoryDto>> GetCustomerQuizHistoryAsync(int customerId)
+        //{
+        //    var customer = await _customerRepository.GetByIdAsync(customerId);
+        //    if(customer == null)
+        //    {
+        //        throw new KeyNotFoundException($"Customer Not Found ID {customerId}");
+        //    }
+        //    var customerQuizzes = await _repository.GetAllAsync(
+        //        predicate: cq => cq.CustomerId == customerId,
+
+        //            cq => cq.Quiz,
+        //            cq => cq.Customer
+        //        );
+        //    var result = customerQuizzes
+        //        .OrderByDescending(cq => cq.CompletedAt)
+        //        .Select(cq => new CustomerQuizHistoryDto
+        //        {
+        //            CustomerQuizId = cq.CustomerQuizId,
+        //            QuizId = cq.QuizId,
+        //            QuizName = cq.Quiz.Name,
+        //            CustomerName = cq.Customer.User.FullName,
+        //            CustomerPoint = cq.TotalScore,
+        //            TotalPoint = cq.Quiz.TotalPoints ?? 0,
+        //            TakingQuizDate = cq.CompletedAt
+        //        }).ToList();
+        //    return result;
+        //}
     }
 }

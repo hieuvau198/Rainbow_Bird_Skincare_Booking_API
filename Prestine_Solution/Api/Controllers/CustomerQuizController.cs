@@ -34,6 +34,12 @@ namespace Api.Controllers
             return Ok(await _customerQuizService.GetCustomerQuizzesByCustomerIdAsync(customerId));
         }
 
+        [HttpGet("customer/{customerId}/history")]
+        public async Task<ActionResult<IEnumerable<CustomerQuizHistoryDto>>> GetCustomerQuizHistory(int customerId)
+        {
+            return Ok(await _customerQuizService.GetCustomerQuizHistoryAsync(customerId));
+        }
+
         [HttpGet("customer/{customerId}/completed")]
         public async Task<ActionResult<IEnumerable<CustomerQuizDto>>> GetCompletedQuizzesByCustomerId(int customerId)
         {

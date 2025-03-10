@@ -12,6 +12,8 @@ namespace Application.Interfaces
         Task<IEnumerable<CustomerQuizDto>> GetAllCustomerQuizzesAsync();
         Task<CustomerQuizDto> GetCustomerQuizByIdAsync(int id);
         Task<IEnumerable<CustomerQuizDto>> GetCustomerQuizzesByCustomerIdAsync(int customerId);
+        Task<IEnumerable<CustomerQuizHistoryDto>> GetCustomerQuizHistoryAsync(int customerId);
+
         Task<CustomerQuizDto> StartQuizAsync(CreateCustomerQuizDto createDto);
         Task UpdateCustomerQuizAsync(int id, UpdateCustomerQuizDto updateDto);
         Task DeleteCustomerQuizAsync(int id);

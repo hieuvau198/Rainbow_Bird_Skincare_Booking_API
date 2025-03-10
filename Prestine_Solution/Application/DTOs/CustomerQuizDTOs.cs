@@ -19,6 +19,16 @@ namespace Application.DTOs
         public QuizDto Quiz { get; set; } = null!;
     }
 
+    public class CustomerQuizHistoryDto
+    {
+        public int CustomerQuizId { get; set; }
+        public int QuizId { get; set; }
+        public string QuizName { get; set; }
+        public string CustomerName { get; set; }
+        public int? CustomerPoint { get; set; }
+        public int TotalPoint { get; set; }
+        public DateTime? TakingQuizDate { get; set; }
+    }
     public class CreateCustomerQuizDto
     {
         public int CustomerId { get; set; }
