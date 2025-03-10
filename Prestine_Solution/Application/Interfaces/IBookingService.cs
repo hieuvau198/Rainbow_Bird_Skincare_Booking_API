@@ -15,8 +15,11 @@ namespace Application.Interfaces
         Task<IEnumerable<BookingDto>> GetBookingsByTherapistIdAsync(int therapistId);
         Task<IEnumerable<BookingDto>> GetBookingsByServiceIdAsync(int serviceId);
         Task<IEnumerable<BookingDto>> GetBookingsByDateAsync(DateOnly date);
+        Task<GetBookingStatusDto> GetBookingStatusAsync(int id);
         Task<BookingDto> CreateBookingAsync(CreateBookingDto createDto);
         Task UpdateBookingAsync(int id, UpdateBookingDto updateDto);
+        Task UpdateBookingStatusAsync(int id, string newStatusString);
+        Task UpdateBookingStatusAsync(int id, UpdateBookingDto updateDto);
         Task DeleteBookingAsync(int id);
     }
 }

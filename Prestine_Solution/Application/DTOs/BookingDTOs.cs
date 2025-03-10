@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -69,4 +70,9 @@ namespace Application.DTOs
         public string? PaymentStatus { get; set; }
     }
 
+    public class GetBookingStatusDto
+    {
+        public BookingStatus CurrentStatus { get; set; }
+        public List<BookingStatus> NextStatuses { get; set; } = new();
+    }
 }

@@ -1,7 +1,9 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using Application.Utils;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -71,6 +73,25 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<BookingDto>>(filtered);
         }
 
+        // Get current status and next possible statuses
+        public async Task<GetBookingStatusDto> GetBookingStatusAsync(int id)
+        {
+            var booking = await _repository.GetByIdAsync(id);
+            if (booking == null)
+                throw new KeyNotFoundException($"Booking with ID {id} not found");
+
+            if (!Enum.TryParse<BookingStatus>(booking.Status, out var currentStatus))
+                throw new InvalidOperationException($"Invalid status stored: {booking.Status}");
+
+            var nextStatuses = BookingStatusHelper.GetNextStatuses(currentStatus);
+
+            return new GetBookingStatusDto
+            {
+                CurrentStatus = currentStatus,
+                NextStatuses = nextStatuses
+            };
+        }
+
         public async Task<BookingDto> CreateBookingAsync(CreateBookingDto createDto)
         {
             var booking = _mapper.Map<Booking>(createDto);
@@ -89,6 +110,38 @@ namespace Application.Services
 
             _mapper.Map(updateDto, booking);
             await _repository.UpdateAsync(booking);
+        }
+
+        
+
+        // Update status (string or DTO)
+        public async Task UpdateBookingStatusAsync(int id, string newStatusString)
+        {
+            var booking = await _repository.GetByIdAsync(id);
+            if (booking == null)
+                throw new KeyNotFoundException($"Booking with ID {id} not found");
+
+            if (!Enum.TryParse<BookingStatus>(newStatusString, true, out var newStatus))
+                throw new ArgumentException($"Invalid status: {newStatusString}");
+
+            if (!Enum.TryParse<BookingStatus>(booking.Status, out var currentStatus))
+                throw new InvalidOperationException($"Invalid status stored: {booking.Status}");
+
+            var allowedStatuses = BookingStatusHelper.GetNextStatuses(currentStatus);
+            if (!allowedStatuses.Contains(newStatus))
+                throw new InvalidOperationException($"Cannot change status from {currentStatus} to {newStatus}");
+
+            booking.Status = newStatus.ToString();
+            await _repository.UpdateAsync(booking);
+        }
+
+        // Overloaded version: Accepts UpdateBookingDto
+        public async Task UpdateBookingStatusAsync(int id, UpdateBookingDto updateDto)
+        {
+            if (updateDto.Status == null)
+                throw new ArgumentException("Status cannot be null");
+
+            await UpdateBookingStatusAsync(id, updateDto.Status);
         }
 
         public async Task DeleteBookingAsync(int id)

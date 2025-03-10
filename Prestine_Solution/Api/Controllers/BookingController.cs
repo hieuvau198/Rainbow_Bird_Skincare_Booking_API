@@ -52,6 +52,13 @@ namespace Api.Controllers
             return Ok(await _bookingService.GetBookingsByDateAsync(date));
         }
 
+        [HttpGet("{id}/status")]
+        public async Task<IActionResult> GetBookingStatus(int id)
+        {
+            var statusInfo = await _bookingService.GetBookingStatusAsync(id);
+            return Ok(statusInfo);
+        }
+
         [HttpPost]
         public async Task<ActionResult<BookingDto>> CreateBooking(CreateBookingDto createDto)
         {
@@ -69,6 +76,22 @@ namespace Api.Controllers
         public async Task<ActionResult> DeleteBooking(int id)
         {
             await _bookingService.DeleteBookingAsync(id);
+            return NoContent();
+        }
+
+        // ✅ Update status using a plain string
+        [HttpPut("{id}/status")]
+        public async Task<IActionResult> UpdateBookingStatus(int id, [FromBody] string newStatus)
+        {
+            await _bookingService.UpdateBookingStatusAsync(id, newStatus);
+            return NoContent();
+        }
+
+        // ✅ Update status using UpdateBookingDto
+        [HttpPut("{id}/status/overload")]
+        public async Task<IActionResult> UpdateBookingStatus(int id, [FromBody] UpdateBookingDto updateDto)
+        {
+            await _bookingService.UpdateBookingStatusAsync(id, updateDto);
             return NoContent();
         }
     }
