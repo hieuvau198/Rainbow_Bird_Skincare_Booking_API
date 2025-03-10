@@ -30,13 +30,13 @@ namespace Application.Services
 
         public async Task<IEnumerable<StaffDto>> GetAllStaffAsync()
         {
-            var staff = await _repository.GetAllAsync();
+            var staff = await _repository.GetAllAsync(null, s => s.User);
             return _mapper.Map<IEnumerable<StaffDto>>(staff);
         }
 
         public async Task<StaffDto> GetStaffByIdAsync(int id)
         {
-            var staff = await _repository.GetByIdAsync(id);
+            var staff = await _repository.GetByIdAsync(id, s => s.User);
             if (staff == null)
                 throw new KeyNotFoundException($"Staff with ID {id} not found");
 
@@ -45,8 +45,7 @@ namespace Application.Services
 
         public async Task<StaffDto> GetStaffByUserIdAsync(int userId)
         {
-            var staffList = await _repository.GetAllAsync();
-            var staff = staffList.FirstOrDefault(s => s.UserId == userId);
+            var staff = await _repository.FindAsync(s => s.UserId == userId, s => s.User);
 
             if (staff == null)
                 throw new KeyNotFoundException($"No staff found for User ID {userId}");

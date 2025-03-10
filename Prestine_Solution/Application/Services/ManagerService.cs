@@ -30,13 +30,13 @@ namespace Application.Services
 
         public async Task<IEnumerable<ManagerDto>> GetAllManagersAsync()
         {
-            var managers = await _repository.GetAllAsync();
+            var managers = await _repository.GetAllAsync(null, m => m.User);
             return _mapper.Map<IEnumerable<ManagerDto>>(managers);
         }
 
         public async Task<ManagerDto> GetManagerByIdAsync(int id)
         {
-            var manager = await _repository.GetByIdAsync(id);
+            var manager = await _repository.GetByIdAsync(id, m => m.User);
             if (manager == null)
                 throw new KeyNotFoundException($"Manager with ID {id} not found");
 
@@ -45,8 +45,7 @@ namespace Application.Services
 
         public async Task<ManagerDto> GetManagerByUserIdAsync(int userId)
         {
-            var managers = await _repository.GetAllAsync();
-            var manager = managers.FirstOrDefault(m => m.UserId == userId);
+            var manager = await _repository.FindAsync(m => m.UserId == userId, m => m.User);
 
             if (manager == null)
                 throw new KeyNotFoundException($"Manager with User ID {userId} not found");
