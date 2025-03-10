@@ -37,6 +37,13 @@ namespace Api.Controllers
             return Ok(therapist);
         }
 
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult<TherapistDto>> GetTherapistByUserId(int userId)
+        {
+            var therapist = await _therapistService.GetTherapistByUserIdAsync(userId);
+            return Ok(therapist);
+        }
+
         [HttpGet("with-reference/{id}")]
         public async Task<ActionResult<TherapistDto>> GetTherapistWithReference(int id)
         {

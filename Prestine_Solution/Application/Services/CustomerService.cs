@@ -30,13 +30,13 @@ namespace Application.Services
 
         public async Task<IEnumerable<CustomerDto>> GetAllCustomersAsync()
         {
-            var customers = await _repository.GetAllAsync();
+            var customers = await _repository.GetAllAsync(null, c => c.User);
             return _mapper.Map<IEnumerable<CustomerDto>>(customers);
         }
 
         public async Task<CustomerDto> GetCustomerByIdAsync(int id)
         {
-            var customer = await _repository.GetByIdAsync(id);
+            var customer = await _repository.GetByIdAsync(id, c => c.User);
             if (customer == null)
                 throw new KeyNotFoundException($"Customer with ID {id} not found");
 
@@ -45,8 +45,7 @@ namespace Application.Services
 
         public async Task<CustomerDto> GetCustomerByUserIdAsync(int userId)
         {
-            var customers = await _repository.GetAllAsync();
-            var customer = customers.FirstOrDefault(c => c.UserId == userId);
+            var customer = await _repository.FindAsync(c => c.UserId == userId, c => c.User);
 
             if (customer == null)
                 throw new KeyNotFoundException($"Customer with User ID {userId} not found");
@@ -56,17 +55,24 @@ namespace Application.Services
 
         public async Task<CustomerDto> CreateCustomerAsync(CreateCustomerDto createDto)
         {
-            var customer = _mapper.Map<Customer>(createDto);
+            // Ensure the User exists before creating a customer
+            var userExists = await _userRepository.ExistsAsync(u => u.UserId == createDto.UserId);
+            if (!userExists)
+                throw new KeyNotFoundException("User does not exist.");
 
+            var customer = _mapper.Map<Customer>(createDto);
             await _repository.CreateAsync(customer);
+
             return _mapper.Map<CustomerDto>(customer);
         }
         public async Task<CustomerDto> CreateCustomerWithUserAsync(CreateCustomerUserDto createDto)
         {
-            var users = await _userRepository.GetAllAsync();
-            if (users.Any(u => u.Email.ToLower() == createDto.Email.ToLower()))
+            // Check if the user with this email already exists
+            bool userExists = await _userRepository.ExistsAsync(u => u.Email.ToLower() == createDto.Email.ToLower());
+            if (userExists)
                 throw new InvalidOperationException("A user with this email already exists.");
 
+            // Create user
             var user = new User
             {
                 Username = createDto.Username,
@@ -77,9 +83,9 @@ namespace Application.Services
                 Role = (int?)UserRole.Customer,
                 CreatedAt = DateTime.UtcNow
             };
-
             await _userRepository.CreateAsync(user);
 
+            // Create customer linked to the new user
             var customer = new Customer
             {
                 UserId = user.UserId,
@@ -87,7 +93,6 @@ namespace Application.Services
                 MedicalHistory = createDto.MedicalHistory,
                 LastVisitAt = createDto.LastVisitAt
             };
-
             await _repository.CreateAsync(customer);
 
             return _mapper.Map<CustomerDto>(customer);
@@ -114,17 +119,19 @@ namespace Application.Services
 
         public async Task<IEnumerable<CustomerDto>> GetCustomersByLastVisitDateAsync(DateTime date)
         {
-            var customers = await _repository.GetAllAsync();
-            var filteredCustomers = customers.Where(c => c.LastVisitAt.HasValue && c.LastVisitAt.Value.Date == date.Date);
+            var customers = await _repository.GetAllAsync(
+                c => c.LastVisitAt.HasValue && c.LastVisitAt.Value.Date == date.Date,
+                c => c.User
+            );
 
-            return _mapper.Map<IEnumerable<CustomerDto>>(filteredCustomers);
+            return _mapper.Map<IEnumerable<CustomerDto>>(customers);
         }
 
         public async Task UpdateLastVisitDateAsync(int id, DateTime lastVisitDate)
         {
             var customer = await _repository.GetByIdAsync(id);
             if (customer == null)
-                throw new KeyNotFoundException($"Customer with ID {id} not found");
+                throw new KeyNotFoundException("Customer not found.");
 
             customer.LastVisitAt = lastVisitDate;
             await _repository.UpdateAsync(customer);

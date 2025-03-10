@@ -13,7 +13,11 @@ namespace Application.Mappings
     {
         public CustomerMappingProfile()
         {
-            CreateMap<Customer, CustomerDto>();
+            CreateMap<Customer, CustomerDto>()
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email))
+            .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.User.Phone))
+            .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.User.FullName))
+            .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User));
 
             CreateMap<CreateCustomerDto, Customer>()
                 .ForMember(dest => dest.CustomerId, opt => opt.Ignore())

@@ -12,6 +12,7 @@ namespace Application.Interfaces
         Task<IEnumerable<TherapistDto>> GetTherapistsAsync();
         Task<IEnumerable<TherapistDto>> GetTherapistsWithReferenceAsync();
         Task<TherapistDto> GetTherapistByIdAsync(int id);
+        Task<TherapistDto> GetTherapistByUserIdAsync(int id);
         Task<TherapistDto> GetTherapistByIdWithReferenceAsync(int id);
         Task<TherapistDto> CreateTherapistAsync(CreateTherapistDto createTherapistDto);
         Task<TherapistDto> CreateTherapistWithUserAsync(CreateTherapistUserDto createDto);

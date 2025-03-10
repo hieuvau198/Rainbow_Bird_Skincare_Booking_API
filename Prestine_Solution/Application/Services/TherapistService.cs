@@ -30,7 +30,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<TherapistDto>> GetTherapistsAsync()
         {
-            var therapists = await _repository.GetAllAsync();
+            var therapists = await _repository.GetAllAsync(null, t => t.User);
             return _mapper.Map<IEnumerable<TherapistDto>>(therapists);
         }
 
@@ -42,7 +42,16 @@ namespace Application.Services
 
         public async Task<TherapistDto> GetTherapistByIdAsync(int id)
         {
-            var therapist = await _repository.GetByIdAsync(id);
+            var therapist = await _repository.GetByIdAsync(id, t => t.User);
+            if (therapist == null)
+                throw new KeyNotFoundException($"Therapist with ID {id} not found");
+
+            return _mapper.Map<TherapistDto>(therapist);
+        }
+
+        public async Task<TherapistDto> GetTherapistByUserIdAsync(int id)
+        {
+            var therapist = await _repository.FindAsync(t => t.UserId == id, t => t.User);
             if (therapist == null)
                 throw new KeyNotFoundException($"Therapist with ID {id} not found");
 
@@ -117,5 +126,7 @@ namespace Application.Services
 
             await _repository.DeleteAsync(therapist);
         }
+
+        
     }
 }
