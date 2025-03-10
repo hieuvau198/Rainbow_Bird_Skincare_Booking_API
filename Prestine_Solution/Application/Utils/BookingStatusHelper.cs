@@ -1,9 +1,8 @@
 ﻿using Domain.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Utils
 {
@@ -13,9 +12,7 @@ namespace Application.Utils
         {
             return currentStatus switch
             {
-                BookingStatus.Pending => new List<BookingStatus> { BookingStatus.AwaitingConfirmation, BookingStatus.CancelledByCustomer },
-
-                BookingStatus.AwaitingConfirmation => new List<BookingStatus> { BookingStatus.Confirmed, BookingStatus.CancelledByStaff },
+                BookingStatus.AwaitingConfirmation => new List<BookingStatus> { BookingStatus.Confirmed, BookingStatus.CancelledByCustomer, BookingStatus.CancelledByStaff },
 
                 BookingStatus.Confirmed => new List<BookingStatus> { BookingStatus.CheckedIn, BookingStatus.CancelledByStaff, BookingStatus.NoShow },
 
@@ -37,6 +34,15 @@ namespace Application.Utils
 
                 _ => new List<BookingStatus>() // Default case
             };
+        }
+
+        // ✅ Get User-Friendly Status Name
+        public static string GetStatusDisplayName(BookingStatus status)
+        {
+            var type = typeof(BookingStatus);
+            var memInfo = type.GetMember(status.ToString());
+            var attributes = memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+            return attributes.Length > 0 ? ((DescriptionAttribute)attributes[0]).Description : status.ToString();
         }
     }
 }

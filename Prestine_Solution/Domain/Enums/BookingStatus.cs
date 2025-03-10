@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Domain.Enums
 {
     public enum BookingStatus
     {
-        Pending = 0,                // Customer created the booking
-        AwaitingConfirmation = 1,   // Staff is reviewing/editing the booking
-        Confirmed = 2,              // Booking is confirmed and assigned to a therapist
-        CheckedIn = 3,              // Customer has arrived
-        InProgress = 4,             // Service is ongoing
-        Completed = 5,              // Service is done
-        CheckedOut = 6,             // Payment completed and booking finalized
+        [Description("Awaiting Confirmation")] AwaitingConfirmation = 0,   // Staff is reviewing/editing the booking
+        [Description("Confirmed")] Confirmed = 1,              // Booking is confirmed and assigned to a therapist
+        [Description("Checked In")] CheckedIn = 2,            // Customer has arrived
+        [Description("In Progress")] InProgress = 3,          // Service is ongoing
+        [Description("Completed")] Completed = 4,             // Service is done
+        [Description("Checked Out")] CheckedOut = 5,          // Payment completed and booking finalized
 
-        CancelledByCustomer = 7,    // Customer cancelled before confirmation
-        CancelledByStaff = 8,       // Staff cancelled due to issues
-        NoShow = 9,                 // Customer did not check in on time
-        Incomplete = 10             // Service was started but not completed
+        [Description("Cancelled By Customer")] CancelledByCustomer = 6,    // Customer cancelled before confirmation
+        [Description("Cancelled By Staff")] CancelledByStaff = 7,       // Staff cancelled due to issues
+        [Description("No Show")] NoShow = 8,                 // Customer did not check in on time
+        [Description("Incomplete")] Incomplete = 9             // Service was started but not completed
     }
 }
