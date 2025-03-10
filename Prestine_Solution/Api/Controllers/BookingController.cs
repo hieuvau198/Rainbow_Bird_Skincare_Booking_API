@@ -55,14 +55,37 @@ namespace Api.Controllers
         [HttpGet("{id}/status")]
         public async Task<IActionResult> GetBookingStatus(int id)
         {
-            var statusInfo = await _bookingService.GetBookingStatusAsync(id);
-            return Ok(statusInfo);
+            try
+            {
+                var statusInfo = await _bookingService.GetBookingStatusAsync(id);
+                return Ok(new { success = true, data = statusInfo });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = "An unexpected error occurred. Please try again." });
+            }
         }
 
         [HttpPost]
-        public async Task<ActionResult<BookingDto>> CreateBooking(CreateBookingDto createDto)
+        public async Task<IActionResult> CreateBooking([FromBody] CreateBookingDto createDto)
         {
-            return Ok(await _bookingService.CreateBookingAsync(createDto));
+            try
+            {
+                var booking = await _bookingService.CreateBookingAsync(createDto);
+                return Ok(new { success = true, message = "Your booking has been successfully created.", data = booking });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Something went wrong while creating your booking. Please try again." });
+            }
         }
 
         [HttpPut("{id}")]
@@ -79,12 +102,30 @@ namespace Api.Controllers
             return NoContent();
         }
 
-        // ✅ Update status using a plain string
         [HttpPut("{id}/status")]
         public async Task<IActionResult> UpdateBookingStatus(int id, [FromBody] string newStatus)
         {
-            await _bookingService.UpdateBookingStatusAsync(id, newStatus);
-            return NoContent();
+            try
+            {
+                await _bookingService.UpdateBookingStatusAsync(id, newStatus);
+                return Ok(new { success = true, message = "Booking status updated successfully." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Something went wrong while updating the booking status. Please try again." });
+            }
         }
 
         // ✅ Update status using UpdateBookingDto

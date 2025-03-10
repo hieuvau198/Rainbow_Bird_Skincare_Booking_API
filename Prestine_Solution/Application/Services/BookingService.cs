@@ -78,25 +78,36 @@ namespace Application.Services
         {
             var booking = await _repository.GetByIdAsync(id);
             if (booking == null)
-                throw new KeyNotFoundException($"Booking with ID {id} not found");
+                throw new KeyNotFoundException("The requested booking does not exist. Please check your details.");
 
             if (!Enum.TryParse<BookingStatus>(booking.Status, out var currentStatus))
-                throw new InvalidOperationException($"Invalid status stored: {booking.Status}");
+                throw new InvalidOperationException("The booking has an invalid status. Please contact support.");
 
             var nextStatuses = BookingStatusHelper.GetNextStatuses(currentStatus);
 
             return new GetBookingStatusDto
             {
-                CurrentStatus = currentStatus,
-                NextStatuses = nextStatuses
+                CurrentStatus = currentStatus.ToString(),
+                NextStatuses = nextStatuses.Select(s => s.ToString()).ToList()
             };
         }
 
         public async Task<BookingDto> CreateBookingAsync(CreateBookingDto createDto)
         {
+            // Check if the customer already has a booking for the same slot & date
+            var existingBookings = await _repository.GetAllAsync(b =>
+                b.CustomerId == createDto.CustomerId &&
+                b.BookingDate == createDto.BookingDate &&
+                b.SlotId == createDto.SlotId);
+
+            if (existingBookings.Any())
+            {
+                throw new InvalidOperationException("You already have a booking for this time slot. Please choose a different time.");
+            }
+
             var booking = _mapper.Map<Booking>(createDto);
             booking.CreatedAt = DateTime.UtcNow;
-            booking.Status = booking.Status ?? "Pending"; // Default status if not provided
+            booking.Status = "Pending"; // Default status
 
             await _repository.CreateAsync(booking);
             return _mapper.Map<BookingDto>(booking);
@@ -112,24 +123,24 @@ namespace Application.Services
             await _repository.UpdateAsync(booking);
         }
 
-        
+
 
         // Update status (string or DTO)
         public async Task UpdateBookingStatusAsync(int id, string newStatusString)
         {
             var booking = await _repository.GetByIdAsync(id);
             if (booking == null)
-                throw new KeyNotFoundException($"Booking with ID {id} not found");
+                throw new KeyNotFoundException("The requested booking does not exist. Please check your details.");
 
             if (!Enum.TryParse<BookingStatus>(newStatusString, true, out var newStatus))
-                throw new ArgumentException($"Invalid status: {newStatusString}");
+                throw new ArgumentException($"The status '{newStatusString}' is not valid. Please try again.");
 
             if (!Enum.TryParse<BookingStatus>(booking.Status, out var currentStatus))
-                throw new InvalidOperationException($"Invalid status stored: {booking.Status}");
+                throw new InvalidOperationException("The booking has an invalid status. Please contact support.");
 
             var allowedStatuses = BookingStatusHelper.GetNextStatuses(currentStatus);
             if (!allowedStatuses.Contains(newStatus))
-                throw new InvalidOperationException($"Cannot change status from {currentStatus} to {newStatus}");
+                throw new InvalidOperationException($"You cannot change the status from '{currentStatus}' to '{newStatus}'. Please check and try again.");
 
             booking.Status = newStatus.ToString();
             await _repository.UpdateAsync(booking);

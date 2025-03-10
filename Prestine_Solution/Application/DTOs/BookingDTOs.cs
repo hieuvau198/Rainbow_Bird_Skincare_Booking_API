@@ -72,7 +72,7 @@ namespace Application.DTOs
 
     public class GetBookingStatusDto
     {
-        public BookingStatus CurrentStatus { get; set; }
-        public List<BookingStatus> NextStatuses { get; set; } = new();
+        public string CurrentStatus { get; set; } = string.Empty;
+        public List<string> NextStatuses { get; set; } = new();
     }
 }
