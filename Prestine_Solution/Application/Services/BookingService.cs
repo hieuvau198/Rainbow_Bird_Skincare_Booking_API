@@ -77,19 +77,15 @@ namespace Application.Services
             if (booking == null)
                 throw new KeyNotFoundException("The requested booking does not exist.");
 
-            if (!Enum.TryParse<BookingStatus>(booking.Status, out var currentStatus))
-                throw new InvalidOperationException("The booking has an invalid status. Please contact support.");
-
-            var nextStatuses = BookingStatusHelper.GetNextStatuses(currentStatus)
-                                .Select(s => BookingStatusHelper.GetStatusDisplayName(s))
-                                .ToList(); // ✅ Ensure it's a List<string>
+            var nextStatuses = BookingStatusHelper.GetNextStatuses(booking.Status);
 
             return new GetBookingStatusDto
             {
-                CurrentStatus = BookingStatusHelper.GetStatusDisplayName(currentStatus),
-                NextStatuses = nextStatuses // ✅ Now it's a List<string>
+                CurrentStatus = booking.Status, // ✅ Return the already stored display name
+                NextStatuses = nextStatuses
             };
         }
+
 
 
         // ✅ Prevent duplicate bookings & default to "Awaiting Confirmation"
@@ -106,7 +102,7 @@ namespace Application.Services
 
             var booking = _mapper.Map<Booking>(createDto);
             booking.CreatedAt = DateTime.UtcNow;
-            booking.Status = BookingStatus.AwaitingConfirmation.ToString(); // ✅ No "Pending" status
+            booking.Status = BookingStatusHelper.GetStatusDisplayName(BookingStatus.AwaitingConfirmation); // ✅ Store as "Awaiting Confirmation"
 
             await _repository.CreateAsync(booking);
             return _mapper.Map<BookingDto>(booking);
@@ -130,19 +126,23 @@ namespace Application.Services
             if (booking == null)
                 throw new KeyNotFoundException("The requested booking does not exist.");
 
-            if (!Enum.TryParse<BookingStatus>(newStatusString, true, out var newStatus))
+            BookingStatus? newStatus = BookingStatusHelper.ParseBookingStatus(newStatusString);
+            if (newStatus == null)
                 throw new ArgumentException($"The status '{newStatusString}' is not valid. Please try again.");
 
-            if (!Enum.TryParse<BookingStatus>(booking.Status, out var currentStatus))
-                throw new InvalidOperationException("The booking has an invalid status. Please contact support.");
+            BookingStatus currentStatus = BookingStatusHelper.ParseBookingStatus(booking.Status)
+                ?? throw new InvalidOperationException("The booking has an invalid status. Please contact support.");
 
             var allowedStatuses = BookingStatusHelper.GetNextStatuses(currentStatus);
-            if (!allowedStatuses.Contains(newStatus))
-                throw new InvalidOperationException($"You cannot change the status from '{currentStatus}' to '{newStatus}'. Please check and try again.");
+            if (!allowedStatuses.Contains(newStatus.Value))
+                throw new InvalidOperationException($"You cannot change the status from '{booking.Status}' to '{newStatusString}'. Please check and try again.");
 
-            booking.Status = newStatus.ToString();
+            booking.Status = BookingStatusHelper.GetStatusDisplayName(newStatus.Value); // ✅ Store as display name
+
             await _repository.UpdateAsync(booking);
         }
+
+
 
         // ✅ Overloaded method for DTO-based status update
         public async Task UpdateBookingStatusAsync(int id, UpdateBookingDto updateDto)

@@ -6,7 +6,7 @@ namespace Domain.Enums
 {
     public enum BookingStatus
     {
-        [Description("Awaiting Confirmation")] AwaitingConfirmation = 0,   // Staff is reviewing/editing the booking
+        [Description("Await Confirmation")] AwaitingConfirmation = 0,   // Staff is reviewing/editing the booking
         [Description("Confirmed")] Confirmed = 1,              // Booking is confirmed and assigned to a therapist
         [Description("Checked In")] CheckedIn = 2,            // Customer has arrived
         [Description("In Progress")] InProgress = 3,          // Service is ongoing
