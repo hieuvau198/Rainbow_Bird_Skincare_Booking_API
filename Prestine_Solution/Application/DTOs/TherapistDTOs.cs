@@ -13,6 +13,7 @@ namespace Application.DTOs
         public bool? IsAvailable { get; set; }
         public string? Schedule { get; set; }
         public decimal? Rating { get; set; }
+        public int? RatingCount { get; set; }
         public UserDto User { get; set; } = null!; 
     }
     public class CreateTherapistUserDto
@@ -25,6 +26,7 @@ namespace Application.DTOs
         public bool? IsAvailable { get; set; }
         public string? Schedule { get; set; }
         public decimal? Rating { get; set; }
+        public int? RatingCount { get; set; }
     }
 
     public class CreateTherapistDto
@@ -33,6 +35,7 @@ namespace Application.DTOs
         public bool? IsAvailable { get; set; }
         public string? Schedule { get; set; }
         public decimal? Rating { get; set; }
+        public int? RatingCount { get; set; }
     }
 
     public class UpdateTherapistDto
@@ -40,5 +43,6 @@ namespace Application.DTOs
         public bool? IsAvailable { get; set; }
         public string? Schedule { get; set; }
         public decimal? Rating { get; set; }
+        public int? RatingCount { get; set; }
     }
 }
