@@ -84,7 +84,7 @@ namespace Api.Controllers
 
         [HttpPut("{serviceId}")]
         //[Authorize(Policy = "StandardPolicy")]
-        public async Task<ActionResult<ServiceDto>> UpdateService(int serviceId, [FromForm] UpdateServiceDto updateDto)
+        public async Task<ActionResult<ServiceDto>> UpdateService(int serviceId, [FromBody] UpdateServiceDto updateDto)
         {
             var service = await _serviceService.UpdateServiceAsync(serviceId, updateDto);
             return service != null ? Ok(service) : NotFound();

@@ -32,28 +32,46 @@ namespace Application.Services
 
         public async Task<IEnumerable<TherapistAvailabilityDto>> GetAllAvailabilitiesAsync()
         {
-            var availabilities = await _availabilityRepository.GetAllAsync(null, t => t.Therapist, u => u.Therapist.User);
+            var availabilities = await _availabilityRepository.GetAllAsync(
+                null,
+                t => t.Therapist,
+                t => t.Therapist.TherapistProfile);
+
+            // Filter out availabilities without a valid TherapistProfile
+            availabilities = availabilities.Where(a => a.Therapist?.TherapistProfile != null);
+
             return _mapper.Map<IEnumerable<TherapistAvailabilityDto>>(availabilities);
         }
 
         public async Task<TherapistAvailabilityDto> GetAvailabilityByIdAsync(int id)
         {
-            var availability = await _availabilityRepository.GetByIdAsync(id);
+            var availability = await _availabilityRepository.GetByIdAsync(
+                id,
+                a => a.Therapist,
+                a => a.Therapist.TherapistProfile);
+
             if (availability == null)
                 throw new KeyNotFoundException($"Availability with ID {id} not found");
+
+            if (availability.Therapist == null || availability.Therapist.TherapistProfile == null)
+                throw new KeyNotFoundException($"This therapist has not registered a profile yet.");
 
             return _mapper.Map<TherapistAvailabilityDto>(availability);
         }
 
         public async Task<IEnumerable<TherapistAvailabilityDto>> GetTherapistAvailabilitiesAsync(int therapistId, DateOnly? date = null)
         {
-            var availabilities = await _availabilityRepository.GetAllAsync();
-            var filtered = availabilities.Where(a => a.TherapistId == therapistId);
+            var availabilities = await _availabilityRepository.GetAllAsync(
+                a => a.TherapistId == therapistId,
+                a => a.Therapist,
+                a => a.Therapist.TherapistProfile);
+
+            availabilities = availabilities.Where(a => a.Therapist?.TherapistProfile != null);
 
             if (date.HasValue)
-                filtered = filtered.Where(a => a.WorkingDate == date.Value);
+                availabilities = availabilities.Where(a => a.WorkingDate == date.Value);
 
-            return _mapper.Map<IEnumerable<TherapistAvailabilityDto>>(filtered);
+            return _mapper.Map<IEnumerable<TherapistAvailabilityDto>>(availabilities);
         }
 
         public async Task<IEnumerable<TherapistAvailabilityDto>> GetAvailabilitiesBySlotIdAsync(int slotId, DateOnly? date = null)
@@ -65,21 +83,28 @@ namespace Application.Services
             else
                 predicate = a => a.SlotId == slotId;
 
-            // Include Therapist and User to get access to the name
             var availabilities = await _availabilityRepository.GetAllAsync(
                 predicate,
                 a => a.Therapist,
-                a => a.Therapist.User);
+                a => a.Therapist.TherapistProfile);
+
+            availabilities = availabilities.Where(a => a.Therapist?.TherapistProfile != null);
 
             return _mapper.Map<IEnumerable<TherapistAvailabilityDto>>(availabilities);
         }
 
         public async Task<TherapistAvailabilityDto> CreateAvailabilityAsync(CreateTherapistAvailabilityDto createDto)
         {
-            // Verify therapist exists
-            var therapist = await _therapistRepository.GetByIdAsync(createDto.TherapistId);
+            // Verify therapist exists and has a profile
+            var therapist = await _therapistRepository.GetByIdAsync(
+                createDto.TherapistId,
+                t => t.TherapistProfile);
+
             if (therapist == null)
                 throw new KeyNotFoundException($"Therapist with ID {createDto.TherapistId} not found");
+
+            if (therapist.TherapistProfile == null)
+                throw new KeyNotFoundException($"Therapist with ID {createDto.TherapistId} has not registered a profile yet.");
 
             // Verify time slot exists
             var timeSlot = await _timeSlotRepository.GetByIdAsync(createDto.SlotId);
@@ -106,9 +131,16 @@ namespace Application.Services
 
         public async Task UpdateAvailabilityAsync(int id, UpdateTherapistAvailabilityDto updateDto)
         {
-            var availability = await _availabilityRepository.GetByIdAsync(id);
+            var availability = await _availabilityRepository.GetByIdAsync(
+                id,
+                a => a.Therapist,
+                a => a.Therapist.TherapistProfile);
+
             if (availability == null)
                 throw new KeyNotFoundException($"Availability with ID {id} not found");
+
+            if (availability.Therapist == null || availability.Therapist.TherapistProfile == null)
+                throw new KeyNotFoundException($"This therapist has not registered a profile yet.");
 
             _mapper.Map(updateDto, availability);
             await _availabilityRepository.UpdateAsync(availability);
@@ -116,9 +148,16 @@ namespace Application.Services
 
         public async Task DeleteAvailabilityAsync(int id)
         {
-            var availability = await _availabilityRepository.GetByIdAsync(id);
+            var availability = await _availabilityRepository.GetByIdAsync(
+                id,
+                a => a.Therapist,
+                a => a.Therapist.TherapistProfile);
+
             if (availability == null)
                 throw new KeyNotFoundException($"Availability with ID {id} not found");
+
+            if (availability.Therapist == null || availability.Therapist.TherapistProfile == null)
+                throw new KeyNotFoundException($"This therapist has not registered a profile yet.");
 
             await _availabilityRepository.DeleteAsync(availability);
         }

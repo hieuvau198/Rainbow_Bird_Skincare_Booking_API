@@ -96,8 +96,7 @@ namespace Application.Services
 
         public async Task<ServiceDto> UpdateServiceAsync(int serviceId, UpdateServiceDto dto)
         {
-            var services = await _repository.GetAllAsync();
-            var existingService = services.FirstOrDefault(s => s.ServiceId == serviceId);
+            var existingService = await _repository.FindAsync(s => s.ServiceId == serviceId);
 
             if (existingService == null)
                 throw new KeyNotFoundException($"Service not found with ID: {serviceId}");
