@@ -16,15 +16,18 @@ namespace Application.Services
     {
         private readonly IGenericRepository<Booking> _repository;
         private readonly IGenericRepository<Therapist> _therapistRepository;
+        private readonly IGenericRepository<TherapistAvailability> _therapistAvaiRepository;
         private readonly IMapper _mapper;
 
         public BookingService(
             IGenericRepository<Booking> repository,
             IGenericRepository<Therapist> therapistRepository,
+            IGenericRepository<TherapistAvailability> therapistAvaiRepository,
             IMapper mapper)
         {
             _repository = repository;
             _therapistRepository = therapistRepository;
+            _therapistAvaiRepository = therapistAvaiRepository;
             _mapper = mapper;
         }
 
@@ -166,6 +169,28 @@ namespace Application.Services
             var therapistExists = await _therapistRepository.ExistsAsync(t => t.TherapistId == newTherapistId);
             if (!therapistExists)
                 throw new KeyNotFoundException("The specified therapist does not exist.");
+
+            // ✅ Check if the new therapist is actually available at this time
+            var isTherapistAvailable = await _therapistAvaiRepository.ExistsAsync(a =>
+                a.TherapistId == newTherapistId &&
+                a.WorkingDate == booking.BookingDate &&
+                a.SlotId == booking.SlotId &&
+                a.Status == "Available" // Ensure the status indicates the therapist is working
+            );
+
+            if (!isTherapistAvailable)
+                throw new InvalidOperationException("The selected therapist is not available at this time. Please choose a different therapist.");
+
+            // Check if the new therapist is already booked at the same time slot
+            var isTherapistBooked = await _repository.ExistsAsync(b =>
+                b.TherapistId == newTherapistId &&
+                b.BookingDate == booking.BookingDate &&
+                b.SlotId == booking.SlotId &&
+                b.BookingId != bookingId // Ensure we are not checking against the same booking
+            );
+
+            if (isTherapistBooked)
+                throw new InvalidOperationException("The selected therapist is already booked at this time slot. Please choose a different therapist.");
 
             // Update the therapist ID
             booking.TherapistId = newTherapistId;

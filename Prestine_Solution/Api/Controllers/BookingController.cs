@@ -151,6 +151,10 @@ namespace Api.Controllers
             {
                 return NotFound(new { success = false, message = ex.Message });
             }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, new { success = false, message = "Something went wrong while updating the therapist. Please try again." });
