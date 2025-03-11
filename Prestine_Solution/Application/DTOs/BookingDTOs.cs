@@ -25,6 +25,11 @@ namespace Application.DTOs
         public string? CustomerName { get; set; }
         public string? CustomerNote { get; set; }
         public string? Location { get; set; }
+        public string ServiceName { get; set; } = null!;
+        public string Currency { get; set; } = null!;
+        public int DurationMinutes { get; set; }
+        public bool IsRated { get; set; }
+        public bool IsFeedback { get; set; }
         public decimal ServicePrice { get; set; }
         public decimal BookingFee { get; set; }
         public decimal? PaymentAmount { get; set; }
@@ -68,6 +73,8 @@ namespace Application.DTOs
         public decimal? BookingFee { get; set; }
         public decimal? PaymentAmount { get; set; }
         public string? PaymentStatus { get; set; }
+        public bool IsRated { get; set; }
+        public bool IsFeedback { get; set; }
     }
 
     public class UpdateBookingTherapistDto

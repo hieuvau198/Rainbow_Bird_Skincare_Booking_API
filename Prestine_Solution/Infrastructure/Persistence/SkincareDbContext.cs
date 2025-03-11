@@ -161,6 +161,10 @@ public partial class SkincareDbContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
+            entity.Property(e => e.Currency)
+                .HasMaxLength(10)
+                .HasDefaultValue("VND")
+                .HasColumnName("currency");
             entity.Property(e => e.CustomerEmail)
                 .HasMaxLength(255)
                 .HasColumnName("customer_email");
@@ -172,6 +176,11 @@ public partial class SkincareDbContext : DbContext
             entity.Property(e => e.CustomerPhone)
                 .HasMaxLength(20)
                 .HasColumnName("customer_phone");
+            entity.Property(e => e.DurationMinutes)
+                .HasDefaultValue(60)
+                .HasColumnName("duration_minutes");
+            entity.Property(e => e.IsFeedback).HasColumnName("is_feedback");
+            entity.Property(e => e.IsRated).HasColumnName("is_rated");
             entity.Property(e => e.Location)
                 .HasMaxLength(255)
                 .HasColumnName("location");
@@ -184,6 +193,10 @@ public partial class SkincareDbContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("payment_status");
             entity.Property(e => e.ServiceId).HasColumnName("service_id");
+            entity.Property(e => e.ServiceName)
+                .HasMaxLength(255)
+                .HasDefaultValue("")
+                .HasColumnName("service_name");
             entity.Property(e => e.ServicePrice)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("service_price");

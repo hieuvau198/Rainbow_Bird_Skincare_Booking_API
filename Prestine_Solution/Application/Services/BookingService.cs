@@ -120,6 +120,15 @@ namespace Application.Services
             var booking = _mapper.Map<Booking>(createDto);
             booking.CreatedAt = DateTime.UtcNow;
             booking.Status = BookingStatusHelper.GetStatusDisplayName(BookingStatus.AwaitingConfirmation); // ✅ Store as "Awaiting Confirmation"
+            booking.ServiceName = service.ServiceName ?? "Service Name Not Found";
+            booking.Currency = service.Currency ?? "VND";
+            booking.DurationMinutes = service.DurationMinutes;
+            booking.PaymentAmount = booking.ServicePrice + booking.BookingFee;
+            booking.Location = "Prestine Care Center, District 9";
+            booking.IsRated = false;
+            booking.IsFeedback = false;
+            booking.PaymentStatus = PaymentStatus.Pending.ToString();
+
 
             await _repository.CreateAsync(booking);
             return _mapper.Map<BookingDto>(booking);

@@ -43,6 +43,16 @@ public partial class Booking
 
     public string? Location { get; set; }
 
+    public string ServiceName { get; set; } = null!;
+
+    public string Currency { get; set; } = null!;
+
+    public int DurationMinutes { get; set; }
+
+    public bool IsRated { get; set; }
+
+    public bool IsFeedback { get; set; }
+
     public virtual CancelBooking? CancelBooking { get; set; }
 
     public virtual Customer Customer { get; set; } = null!;
