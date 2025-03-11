@@ -135,5 +135,26 @@ namespace Api.Controllers
             await _bookingService.UpdateBookingStatusAsync(id, updateDto);
             return NoContent();
         }
+
+        [HttpPatch("{id}/therapist")]
+        public async Task<IActionResult> UpdateTherapist(int id, [FromBody] UpdateBookingTherapistDto dto)
+        {
+            if (dto == null || dto.TherapistId <= 0)
+                return BadRequest(new { success = false, message = "Invalid therapist ID." });
+
+            try
+            {
+                await _bookingService.UpdateBookingTherapistAsync(id, dto.TherapistId);
+                return Ok(new { success = true, message = "Therapist updated successfully." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Something went wrong while updating the therapist. Please try again." });
+            }
+        }
     }
 }

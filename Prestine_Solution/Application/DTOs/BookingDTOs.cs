@@ -70,6 +70,11 @@ namespace Application.DTOs
         public string? PaymentStatus { get; set; }
     }
 
+    public class UpdateBookingTherapistDto
+    {
+        public int TherapistId { get; set; }
+    }
+
     public class GetBookingStatusDto
     {
         public string CurrentStatus { get; set; } = string.Empty;

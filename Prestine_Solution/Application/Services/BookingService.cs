@@ -15,13 +15,16 @@ namespace Application.Services
     public class BookingService : IBookingService
     {
         private readonly IGenericRepository<Booking> _repository;
+        private readonly IGenericRepository<Therapist> _therapistRepository;
         private readonly IMapper _mapper;
 
         public BookingService(
             IGenericRepository<Booking> repository,
+            IGenericRepository<Therapist> therapistRepository,
             IMapper mapper)
         {
             _repository = repository;
+            _therapistRepository = therapistRepository;
             _mapper = mapper;
         }
 
@@ -152,6 +155,24 @@ namespace Application.Services
 
             await UpdateBookingStatusAsync(id, updateDto.Status);
         }
+
+        public async Task UpdateBookingTherapistAsync(int bookingId, int newTherapistId)
+        {
+            var booking = await _repository.GetByIdAsync(bookingId);
+            if (booking == null)
+                throw new KeyNotFoundException("The requested booking does not exist.");
+
+            // Ensure the new therapist exists (Optional validation)
+            var therapistExists = await _therapistRepository.ExistsAsync(t => t.TherapistId == newTherapistId);
+            if (!therapistExists)
+                throw new KeyNotFoundException("The specified therapist does not exist.");
+
+            // Update the therapist ID
+            booking.TherapistId = newTherapistId;
+
+            await _repository.UpdateAsync(booking);
+        }
+
 
         // ✅ Delete a booking
         public async Task DeleteBookingAsync(int id)
