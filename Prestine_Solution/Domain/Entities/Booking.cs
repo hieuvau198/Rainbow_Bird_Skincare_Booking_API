@@ -9,7 +9,7 @@ public partial class Booking
 
     public int CustomerId { get; set; }
 
-    public int TherapistId { get; set; }
+    public int? TherapistId { get; set; }
 
     public int ServiceId { get; set; }
 
@@ -53,6 +53,8 @@ public partial class Booking
 
     public bool IsFeedback { get; set; }
 
+    public string TherapistName { get; set; } = null!;
+
     public virtual CancelBooking? CancelBooking { get; set; }
 
     public virtual Customer Customer { get; set; } = null!;
@@ -68,6 +70,4 @@ public partial class Booking
     public virtual Service Service { get; set; } = null!;
 
     public virtual TimeSlot Slot { get; set; } = null!;
-
-    public virtual Therapist Therapist { get; set; } = null!;
 }

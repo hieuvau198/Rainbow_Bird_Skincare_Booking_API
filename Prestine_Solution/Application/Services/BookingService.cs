@@ -37,14 +37,14 @@ namespace Application.Services
         // ✅ Efficiently fetch all bookings with necessary relationships
         public async Task<IEnumerable<BookingDto>> GetAllBookingsAsync()
         {
-            var bookings = await _repository.GetAllAsync(null, b => b.Customer, b => b.Therapist);
+            var bookings = await _repository.GetAllAsync(null, b => b.Customer);
             return _mapper.Map<IEnumerable<BookingDto>>(bookings);
         }
 
         // ✅ Get booking by ID with necessary relationships
         public async Task<BookingDto> GetBookingByIdAsync(int id)
         {
-            var booking = await _repository.GetByIdAsync(id, b => b.Customer, b => b.Therapist);
+            var booking = await _repository.GetByIdAsync(id, b => b.Customer);
             if (booking == null)
                 throw new KeyNotFoundException("The requested booking does not exist.");
 
@@ -61,7 +61,7 @@ namespace Application.Services
         // ✅ Optimized search for therapist bookings
         public async Task<IEnumerable<BookingDto>> GetBookingsByTherapistIdAsync(int therapistId)
         {
-            var bookings = await _repository.GetAllAsync(b => b.TherapistId == therapistId, b => b.Therapist);
+            var bookings = await _repository.GetAllAsync(b => b.TherapistId == therapistId);
             return _mapper.Map<IEnumerable<BookingDto>>(bookings.OrderByDescending(b => b.BookingDate));
         }
 

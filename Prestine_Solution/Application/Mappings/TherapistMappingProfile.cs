@@ -14,7 +14,6 @@ namespace Application.Mappings
             CreateMap<CreateTherapistDto, Therapist>()
                 .ForMember(dest => dest.TherapistId, opt => opt.Ignore())
                 .ForMember(dest => dest.User, opt => opt.Ignore())
-                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
                 .ForMember(dest => dest.TherapistAvailabilities, opt => opt.Ignore())
                 .ForMember(dest => dest.TherapistProfile, opt => opt.Ignore());
 
@@ -22,7 +21,6 @@ namespace Application.Mappings
                 .ForMember(dest => dest.TherapistId, opt => opt.Ignore())
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
                 .ForMember(dest => dest.User, opt => opt.Ignore())
-                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
                 .ForMember(dest => dest.TherapistAvailabilities, opt => opt.Ignore())
                 .ForMember(dest => dest.TherapistProfile, opt => opt.Ignore());
 
@@ -30,7 +28,6 @@ namespace Application.Mappings
                 .ForMember(dest => dest.TherapistId, opt => opt.Ignore())
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
                 .ForMember(dest => dest.User, opt => opt.Ignore())
-                .ForMember(dest => dest.Bookings, opt => opt.Ignore())
                 .ForMember(dest => dest.TherapistAvailabilities, opt => opt.Ignore())
                 .ForMember(dest => dest.TherapistProfile, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

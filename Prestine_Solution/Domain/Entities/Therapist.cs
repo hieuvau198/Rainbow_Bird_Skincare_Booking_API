@@ -16,11 +16,10 @@ public partial class Therapist
 
     public int? RatingCount { get; set; }
 
-    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
-
     public virtual ICollection<TherapistAvailability> TherapistAvailabilities { get; set; } = new List<TherapistAvailability>();
 
     public virtual TherapistProfile? TherapistProfile { get; set; }
 
     public virtual User User { get; set; } = null!;
 }
+

@@ -19,7 +19,6 @@ namespace Application.Mappings
                 .ForMember(dest => dest.Review, opt => opt.Ignore())
                 .ForMember(dest => dest.Service, opt => opt.Ignore())
                 .ForMember(dest => dest.Slot, opt => opt.Ignore())
-                .ForMember(dest => dest.Therapist, opt => opt.Ignore())
                 .ForMember(dest => dest.CancelBooking, opt => opt.Ignore());
 
             CreateMap<UpdateBookingDto, Booking>()
@@ -35,7 +34,6 @@ namespace Application.Mappings
                 .ForMember(dest => dest.Review, opt => opt.Ignore())
                 .ForMember(dest => dest.Service, opt => opt.Ignore())
                 .ForMember(dest => dest.Slot, opt => opt.Ignore())
-                .ForMember(dest => dest.Therapist, opt => opt.Ignore())
                 .ForMember(dest => dest.CancelBooking, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }

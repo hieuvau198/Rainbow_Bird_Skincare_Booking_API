@@ -37,7 +37,6 @@ namespace Application.DTOs
 
     }
 
-
     public class CreateBookingDto
     {
         public int CustomerId { get; set; }

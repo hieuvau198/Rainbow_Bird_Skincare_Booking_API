@@ -205,6 +205,10 @@ public partial class SkincareDbContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("status");
             entity.Property(e => e.TherapistId).HasColumnName("therapist_id");
+            entity.Property(e => e.TherapistName)
+                .HasMaxLength(255)
+                .HasDefaultValue("Not Assigned Yet")
+                .HasColumnName("therapist_name");
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.CustomerId)
@@ -224,11 +228,6 @@ public partial class SkincareDbContext : DbContext
                 .HasForeignKey(d => d.SlotId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Booking__slot_id__10566F31");
-
-            entity.HasOne(d => d.Therapist).WithMany(p => p.Bookings)
-                .HasForeignKey(d => d.TherapistId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Booking__therapi__0E6E26BF");
         });
 
         modelBuilder.Entity<CancelBooking>(entity =>
