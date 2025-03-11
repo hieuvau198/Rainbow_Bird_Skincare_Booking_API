@@ -63,6 +63,8 @@ public partial class SkincareDbContext : DbContext
 
     public virtual DbSet<Service> Services { get; set; }
 
+    public virtual DbSet<ServiceCategory> ServiceCategories { get; set; }
+
     public virtual DbSet<Staff> Staff { get; set; }
 
     public virtual DbSet<Therapist> Therapists { get; set; }
@@ -183,14 +185,17 @@ public partial class SkincareDbContext : DbContext
             entity.Property(e => e.IsRated).HasColumnName("is_rated");
             entity.Property(e => e.Location)
                 .HasMaxLength(255)
+                .HasDefaultValue("Prestine Care Center, District 9")
                 .HasColumnName("location");
             entity.Property(e => e.Notes).HasColumnName("notes");
             entity.Property(e => e.PaymentAmount)
+                .HasDefaultValue(0m)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("payment_amount");
             entity.Property(e => e.PaymentId).HasColumnName("payment_id");
             entity.Property(e => e.PaymentStatus)
                 .HasMaxLength(50)
+                .HasDefaultValue("Pending")
                 .HasColumnName("payment_status");
             entity.Property(e => e.ServiceId).HasColumnName("service_id");
             entity.Property(e => e.ServiceName)
@@ -702,6 +707,7 @@ public partial class SkincareDbContext : DbContext
                 .HasColumnType("decimal(3, 2)")
                 .HasColumnName("average_review");
             entity.Property(e => e.BookingNumber).HasColumnName("booking_number");
+            entity.Property(e => e.CategoryId).HasColumnName("category_id");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
@@ -735,6 +741,24 @@ public partial class SkincareDbContext : DbContext
             entity.Property(e => e.ShortDescription)
                 .HasMaxLength(255)
                 .HasColumnName("short_description");
+
+            entity.HasOne(d => d.Category).WithMany(p => p.Services)
+                .HasForeignKey(d => d.CategoryId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_Service_ServiceCategory");
+        });
+
+        modelBuilder.Entity<ServiceCategory>(entity =>
+        {
+            entity.HasKey(e => e.CategoryId);
+
+            entity.ToTable("ServiceCategory");
+
+            entity.Property(e => e.CategoryId).HasColumnName("category_id");
+            entity.Property(e => e.CategoryName)
+                .HasMaxLength(100)
+                .HasColumnName("category_name");
+            entity.Property(e => e.Description).HasColumnName("description");
         });
 
         modelBuilder.Entity<Staff>(entity =>

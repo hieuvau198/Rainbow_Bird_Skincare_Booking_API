@@ -35,7 +35,11 @@ public partial class Service
 
     public int BookingNumber { get; set; }
 
+    public int? CategoryId { get; set; }
+
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
+    public virtual ServiceCategory? Category { get; set; }
 
     public virtual ICollection<QuizRecommendation> QuizRecommendations { get; set; } = new List<QuizRecommendation>();
 }
