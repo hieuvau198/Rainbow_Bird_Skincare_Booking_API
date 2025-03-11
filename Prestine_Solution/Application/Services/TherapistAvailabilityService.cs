@@ -35,6 +35,7 @@ namespace Application.Services
             var availabilities = await _availabilityRepository.GetAllAsync(
                 null,
                 t => t.Therapist,
+                t => t.Therapist.User,
                 t => t.Therapist.TherapistProfile);
 
             // Filter out availabilities without a valid TherapistProfile
@@ -48,6 +49,7 @@ namespace Application.Services
             var availability = await _availabilityRepository.GetByIdAsync(
                 id,
                 a => a.Therapist,
+                t => t.Therapist.User,
                 a => a.Therapist.TherapistProfile);
 
             if (availability == null)
@@ -64,6 +66,7 @@ namespace Application.Services
             var availabilities = await _availabilityRepository.GetAllAsync(
                 a => a.TherapistId == therapistId,
                 a => a.Therapist,
+                t => t.Therapist.User,
                 a => a.Therapist.TherapistProfile);
 
             availabilities = availabilities.Where(a => a.Therapist?.TherapistProfile != null);
@@ -86,6 +89,7 @@ namespace Application.Services
             var availabilities = await _availabilityRepository.GetAllAsync(
                 predicate,
                 a => a.Therapist,
+                t => t.Therapist.User,
                 a => a.Therapist.TherapistProfile);
 
             availabilities = availabilities.Where(a => a.Therapist?.TherapistProfile != null);

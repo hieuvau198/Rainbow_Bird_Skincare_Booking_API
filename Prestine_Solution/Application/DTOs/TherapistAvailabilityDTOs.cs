@@ -19,8 +19,7 @@ namespace Application.DTOs
         public decimal? TherapistRating { get; set; } // New field for rating
         public int? TherapistRatingCount { get; set; } // New field for rating count
 
-        // Remove this line
-        // public TherapistDto Therapist { get; set; } = null!;
+        
     }
 
     public class CreateTherapistAvailabilityDto
