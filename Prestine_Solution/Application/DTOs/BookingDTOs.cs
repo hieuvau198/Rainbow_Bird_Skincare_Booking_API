@@ -11,7 +11,7 @@ namespace Application.DTOs
     {
         public int BookingId { get; set; }
         public int CustomerId { get; set; }
-        public int TherapistId { get; set; }
+        public int? TherapistId { get; set; }
         public int ServiceId { get; set; }
         public int SlotId { get; set; }
         public int? PaymentId { get; set; }
@@ -26,6 +26,7 @@ namespace Application.DTOs
         public string? CustomerNote { get; set; }
         public string? Location { get; set; }
         public string ServiceName { get; set; } = null!;
+        public string TherapistName { get; set; } = null!;
         public string Currency { get; set; } = null!;
         public int DurationMinutes { get; set; }
         public bool IsRated { get; set; }
@@ -62,7 +63,7 @@ namespace Application.DTOs
         public string? Status { get; set; }
         public string? Notes { get; set; }
         public int? PaymentId { get; set; }
-
+        public int TherapistId { get; set; }
         public string? CustomerPhone { get; set; }
         public string? CustomerEmail { get; set; }
         public string? CustomerName { get; set; }

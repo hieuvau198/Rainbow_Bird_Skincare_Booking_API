@@ -113,6 +113,16 @@ namespace Application.Services
             if (service == null)
                 throw new InvalidOperationException("This service is no longer existed.");
 
+            string therapistName = "No Therapist Assigned";
+            if(createDto.TherapistId != 0)
+            {
+                Therapist therapist = await _therapistRepository.FindAsync(t => t.TherapistId == createDto.TherapistId, t => t.User);
+                if(therapist != null)
+                {
+                    therapistName = therapist.User.FullName;
+                }
+            }
+
             service.BookingNumber++;
 
             await _serviceRepository.UpdateAsync(service);
@@ -128,7 +138,7 @@ namespace Application.Services
             booking.IsRated = false;
             booking.IsFeedback = false;
             booking.PaymentStatus = PaymentStatus.Pending.ToString();
-
+            booking.TherapistName = therapistName;
 
             await _repository.CreateAsync(booking);
             return _mapper.Map<BookingDto>(booking);
