@@ -20,6 +20,7 @@ namespace Application.Interfaces
         Task UpdateBookingAsync(int id, UpdateBookingDto updateDto);
         Task UpdateBookingStatusAsync(int id, string newStatusString);
         Task UpdateBookingStatusAsync(int id, UpdateBookingDto updateDto);
+        Task UpdateBookingTherapistAsync(int bookingId, int newTherapistId);
         Task DeleteBookingAsync(int id);
     }
 }

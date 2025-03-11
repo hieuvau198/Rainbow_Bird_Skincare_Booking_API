@@ -189,7 +189,7 @@ public partial class SkincareDbContext : DbContext
                 .HasColumnName("service_price");
             entity.Property(e => e.SlotId).HasColumnName("slot_id");
             entity.Property(e => e.Status)
-                .HasMaxLength(20)
+                .HasMaxLength(50)
                 .HasColumnName("status");
             entity.Property(e => e.TherapistId).HasColumnName("therapist_id");
 
