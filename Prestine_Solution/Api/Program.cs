@@ -167,6 +167,7 @@ builder.Services.AddScoped<IFeedbackQuestionService, FeedbackQuestionService>();
 builder.Services.AddScoped<IFeedbackAnswerService, FeedbackAnswerService>();
 builder.Services.AddScoped<ICustomerFeedbackService, CustomerFeedbackService>();
 builder.Services.AddScoped<ICustomerFeedbackAnswerService, CustomerFeedbackAnswerService>();
+builder.Services.AddScoped<IServiceCategoryService, ServiceCategoryService>();
 
 builder.Services.AddScoped<IImageService, FirebaseImageService>();
 
@@ -185,6 +186,7 @@ builder.Services.AddAutoMapper(
                                typeof(WorkingDayMappingProfile),
                                typeof(TimeSlotMappingProfile),
                                typeof(ServiceMappingProfile),
+                               typeof(ServiceCategoryMappingProfile),
                                typeof(QuizMappingProfile),
                                typeof(QuestionMappingProfile),
                                typeof(CustomerQuizMappingProfile),

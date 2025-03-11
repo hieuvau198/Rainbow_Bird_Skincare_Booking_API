@@ -29,12 +29,13 @@ namespace Api.Controllers
             [FromQuery] string serviceName = null,
             [FromQuery] decimal? minPrice = null,
             [FromQuery] decimal? maxPrice = null,
+            [FromQuery] int? categoryId = null,
             [FromQuery] string sortBy = "price",
             [FromQuery] string order = "asc",
             [FromQuery] int page = 1,
             [FromQuery] int size = 10)
         {
-            var services = await _serviceService.GetServicesAsync(serviceName, minPrice, maxPrice, sortBy, order, page, size);
+            var services = await _serviceService.GetServicesAsync(serviceName, minPrice, maxPrice, categoryId, sortBy, order, page, size);
 
             return Ok(new
             {

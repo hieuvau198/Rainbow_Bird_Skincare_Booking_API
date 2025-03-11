@@ -3,36 +3,36 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
 {
     public class ServiceService : IServiceService
     {
         private readonly IGenericRepository<Service> _repository;
+        private readonly IGenericRepository<ServiceCategory> _categoryRepository;
         private readonly IImageService _imageService;
         private readonly IMapper _mapper;
 
         public ServiceService(
             IGenericRepository<Service> repository,
+            IGenericRepository<ServiceCategory> categoryRepository,
             IImageService imageService,
             IMapper mapper)
         {
             _repository = repository;
+            _categoryRepository = categoryRepository;
             _imageService = imageService;
             _mapper = mapper;
         }
 
         public async Task<ServiceDto> GetServiceByIdAsync(int serviceId)
         {
-            var services = await _repository.GetAllAsync();
-            var service = services.FirstOrDefault(s => s.ServiceId == serviceId);
-
+            var service = await _repository.GetByIdAsync(serviceId, s => s.Category);
             if (service == null)
                 throw new KeyNotFoundException($"Service not found with ID: {serviceId}");
 
@@ -41,7 +41,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<ServiceDto>> GetAllServicesAsync()
         {
-            var services = await _repository.GetAllAsync();
+            var services = await _repository.GetAllAsync(null, s => s.Category);
             return _mapper.Map<IEnumerable<ServiceDto>>(services);
         }
 
@@ -49,6 +49,7 @@ namespace Application.Services
             string serviceName = null,
             decimal? minPrice = null,
             decimal? maxPrice = null,
+            int? categoryId = null,
             string sortBy = "price",
             string order = "asc",
             int page = 1,
@@ -65,6 +66,10 @@ namespace Application.Services
             if (maxPrice.HasValue)
                 query = query.Where(s => s.Price <= maxPrice.Value);
 
+            // ✅ Filter by Category
+            if (categoryId.HasValue)
+                query = query.Where(s => s.CategoryId == categoryId.Value);
+
             query = sortBy.ToLower() switch
             {
                 "price" => order.ToLower() == "desc" ? query.OrderByDescending(s => s.Price) : query.OrderBy(s => s.Price),
@@ -73,38 +78,38 @@ namespace Application.Services
                 _ => query.OrderBy(s => s.ServiceId)
             };
 
-            var totalItems = await _repository.CountAsync(x => true);
-            var services = await query.Skip((page - 1) * size).Take(size).ToListAsync();
-
+            var services = await query.Skip((page - 1) * size).Take(size).Include(s => s.Category).ToListAsync();
             return _mapper.Map<IEnumerable<ServiceDto>>(services);
         }
 
         public async Task<ServiceDto> CreateServiceAsync(CreateServiceDto dto)
         {
+            // ✅ Ensure the category exists
+            var category = await _categoryRepository.GetByIdAsync(dto.CategoryId ?? 999);
+            if (category == null)
+                throw new KeyNotFoundException("Invalid category ID");
+
             var service = _mapper.Map<Service>(dto);
             service.CreatedAt = DateTime.UtcNow;
+            service.Category = category;
 
-            // Handle service image
             if (dto.ServiceImage != null)
             {
                 service.ServiceImage = await _imageService.UploadImageAsync(dto.ServiceImage);
             }
 
-            var createdService = await _repository.CreateAsync(service);
-            return _mapper.Map<ServiceDto>(createdService);
+            await _repository.CreateAsync(service);
+            return _mapper.Map<ServiceDto>(service);
         }
 
         public async Task<ServiceDto> UpdateServiceAsync(int serviceId, UpdateServiceDto dto)
         {
-            var existingService = await _repository.FindAsync(s => s.ServiceId == serviceId);
-
+            var existingService = await _repository.GetByIdAsync(serviceId, s => s.Category);
             if (existingService == null)
                 throw new KeyNotFoundException($"Service not found with ID: {serviceId}");
 
-            // Handle service image update
             if (dto.ServiceImage != null)
             {
-                // Delete old image if it exists
                 if (!string.IsNullOrEmpty(existingService.ServiceImage))
                 {
                     await _imageService.DeleteImageAsync(existingService.ServiceImage);
@@ -113,22 +118,28 @@ namespace Application.Services
                 existingService.ServiceImage = await _imageService.UploadImageAsync(dto.ServiceImage);
             }
 
-            // Update other properties
-            _mapper.Map(dto, existingService);
+            // ✅ Allow category updates
+            if (dto.CategoryId.HasValue)
+            {
+                var newCategory = await _categoryRepository.GetByIdAsync(dto.CategoryId.Value);
+                if (newCategory == null)
+                    throw new KeyNotFoundException("Invalid category ID");
 
+                existingService.Category = newCategory;
+            }
+
+            _mapper.Map(dto, existingService);
             await _repository.UpdateAsync(existingService);
+
             return _mapper.Map<ServiceDto>(existingService);
         }
 
         public async Task DeleteServiceAsync(int serviceId)
         {
-            var services = await _repository.GetAllAsync();
-            var service = services.FirstOrDefault(s => s.ServiceId == serviceId);
-
+            var service = await _repository.GetByIdAsync(serviceId);
             if (service == null)
                 throw new KeyNotFoundException($"Service not found with ID: {serviceId}");
 
-            // Delete service image if it exists
             if (!string.IsNullOrEmpty(service.ServiceImage))
             {
                 await _imageService.DeleteImageAsync(service.ServiceImage);

@@ -15,11 +15,11 @@ namespace Application.Interfaces
             string serviceName = null,
             decimal? minPrice = null,
             decimal? maxPrice = null,
+            int? categoryId = null,
             string sortBy = "price",
             string order = "asc",
             int page = 1,
-            int size = 10
-        );
+            int size = 10);
         Task<ServiceDto> CreateServiceAsync(CreateServiceDto dto);
         Task<ServiceDto> UpdateServiceAsync(int serviceId, UpdateServiceDto dto);
         Task DeleteServiceAsync(int serviceId);
