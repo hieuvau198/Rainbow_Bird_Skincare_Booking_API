@@ -17,17 +17,20 @@ namespace Application.Services
         private readonly IGenericRepository<Booking> _repository;
         private readonly IGenericRepository<Therapist> _therapistRepository;
         private readonly IGenericRepository<TherapistAvailability> _therapistAvaiRepository;
+        private readonly IGenericRepository<Service> _serviceRepository;
         private readonly IMapper _mapper;
 
         public BookingService(
             IGenericRepository<Booking> repository,
             IGenericRepository<Therapist> therapistRepository,
             IGenericRepository<TherapistAvailability> therapistAvaiRepository,
+            IGenericRepository<Service> serviceRepository,
             IMapper mapper)
         {
             _repository = repository;
             _therapistRepository = therapistRepository;
             _therapistAvaiRepository = therapistAvaiRepository;
+            _serviceRepository = serviceRepository;
             _mapper = mapper;
         }
 
@@ -105,6 +108,14 @@ namespace Application.Services
 
             if (existingBookings.Any())
                 throw new InvalidOperationException("You already have a booking for this time slot. Please choose a different time.");
+
+            Service service = await _serviceRepository.FindAsync(s => s.ServiceId == createDto.ServiceId);
+            if (service == null)
+                throw new InvalidOperationException("This service is no longer existed.");
+
+            service.BookingNumber++;
+
+            await _serviceRepository.UpdateAsync(service);
 
             var booking = _mapper.Map<Booking>(createDto);
             booking.CreatedAt = DateTime.UtcNow;
