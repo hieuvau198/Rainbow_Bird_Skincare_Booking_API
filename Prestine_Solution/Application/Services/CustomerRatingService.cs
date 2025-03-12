@@ -73,6 +73,7 @@ namespace Application.Services
             {
                 if (booking != null)
                 {
+                    booking.IsRated = true;
                     Service service = await _serviceRepo.GetByIdAsync(booking.ServiceId);
                     Therapist therapist = await _therapistRepo.GetByIdAsync((int)booking.TherapistId);
                     service.Rating = (service.Rating * service.RatingCount + createDto.RatingValue) / (service.RatingCount + 1);
