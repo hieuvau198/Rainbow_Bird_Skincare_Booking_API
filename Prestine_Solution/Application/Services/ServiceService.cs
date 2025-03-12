@@ -97,6 +97,10 @@ namespace Application.Services
             {
                 service.ServiceImage = await _imageService.UploadImageAsync(dto.ServiceImage);
             }
+            else
+            {
+                service.ServiceImage = "https://www.theskinclinics.com/wp-content/uploads/2022/11/fader3.jpg";
+            }
 
             await _repository.CreateAsync(service);
             return _mapper.Map<ServiceDto>(service);
