@@ -12,13 +12,22 @@ namespace Application.Services
     public class CustomerRatingService : ICustomerRatingService
     {
         private readonly IGenericRepository<CustomerRating> _repository;
+        private readonly IGenericRepository<Booking> _bookingRepository;
+        private readonly IGenericRepository<Service> _serviceRepo;
+        private readonly IGenericRepository<Therapist> _therapistRepo;
         private readonly IMapper _mapper;
 
         public CustomerRatingService(
             IGenericRepository<CustomerRating> repository,
+            IGenericRepository<Booking> bookingRepository,
+            IGenericRepository<Service> serviceRepo,
+            IGenericRepository<Therapist> therapistRepo,
             IMapper mapper)
         {
             _repository = repository;
+            _bookingRepository = bookingRepository;
+            _serviceRepo = serviceRepo;
+            _therapistRepo = therapistRepo;
             _mapper = mapper;
         }
 
@@ -52,6 +61,30 @@ namespace Application.Services
         {
             if (createDto.RatingValue < 1 || createDto.RatingValue > 5)
                 throw new InvalidOperationException("Rating value must be between 1 and 5");
+            Booking booking = await _bookingRepository.GetByIdAsync(createDto.BookingId);
+
+            if (booking == null)
+                throw new InvalidOperationException("This booking is not existed");
+
+            var existedRating = _repository.FindAsync(r => r.BookingId ==  createDto.BookingId);
+            if (existedRating != null)
+                throw new InvalidOperationException("You rated this service booking already.");
+            try
+            {
+                if (booking != null)
+                {
+                    Service service = await _serviceRepo.GetByIdAsync(booking.ServiceId);
+                    Therapist therapist = await _therapistRepo.GetByIdAsync((int)booking.TherapistId);
+                    service.Rating = (service.Rating * service.RatingCount + createDto.RatingValue) / (service.RatingCount + 1);
+                    service.RatingCount++;
+                    therapist.Rating = (therapist.Rating * therapist.RatingCount + createDto.RatingValue) / (therapist.RatingCount + 1);
+                    therapist.RatingCount++;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
 
             var rating = _mapper.Map<CustomerRating>(createDto);
             rating.CreatedAt = DateTime.UtcNow;

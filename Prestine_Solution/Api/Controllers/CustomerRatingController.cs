@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using Application.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,8 +41,19 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<ActionResult<CustomerRatingDto>> CreateRating(CreateCustomerRatingDto createDto)
         {
-            var createdRating = await _ratingService.CreateRatingAsync(createDto);
-            return CreatedAtAction(nameof(GetRatingById), new { id = createdRating.RatingId }, createdRating);
+            try
+            {
+                var createdRating = await _ratingService.CreateRatingAsync(createDto);
+                return Ok(new { success = true, message = "Your Rating has been successfully sent. Thank you.", data = CreatedAtAction(nameof(GetRatingById), new { id = createdRating.RatingId }, createdRating) });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Something went wrong while rating. Please try again." });
+            }
         }
 
         [HttpPut("{id}")]
