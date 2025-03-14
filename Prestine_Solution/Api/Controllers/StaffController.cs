@@ -17,6 +17,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
+        
         public async Task<ActionResult<IEnumerable<StaffDto>>> GetAllStaff()
         {
             var staff = await _staffService.GetAllStaffAsync();
