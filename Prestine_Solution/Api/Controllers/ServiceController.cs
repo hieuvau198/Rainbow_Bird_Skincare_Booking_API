@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,14 +18,15 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Policy = "OpenPolicy")]
+        [Authorize(Policy = "OpenPolicy")]
+
         public async Task<ActionResult<IEnumerable<ServiceDto>>> GetAllServices()
         {
             return Ok(await _serviceService.GetAllServicesAsync());
         }
 
         [HttpGet("filter")]
-        //[Authorize(Policy = "OpenPolicy")]
+        [Authorize(Policy = "OpenPolicy")]
         public async Task<IActionResult> GetServices(
             [FromQuery] string serviceName = null,
             [FromQuery] decimal? minPrice = null,
