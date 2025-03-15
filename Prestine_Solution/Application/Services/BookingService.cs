@@ -208,7 +208,6 @@ namespace Application.Services
             // ✅ Check if the new therapist is actually available at this time
             var isTherapistAvailable = await _therapistAvaiRepository.ExistsAsync(a =>
                 a.TherapistId == newTherapistId &&
-                a.WorkingDate == booking.BookingDate &&
                 a.SlotId == booking.SlotId &&
                 a.Status == "Available" // Ensure the status indicates the therapist is working
             );

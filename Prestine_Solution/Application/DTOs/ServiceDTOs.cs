@@ -20,7 +20,8 @@ namespace Application.DTOs
         public string Location { get; set; }
         public bool IsActive { get; set; }
         public DateTime? CreatedAt { get; set; }
-        public decimal? AverageReview { get; set; }
+        public decimal? Rating { get; set; }
+        public int? RatingCount { get; set; }
         public string? ShortDescription { get; set; }
         public int BookingNumber { get; set; }
     }
