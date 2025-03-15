@@ -149,7 +149,12 @@ namespace Application.Services
         {
             var booking = await _repository.GetByIdAsync(id);
             if (booking == null)
-                throw new KeyNotFoundException("The requested booking does not exist.");
+                throw new KeyNotFoundException("Sorry! This booking does not exist.");
+
+            if(updateDto.TherapistId == 0 && updateDto.Status.Equals("Confirmed"))
+            {
+                throw new InvalidOperationException("Assign a therapist for this booking before confirm it.");
+            }
 
             _mapper.Map(updateDto, booking);
             await _repository.UpdateAsync(booking);
