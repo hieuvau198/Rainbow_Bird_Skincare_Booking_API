@@ -14,7 +14,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout code #Chat edit from: []
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up .NET Core
@@ -22,20 +22,20 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      - name: Restore dependencies #Chat edit from: Build with dotnet
+      - name: Restore dependencies
         run: dotnet restore Prestine_Solution/Prestine_Solution.sln
 
-      - name: Build the solution #Chat edit from: dotnet publish 
+      - name: Build the solution
         run: dotnet build Prestine_Solution/Prestine_Solution.sln --configuration Release
 
-      - name: Publish the application #Chat edit from: dotnet publish 
+      - name: Publish the application
         run: dotnet publish Prestine_Solution/Api/Api.csproj -c Release -o "${{ runner.temp }}/myapp"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{ runner.temp }}/myapp #Chat edit from: ${{env.DOTNET_ROOT}}/myapp
+          path: ${{ runner.temp }}/myapp
 
   deploy:
     runs-on: windows-latest
