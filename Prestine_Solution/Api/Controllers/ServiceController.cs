@@ -3,6 +3,9 @@ using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Api.Controllers
 {
@@ -18,10 +21,17 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        
         public async Task<ActionResult<IEnumerable<ServiceDto>>> GetAllServices()
         {
-            return Ok(await _serviceService.GetAllServicesAsync());
+            try
+            {
+                var services = await _serviceService.GetAllServicesAsync();
+                return Ok(services);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while retrieving services.", error = ex.Message });
+            }
         }
 
         [HttpGet("filter")]
@@ -35,46 +45,104 @@ namespace Api.Controllers
             [FromQuery] int page = 1,
             [FromQuery] int size = 10)
         {
-            var services = await _serviceService.GetServicesAsync(serviceName, minPrice, maxPrice, categoryId, sortBy, order, page, size);
-
-            return Ok(new
+            try
             {
-                totalItems = services.Count(),
-                currentPage = page,
-                pageSize = size,
-                data = services
-            });
+                var services = await _serviceService.GetServicesAsync(serviceName, minPrice, maxPrice, categoryId, sortBy, order, page, size);
+                return Ok(new
+                {
+                    totalItems = services.Count(),
+                    currentPage = page,
+                    pageSize = size,
+                    data = services
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error retrieving services.", error = ex.Message });
+            }
         }
 
         [HttpGet("{serviceId}")]
         public async Task<ActionResult<ServiceDto>> GetService(int serviceId)
         {
-            var service = await _serviceService.GetServiceByIdAsync(serviceId);
-            return service != null ? Ok(service) : NotFound();
+            try
+            {
+                var service = await _serviceService.GetServiceByIdAsync(serviceId);
+                return Ok(service);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error retrieving service.", error = ex.Message });
+            }
         }
 
         [HttpPost]
         [Authorize(Policy = "StandardPolicy")]
         public async Task<ActionResult<ServiceDto>> CreateService([FromForm] CreateServiceDto createDto)
         {
-            var service = await _serviceService.CreateServiceAsync(createDto);
-            return CreatedAtAction(nameof(GetService), new { serviceId = service.ServiceId }, service);
+            try
+            {
+                var service = await _serviceService.CreateServiceAsync(createDto);
+                return CreatedAtAction(nameof(GetService), new { serviceId = service.ServiceId }, service);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error creating service.", error = ex.Message });
+            }
         }
 
         [HttpPut("{serviceId}")]
         [Authorize(Policy = "StandardPolicy")]
         public async Task<ActionResult<ServiceDto>> UpdateService(int serviceId, [FromForm] UpdateServiceDto updateDto)
         {
-            var service = await _serviceService.UpdateServiceAsync(serviceId, updateDto);
-            return service != null ? Ok(service) : NotFound();
+            try
+            {
+                var service = await _serviceService.UpdateServiceAsync(serviceId, updateDto);
+                return Ok(service);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error updating service.", error = ex.Message });
+            }
         }
 
         [HttpDelete("{serviceId}")]
         [Authorize(Policy = "RestrictPolicy")]
         public async Task<IActionResult> DeleteService(int serviceId)
         {
-            await _serviceService.DeleteServiceAsync(serviceId);
-            return NoContent();
+            try
+            {
+                await _serviceService.DeleteServiceAsync(serviceId);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error deleting service.", error = ex.Message });
+            }
         }
     }
 }

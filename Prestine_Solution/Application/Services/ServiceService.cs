@@ -35,13 +35,16 @@ namespace Application.Services
             var service = await _repository.GetByIdAsync(serviceId, s => s.Category);
             if (service == null)
                 throw new KeyNotFoundException($"Service not found with ID: {serviceId}");
+            if (!service.IsActive ?? false)
+                throw new KeyNotFoundException($"This service is not exist anymore: {serviceId}");
 
             return _mapper.Map<ServiceDto>(service);
         }
 
         public async Task<IEnumerable<ServiceDto>> GetAllServicesAsync()
         {
-            var services = await _repository.GetAllAsync(null, s => s.Category);
+            var services = await _repository.GetAllAsync(s => s.IsActive == true, s => s.Category);
+
             return _mapper.Map<IEnumerable<ServiceDto>>(services);
         }
 
@@ -57,6 +60,8 @@ namespace Application.Services
         {
             var query = _repository.GetAllAsQueryable();
 
+            query = query.Where(s => s.IsActive == true);
+
             if (!string.IsNullOrEmpty(serviceName))
                 query = query.Where(s => s.ServiceName.Contains(serviceName));
 
@@ -66,7 +71,6 @@ namespace Application.Services
             if (maxPrice.HasValue)
                 query = query.Where(s => s.Price <= maxPrice.Value);
 
-            // ✅ Filter by Category
             if (categoryId.HasValue)
                 query = query.Where(s => s.CategoryId == categoryId.Value);
 
@@ -84,14 +88,18 @@ namespace Application.Services
 
         public async Task<ServiceDto> CreateServiceAsync(CreateServiceDto dto)
         {
-            // ✅ Ensure the category exists
-            var category = await _categoryRepository.GetByIdAsync(dto.CategoryId ?? 999);
+            if(dto.CategoryId == 0)
+            {
+                throw new KeyNotFoundException("Please specify Category");
+            }
+            var category = await _categoryRepository.GetByIdAsync(dto.CategoryId ?? 0);
             if (category == null)
                 throw new KeyNotFoundException("Invalid category ID");
 
             var service = _mapper.Map<Service>(dto);
             service.CreatedAt = DateTime.UtcNow;
             service.Category = category;
+            service.IsActive = true;
 
             if (dto.ServiceImage != null)
             {
@@ -112,6 +120,11 @@ namespace Application.Services
             if (existingService == null)
                 throw new KeyNotFoundException($"Service not found with ID: {serviceId}");
 
+            if (!existingService.IsActive ?? false)
+                throw new KeyNotFoundException("This service is not exist anymore");
+
+            dto.IsActive = true;
+
             if (dto.ServiceImage != null)
             {
                 if (!string.IsNullOrEmpty(existingService.ServiceImage))
@@ -122,7 +135,6 @@ namespace Application.Services
                 existingService.ServiceImage = await _imageService.UploadImageAsync(dto.ServiceImage);
             }
 
-            // ✅ Allow category updates
             if (dto.CategoryId.HasValue)
             {
                 var newCategory = await _categoryRepository.GetByIdAsync(dto.CategoryId.Value);
@@ -133,6 +145,7 @@ namespace Application.Services
             }
 
             _mapper.Map(dto, existingService);
+
             await _repository.UpdateAsync(existingService);
 
             return _mapper.Map<ServiceDto>(existingService);
@@ -144,12 +157,9 @@ namespace Application.Services
             if (service == null)
                 throw new KeyNotFoundException($"Service not found with ID: {serviceId}");
 
-            if (!string.IsNullOrEmpty(service.ServiceImage))
-            {
-                await _imageService.DeleteImageAsync(service.ServiceImage);
-            }
+            service.IsActive = false;
 
-            await _repository.DeleteAsync(service);
+            await _repository.UpdateAsync(service);
         }
     }
 }
