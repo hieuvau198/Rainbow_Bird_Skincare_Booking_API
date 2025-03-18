@@ -170,6 +170,7 @@ builder.Services.AddScoped<ICustomerFeedbackAnswerService, CustomerFeedbackAnswe
 builder.Services.AddScoped<IServiceCategoryService, ServiceCategoryService>();
 builder.Services.AddScoped<IBlogCommentService, BlogCommentService>();
 builder.Services.AddScoped<IHashtagService, HashtagService>();
+builder.Services.AddScoped<IBlogNewsHashtagService,  BlogNewsHashtagService>();
 
 builder.Services.AddScoped<IImageService, FirebaseImageService>();
 
