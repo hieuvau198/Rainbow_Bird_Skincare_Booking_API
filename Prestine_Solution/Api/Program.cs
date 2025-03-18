@@ -168,6 +168,7 @@ builder.Services.AddScoped<IFeedbackAnswerService, FeedbackAnswerService>();
 builder.Services.AddScoped<ICustomerFeedbackService, CustomerFeedbackService>();
 builder.Services.AddScoped<ICustomerFeedbackAnswerService, CustomerFeedbackAnswerService>();
 builder.Services.AddScoped<IServiceCategoryService, ServiceCategoryService>();
+builder.Services.AddScoped<IBlogCommentService, BlogCommentService>();
 
 builder.Services.AddScoped<IImageService, FirebaseImageService>();
 
@@ -202,7 +203,8 @@ builder.Services.AddAutoMapper(
                                typeof(FeedbackQuestionMappingProfile),
                                typeof(FeedbackAnswerMappingProfile),
                                typeof(CustomerFeedbackMappingProfile),
-                               typeof(CustomerFeedbackAnswerMappingProfile));
+                               typeof(CustomerFeedbackAnswerMappingProfile),
+                               typeof(BlogCommentMappingProfile));
 #endregion
 
 #region Add CORS service and allow all origins for simplicity

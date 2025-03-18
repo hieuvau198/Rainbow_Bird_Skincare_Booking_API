@@ -23,6 +23,8 @@ public partial class SkincareDbContext : DbContext
 
     public virtual DbSet<Blog> Blogs { get; set; }
 
+    public virtual DbSet<BlogComment> BlogComments { get; set; }
+
     public virtual DbSet<Booking> Bookings { get; set; }
 
     public virtual DbSet<CancelBooking> CancelBookings { get; set; }
@@ -134,6 +136,51 @@ public partial class SkincareDbContext : DbContext
             entity.HasOne(d => d.Author).WithMany(p => p.Blogs)
                 .HasForeignKey(d => d.AuthorId)
                 .HasConstraintName("FK_Blog_Author");
+        });
+
+        modelBuilder.Entity<BlogComment>(entity =>
+        {
+            entity.HasKey(e => e.CommentId).HasName("PK__BlogComm__E7957687DBF4AB98");
+
+            entity.ToTable("BlogComment");
+
+            entity.Property(e => e.CommentId).HasColumnName("comment_id");
+            entity.Property(e => e.AvatarUrl)
+                .HasMaxLength(500)
+                .HasColumnName("avatar_url");
+            entity.Property(e => e.BlogId).HasColumnName("blog_id");
+            entity.Property(e => e.UserId)
+                .HasDefaultValue(-1)
+                .HasColumnName("user_id");
+            entity.Property(e => e.Content).HasColumnName("content");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.Downvotes)
+                .HasDefaultValue(0)
+                .HasColumnName("downvotes");
+            entity.Property(e => e.FullName)
+                .HasMaxLength(255)
+                .HasColumnName("full_name");
+            entity.Property(e => e.IsEdited)
+                .HasDefaultValue(false)
+                .HasColumnName("is_edited");
+            entity.Property(e => e.ParentCommentId).HasColumnName("parent_comment_id");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.Upvotes)
+                .HasDefaultValue(0)
+                .HasColumnName("upvotes");
+
+            entity.HasOne(d => d.Blog).WithMany(p => p.BlogComments)
+                .HasForeignKey(d => d.BlogId)
+                .HasConstraintName("FK_BlogComment_Blog");
+
+            entity.HasOne(d => d.ParentComment).WithMany(p => p.InverseParentComment)
+                .HasForeignKey(d => d.ParentCommentId)
+                .HasConstraintName("FK_BlogComment_Parent");
         });
 
         modelBuilder.Entity<Booking>(entity =>
