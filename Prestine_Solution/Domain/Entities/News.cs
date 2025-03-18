@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 namespace Domain.Entities;
+
 public partial class News
 {
     public int NewsId { get; set; }
@@ -18,5 +19,9 @@ public partial class News
 
     public int PublisherId { get; set; }
 
+    public virtual ICollection<NewsHashtag> NewsHashtags { get; set; } = new List<NewsHashtag>();
+
     public virtual User Publisher { get; set; } = null!;
+
+    public virtual ICollection<Hashtag> Hashtags { get; set; } = new List<Hashtag>();
 }

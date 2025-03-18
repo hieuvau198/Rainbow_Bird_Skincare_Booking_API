@@ -169,6 +169,7 @@ builder.Services.AddScoped<ICustomerFeedbackService, CustomerFeedbackService>();
 builder.Services.AddScoped<ICustomerFeedbackAnswerService, CustomerFeedbackAnswerService>();
 builder.Services.AddScoped<IServiceCategoryService, ServiceCategoryService>();
 builder.Services.AddScoped<IBlogCommentService, BlogCommentService>();
+builder.Services.AddScoped<IHashtagService, HashtagService>();
 
 builder.Services.AddScoped<IImageService, FirebaseImageService>();
 
