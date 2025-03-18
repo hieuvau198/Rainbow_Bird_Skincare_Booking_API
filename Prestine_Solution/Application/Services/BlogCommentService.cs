@@ -15,15 +15,18 @@ namespace Application.Services
     {
         private readonly IGenericRepository<BlogComment> _repository;
         private readonly IGenericRepository<Blog> _blogRepository;
+        private readonly IGenericRepository<User> _userRepository;
         private readonly IMapper _mapper;
 
         public BlogCommentService(
             IGenericRepository<BlogComment> repository,
             IGenericRepository<Blog> blogRepository,
+            IGenericRepository<User> userRepository,
             IMapper mapper)
         {
             _repository = repository;
             _blogRepository = blogRepository;
+            _userRepository = userRepository;
             _mapper = mapper;
         }
 
@@ -100,24 +103,35 @@ namespace Application.Services
 
         public async Task<BlogCommentDto> CreateCommentAsync(CreateBlogCommentDto dto)
         {
-            // Validate blog exists
             var blog = await _blogRepository.GetByIdAsync(dto.BlogId);
             if (blog == null)
                 throw new KeyNotFoundException($"Blog not found with ID: {dto.BlogId}");
 
-            // Validate parent comment if provided
-            if (dto.ParentCommentId.HasValue)
+            string fullName = "Anynomous";
+
+            if(dto.UserId != null && dto.UserId != 0)
+            {
+                var user = await _userRepository.GetByIdAsync(dto.UserId ?? 0);
+                if (user == null) throw new KeyNotFoundException("User Not Found.");
+                fullName = user.FullName ?? "Anynomous";
+            }
+
+            if (dto.ParentCommentId.HasValue && dto.ParentCommentId != 0)
             {
                 var parentComment = await _repository.GetByIdAsync(dto.ParentCommentId.Value);
                 if (parentComment == null)
                     throw new KeyNotFoundException($"Parent comment not found with ID: {dto.ParentCommentId}");
 
-                // Ensure parent comment belongs to the same blog
                 if (parentComment.BlogId != dto.BlogId)
                     throw new ArgumentException("Parent comment does not belong to the specified blog");
             }
+            else
+            {
+                dto.ParentCommentId = null;
+            }
 
             var comment = _mapper.Map<BlogComment>(dto);
+            
             comment.CreatedAt = DateTime.UtcNow;
             comment.Upvotes = 0;
             comment.Downvotes = 0;

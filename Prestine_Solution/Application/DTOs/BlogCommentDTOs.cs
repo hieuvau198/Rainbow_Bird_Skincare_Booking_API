@@ -42,7 +42,6 @@ namespace Application.DTOs
         public int BlogId { get; set; }
         public int? UserId { get; set; }
         public int? ParentCommentId { get; set; }
-        public string FullName { get; set; }
         public string Content { get; set; }
     }
 
