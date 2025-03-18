@@ -131,7 +131,7 @@ namespace Application.Services
             }
 
             var comment = _mapper.Map<BlogComment>(dto);
-            
+            comment.FullName = fullName;
             comment.CreatedAt = DateTime.UtcNow;
             comment.Upvotes = 0;
             comment.Downvotes = 0;

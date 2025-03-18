@@ -94,10 +94,7 @@ namespace Api.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error creating comment.", error = ex.Message });
-            }
+            
         }
 
         [HttpPut("{commentId}")]
