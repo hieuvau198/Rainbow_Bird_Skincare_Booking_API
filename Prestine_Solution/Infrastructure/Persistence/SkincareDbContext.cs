@@ -142,23 +142,6 @@ public partial class SkincareDbContext : DbContext
             entity.HasOne(d => d.Author).WithMany(p => p.Blogs)
                 .HasForeignKey(d => d.AuthorId)
                 .HasConstraintName("FK_Blog_Author");
-
-            entity.HasMany(d => d.Hashtags).WithMany(p => p.Blogs)
-                .UsingEntity<Dictionary<string, object>>(
-                    "BlogHashtag1",
-                    r => r.HasOne<Hashtag>().WithMany()
-                        .HasForeignKey("HashtagId")
-                        .HasConstraintName("FK_BlogHashtag_Hashtag"),
-                    l => l.HasOne<Blog>().WithMany()
-                        .HasForeignKey("BlogId")
-                        .HasConstraintName("FK_BlogHashtag_Blog"),
-                    j =>
-                    {
-                        j.HasKey("BlogId", "HashtagId");
-                        j.ToTable("BlogHashtag");
-                        j.IndexerProperty<int>("BlogId").HasColumnName("blog_id");
-                        j.IndexerProperty<int>("HashtagId").HasColumnName("hashtag_id");
-                    });
         });
 
         modelBuilder.Entity<BlogComment>(entity =>
@@ -208,16 +191,23 @@ public partial class SkincareDbContext : DbContext
 
         modelBuilder.Entity<BlogHashtag>(entity =>
         {
-            entity.HasKey(e => new { e.BlogId, e.HashtagId });
+            entity.HasKey(e => e.Id).HasName("PK__BlogHash__3213E83FF3628F96");
 
-            entity.ToTable("Blog_Hashtag");
+            entity.ToTable("BlogHashtag");
 
+            entity.HasIndex(e => new { e.BlogId, e.HashtagId }, "UQ_BlogHashtag").IsUnique();
+
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.BlogId).HasColumnName("blog_id");
             entity.Property(e => e.HashtagId).HasColumnName("hashtag_id");
 
             entity.HasOne(d => d.Blog).WithMany(p => p.BlogHashtags)
                 .HasForeignKey(d => d.BlogId)
-                .HasConstraintName("FK_Blog_Hashtag_Blog");
+                .HasConstraintName("FK_BlogHashtag_Blog");
+
+            entity.HasOne(d => d.Hashtag).WithMany(p => p.BlogHashtags)
+                .HasForeignKey(d => d.HashtagId)
+                .HasConstraintName("FK_BlogHashtag_Hashtag");
         });
 
         modelBuilder.Entity<Booking>(entity =>
@@ -625,37 +615,27 @@ public partial class SkincareDbContext : DbContext
             entity.HasOne(d => d.Publisher).WithMany(p => p.News)
                 .HasForeignKey(d => d.PublisherId)
                 .HasConstraintName("FK_News_Publisher");
-
-            entity.HasMany(d => d.Hashtags).WithMany(p => p.News)
-                .UsingEntity<Dictionary<string, object>>(
-                    "NewsHashtag1",
-                    r => r.HasOne<Hashtag>().WithMany()
-                        .HasForeignKey("HashtagId")
-                        .HasConstraintName("FK_NewsHashtag_Hashtag"),
-                    l => l.HasOne<News>().WithMany()
-                        .HasForeignKey("NewsId")
-                        .HasConstraintName("FK_NewsHashtag_News"),
-                    j =>
-                    {
-                        j.HasKey("NewsId", "HashtagId");
-                        j.ToTable("NewsHashtag");
-                        j.IndexerProperty<int>("NewsId").HasColumnName("news_id");
-                        j.IndexerProperty<int>("HashtagId").HasColumnName("hashtag_id");
-                    });
         });
 
         modelBuilder.Entity<NewsHashtag>(entity =>
         {
-            entity.HasKey(e => new { e.NewsId, e.HashtagId });
+            entity.HasKey(e => e.Id).HasName("PK__NewsHash__3213E83FA7179938");
 
-            entity.ToTable("News_Hashtag");
+            entity.ToTable("NewsHashtag");
 
-            entity.Property(e => e.NewsId).HasColumnName("news_id");
+            entity.HasIndex(e => new { e.NewsId, e.HashtagId }, "UQ_NewsHashtag").IsUnique();
+
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.HashtagId).HasColumnName("hashtag_id");
+            entity.Property(e => e.NewsId).HasColumnName("news_id");
+
+            entity.HasOne(d => d.Hashtag).WithMany(p => p.NewsHashtags)
+                .HasForeignKey(d => d.HashtagId)
+                .HasConstraintName("FK_NewsHashtag_Hashtag");
 
             entity.HasOne(d => d.News).WithMany(p => p.NewsHashtags)
                 .HasForeignKey(d => d.NewsId)
-                .HasConstraintName("FK_News_Hashtag_News");
+                .HasConstraintName("FK_NewsHashtag_News");
         });
 
         modelBuilder.Entity<Payment>(entity =>

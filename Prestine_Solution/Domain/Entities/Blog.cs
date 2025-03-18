@@ -24,6 +24,4 @@ public partial class Blog
     public virtual ICollection<BlogComment> BlogComments { get; set; } = new List<BlogComment>();
 
     public virtual ICollection<BlogHashtag> BlogHashtags { get; set; } = new List<BlogHashtag>();
-
-    public virtual ICollection<Hashtag> Hashtags { get; set; } = new List<Hashtag>();
 }

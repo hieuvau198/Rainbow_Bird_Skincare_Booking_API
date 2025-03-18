@@ -13,7 +13,7 @@ public partial class Hashtag
 
     public DateTime CreatedAt { get; set; }
 
-    public virtual ICollection<Blog> Blogs { get; set; } = new List<Blog>();
+    public virtual ICollection<BlogHashtag> BlogHashtags { get; set; } = new List<BlogHashtag>();
 
-    public virtual ICollection<News> News { get; set; } = new List<News>();
+    public virtual ICollection<NewsHashtag> NewsHashtags { get; set; } = new List<NewsHashtag>();
 }
