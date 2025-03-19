@@ -6,37 +6,30 @@ using Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Services
 {
     public class PaymentService : IPaymentService
     {
-        private readonly IGenericRepository<Payment> _repository;
-        private readonly IGenericRepository<Transaction> _transactionRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public PaymentService(
-            IGenericRepository<Payment> repository,
-            IGenericRepository<Transaction> transactionRepository,
-            IMapper mapper)
+        public PaymentService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _repository = repository;
-            _transactionRepository = transactionRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
-
         public async Task<IEnumerable<PaymentDto>> GetAllPaymentsAsync()
         {
-            var payments = await _repository.GetAllAsync();
+            var payments = await _unitOfWork.Payments.GetAllAsync();
             return _mapper.Map<IEnumerable<PaymentDto>>(payments);
         }
 
         public async Task<PaymentDto> GetPaymentByIdAsync(int id)
         {
-            var payment = await _repository.GetByIdAsync(id);
+            var payment = await _unitOfWork.Payments.GetByIdAsync(id);
             if (payment == null)
                 throw new KeyNotFoundException($"Payment with ID {id} not found");
 
@@ -45,7 +38,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<PaymentDto>> GetPaymentsByStatusAsync(string status)
         {
-            var payments = await _repository.GetAllAsync();
+            var payments = await _unitOfWork.Payments.GetAllAsync();
             var filtered = payments.Where(p => p.Status == status)
                                  .OrderByDescending(p => p.PaymentDate);
             return _mapper.Map<IEnumerable<PaymentDto>>(filtered);
@@ -53,7 +46,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<PaymentDto>> GetPaymentsByDateRangeAsync(DateTime startDate, DateTime endDate)
         {
-            var payments = await _repository.GetAllAsync();
+            var payments = await _unitOfWork.Payments.GetAllAsync();
             var filtered = payments.Where(p => p.PaymentDate >= startDate && p.PaymentDate <= endDate)
                                  .OrderByDescending(p => p.PaymentDate);
             return _mapper.Map<IEnumerable<PaymentDto>>(filtered);
@@ -61,37 +54,40 @@ namespace Application.Services
 
         public async Task<PaymentDto> CreatePaymentAsync(CreatePaymentDto createDto)
         {
+            var booking = _unitOfWork.Bookings.FindAsync(b => b.PaymentId != null )
+            
             var payment = _mapper.Map<Payment>(createDto);
             payment.PaymentDate = DateTime.UtcNow;
 
-            await _repository.CreateAsync(payment);
+            await _unitOfWork.Payments.CreateAsync(payment);
+            await _unitOfWork.SaveChangesAsync();
             return _mapper.Map<PaymentDto>(payment);
         }
 
         public async Task UpdatePaymentAsync(int id, UpdatePaymentDto updateDto)
         {
-            var payment = await _repository.GetByIdAsync(id);
+            var payment = await _unitOfWork.Payments.GetByIdAsync(id);
             if (payment == null)
                 throw new KeyNotFoundException($"Payment with ID {id} not found");
 
             _mapper.Map(updateDto, payment);
-            await _repository.UpdateAsync(payment);
+            await _unitOfWork.Payments.UpdateAsync(payment);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task DeletePaymentAsync(int id)
         {
-            var payment = await _repository.GetByIdAsync(id);
+            var payment = await _unitOfWork.Payments.GetByIdAsync(id);
             if (payment == null)
                 throw new KeyNotFoundException($"Payment with ID {id} not found");
 
-            await _repository.DeleteAsync(payment);
+            await _unitOfWork.Payments.DeleteAsync(payment);
+            await _unitOfWork.SaveChangesAsync();
         }
-
-        // New methods for transactions
 
         public async Task<IEnumerable<TransactionDto>> GetTransactionsAsync(TransactionFilterDto filter)
         {
-            var transactions = await _transactionRepository.GetAllAsync();
+            var transactions = await _unitOfWork.Transactions.GetAllAsync();
 
             // Apply simple date and amount filters
             if (filter.StartDate.HasValue)
@@ -115,7 +111,7 @@ namespace Application.Services
 
         public async Task<TransactionDto> GetTransactionByIdAsync(int id)
         {
-            var transaction = await _transactionRepository.GetByIdAsync(id);
+            var transaction = await _unitOfWork.Transactions.GetByIdAsync(id);
             if (transaction == null)
                 throw new KeyNotFoundException();
 
