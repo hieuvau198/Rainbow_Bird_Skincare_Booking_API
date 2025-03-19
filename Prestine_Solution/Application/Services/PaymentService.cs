@@ -89,6 +89,10 @@ namespace Application.Services
 
                 booking.PaymentId = payment.PaymentId;
 
+                if(payment.Status.ToLower() == "paid")
+                {
+                    await CreateTransactionAsync(payment, booking);
+                }
                 await _unitOfWork.Bookings.UpdateAsync(booking);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -100,7 +104,6 @@ namespace Application.Services
                 throw new InvalidOperationException("Sorry, but something went wrong.", ex);
             }
         }
-
 
         public async Task UpdatePaymentAsync(int id, UpdatePaymentDto updateDto)
         {
@@ -155,5 +158,32 @@ namespace Application.Services
 
             return _mapper.Map<TransactionDto>(transaction);
         }
+
+        private async Task<Transaction> CreateTransactionAsync(Payment payment, Booking booking)
+        {
+            var transaction = new Transaction
+            {
+                PaymentId = payment.PaymentId,
+                Amount = payment.TotalAmount,
+                Currency = payment.Currency ?? "VND",  
+                TransactionType = payment.PaymentMethod ?? "Cash",
+                ReferenceNumber = "No reference",
+                Sender = payment.Sender ?? "Prestine Care Customer",
+                Receiver = payment.Receiver ?? "Prestine Care",
+                TransactionDate = DateTime.UtcNow,
+                TaxAmount = payment.Tax,
+                TaxPercentage = payment.Tax > 0 ? 10m : 0m,
+                Description = "Payment for booking services",
+                ServiceId = booking.ServiceId,
+                ServiceName = booking.ServiceName,
+                SourceSystem = "POS System & Mobile App"
+            };
+
+            await _unitOfWork.Transactions.CreateAsync(transaction);
+            await _unitOfWork.SaveChangesAsync();
+
+            return transaction;
+        }
+
     }
 }
