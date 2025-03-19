@@ -73,7 +73,7 @@ namespace Application.Services
                 if (payment.PaymentMethod == null ||
                     (payment.PaymentMethod.ToLower() != "cash" && payment.PaymentMethod.ToLower() != "vnpay"))
                 {
-                    payment.PaymentMethod = "cash";
+                    payment.PaymentMethod = "Cash";
                 }
 
                 if (payment.Status == null ||
@@ -92,6 +92,7 @@ namespace Application.Services
                 if(payment.Status.ToLower() == "paid")
                 {
                     await CreateTransactionAsync(payment, booking);
+                    booking.PaymentStatus = payment.Status;
                 }
                 await _unitOfWork.Bookings.UpdateAsync(booking);
                 await _unitOfWork.SaveChangesAsync();
@@ -111,8 +112,23 @@ namespace Application.Services
             if (payment == null)
                 throw new KeyNotFoundException($"Payment with ID {id} not found");
 
+            var booking = await _unitOfWork.Bookings.FindAsync(b => b.PaymentId == id);
+
+            if (booking == null)
+            {
+                throw new KeyNotFoundException($"Booking not found");
+            }
+
             _mapper.Map(updateDto, payment);
+
+            if(payment.Status.ToLower() == "paid")
+            {
+                await CreateTransactionAsync(payment, booking);
+                booking.PaymentStatus = "Paid";
+            }
+
             await _unitOfWork.Payments.UpdateAsync(payment);
+            await _unitOfWork.Bookings.UpdateAsync(booking);
             await _unitOfWork.SaveChangesAsync();
         }
 
