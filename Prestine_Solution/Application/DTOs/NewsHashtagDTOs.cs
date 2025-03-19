@@ -11,7 +11,7 @@ namespace Application.DTOs
     {
         public int NewsId { get; set; }
         public int HashtagId { get; set; }
-        public string Tittle { get; set; }
+        public string Name { get; set; }
     }
 
     public class CreateNewsHashtagDto
