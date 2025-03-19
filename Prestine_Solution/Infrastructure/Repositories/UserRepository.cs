@@ -12,7 +12,7 @@ namespace Infrastructure.Repositories
 {
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
-        public UserRepository(SkincareDbContext context) : base(context)
+        public UserRepository(PrestinedbContext context) : base(context)
         {
         }
 

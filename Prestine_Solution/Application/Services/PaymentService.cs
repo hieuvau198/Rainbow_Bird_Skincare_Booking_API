@@ -14,15 +14,19 @@ namespace Application.Services
     public class PaymentService : IPaymentService
     {
         private readonly IGenericRepository<Payment> _repository;
+        private readonly IGenericRepository<Transaction> _transactionRepository;
         private readonly IMapper _mapper;
 
         public PaymentService(
             IGenericRepository<Payment> repository,
+            IGenericRepository<Transaction> transactionRepository,
             IMapper mapper)
         {
             _repository = repository;
+            _transactionRepository = transactionRepository;
             _mapper = mapper;
         }
+
 
         public async Task<IEnumerable<PaymentDto>> GetAllPaymentsAsync()
         {
@@ -81,6 +85,41 @@ namespace Application.Services
                 throw new KeyNotFoundException($"Payment with ID {id} not found");
 
             await _repository.DeleteAsync(payment);
+        }
+
+        // New methods for transactions
+
+        public async Task<IEnumerable<TransactionDto>> GetTransactionsAsync(TransactionFilterDto filter)
+        {
+            var transactions = await _transactionRepository.GetAllAsync();
+
+            // Apply simple date and amount filters
+            if (filter.StartDate.HasValue)
+                transactions = transactions.Where(t => t.TransactionDate >= filter.StartDate.Value);
+
+            if (filter.EndDate.HasValue)
+                transactions = transactions.Where(t => t.TransactionDate <= filter.EndDate.Value);
+
+            if (filter.MinAmount.HasValue)
+                transactions = transactions.Where(t => t.Amount >= filter.MinAmount.Value);
+
+            if (filter.MaxAmount.HasValue)
+                transactions = transactions.Where(t => t.Amount <= filter.MaxAmount.Value);
+
+            // Apply pagination
+            transactions = transactions.Skip((filter.PageNumber - 1) * filter.PageSize)
+                                       .Take(filter.PageSize);
+
+            return _mapper.Map<IEnumerable<TransactionDto>>(transactions);
+        }
+
+        public async Task<TransactionDto> GetTransactionByIdAsync(int id)
+        {
+            var transaction = await _transactionRepository.GetByIdAsync(id);
+            if (transaction == null)
+                throw new KeyNotFoundException();
+
+            return _mapper.Map<TransactionDto>(transaction);
         }
     }
 }

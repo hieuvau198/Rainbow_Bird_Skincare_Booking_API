@@ -61,5 +61,30 @@ namespace Api.Controllers
             await _service.DeletePaymentAsync(id);
             return NoContent();
         }
+
+        // New endpoints for transactions
+
+        [HttpGet("transactions")]
+        public async Task<ActionResult<IEnumerable<TransactionDto>>> GetTransactions([FromQuery] TransactionFilterDto filter)
+        {
+            // Use default values if filter is not provided
+            var transactions = await _service.GetTransactionsAsync(filter ?? new TransactionFilterDto());
+            return Ok(transactions);
+        }
+
+        [HttpGet("transactions/{id}")]
+        public async Task<ActionResult<TransactionDto>> GetTransactionById(int id)
+        {
+            try
+            {
+                var transaction = await _service.GetTransactionByIdAsync(id);
+                return Ok(transaction);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound($"Transaction with ID {id} not found.");
+            }
+        }
+
     }
 }
