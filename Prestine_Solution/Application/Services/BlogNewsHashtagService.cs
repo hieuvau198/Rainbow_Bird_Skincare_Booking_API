@@ -40,7 +40,7 @@ namespace Application.Services
                 throw new KeyNotFoundException($"Blog not found with ID: {blogId}");
 
             var blogHashtags = await _blogHashtagRepository.GetAllAsync(
-                bh => bh.BlogId == blogId);
+                bh => bh.BlogId == blogId, bh => bh.Blog);
 
             return _mapper.Map<IEnumerable<BlogHashtagDto>>(blogHashtags);
         }
@@ -79,7 +79,7 @@ namespace Application.Services
                 throw new KeyNotFoundException($"News not found with ID: {newsId}");
 
             var newsHashtags = await _newsHashtagRepository.GetAllAsync(
-                nh => nh.NewsId == newsId);
+                nh => nh.NewsId == newsId, nh => nh.News);
 
             return _mapper.Map<IEnumerable<NewsHashtagDto>>(newsHashtags);
         }

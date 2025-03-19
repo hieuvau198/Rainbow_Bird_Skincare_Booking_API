@@ -14,11 +14,13 @@ namespace Application.Mappings
         public BlogNewsHashtagMappingProfile()
         {
             // Blog Hashtag mappings
-            CreateMap<BlogHashtag, BlogHashtagDto>();
+            CreateMap<BlogHashtag, BlogHashtagDto>()
+                .ForMember(dest => dest.Tittle, opt => opt.MapFrom(src => src.Blog.Title));
             CreateMap<CreateBlogHashtagDto, BlogHashtag>();
 
             // News Hashtag mappings
-            CreateMap<NewsHashtag, NewsHashtagDto>();
+            CreateMap<NewsHashtag, NewsHashtagDto>()
+                .ForMember(dest => dest.Tittle, opt => opt.MapFrom(src => src.News.Title));
             CreateMap<CreateNewsHashtagDto, NewsHashtag>();
         }
     }
