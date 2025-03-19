@@ -54,42 +54,51 @@ namespace Application.Services
 
         public async Task<PaymentDto> CreatePaymentAsync(CreatePaymentDto createDto)
         {
-            var booking = await _unitOfWork.Bookings.FindAsync(b =>
-                b.BookingId == createDto.BookingId &&
-                (b.PaymentId == null || b.PaymentId == 0));
-
-            if (booking == null)
+            try
             {
-                throw new InvalidOperationException("This booking either has its payment or just does not exist.");
-            }
+                var booking = await _unitOfWork.Bookings.FindAsync(b =>
+                    b.BookingId == createDto.BookingId &&
+                    (b.PaymentId == null || b.PaymentId == 0));
 
-            var payment = _mapper.Map<Payment>(createDto);
-            payment.PaymentDate = DateTime.UtcNow;
-            payment.TotalAmount = booking.PaymentAmount ?? 1000000;
-            payment.Currency = "VND";
-            if(payment.PaymentMethod == null || 
-                (payment.PaymentMethod.ToLower() != "cash" &&
-                payment.PaymentMethod.ToLower() != "vnpay"))
+                if (booking == null)
+                {
+                    throw new InvalidOperationException("This booking either has its payment or just does not exist.");
+                }
+
+                var payment = _mapper.Map<Payment>(createDto);
+                payment.PaymentDate = DateTime.UtcNow;
+                payment.TotalAmount = booking.PaymentAmount ?? 1000000;
+                payment.Currency = "VND";
+
+                if (payment.PaymentMethod == null ||
+                    (payment.PaymentMethod.ToLower() != "cash" && payment.PaymentMethod.ToLower() != "vnpay"))
+                {
+                    payment.PaymentMethod = "cash";
+                }
+
+                if (payment.Status == null ||
+                    (payment.Status.ToLower() != "pending" && payment.Status.ToLower() != "paid"))
+                {
+                    payment.Status = "Pending";
+                }
+
+                payment.Tax = payment.TotalAmount * (decimal)0.1;
+                payment.Receiver = "Prestine Care";
+
+                await _unitOfWork.Payments.CreateAsync(payment);
+
+                booking.PaymentId = payment.PaymentId;
+
+                await _unitOfWork.Bookings.UpdateAsync(booking);
+                await _unitOfWork.SaveChangesAsync();
+
+                return _mapper.Map<PaymentDto>(payment);
+            }
+            catch (Exception ex)
             {
-                payment.PaymentMethod = "cash";
+                // Log the exception details (ex.Message, ex.StackTrace) for debugging purposes if necessary
+                throw new InvalidOperationException("Sorry, but something went wrong.", ex);
             }
-
-            if(payment.Status == null ||
-                (payment.Status.ToLower() != "pending" && payment.Status.ToLower() != "paid")
-                )
-            {
-                payment.Status = "Pending";
-            }
-            payment.Tax = payment.TotalAmount * (decimal) 0.1;
-            payment.Receiver = "Prestine Care";
-            await _unitOfWork.Payments.CreateAsync(payment);
-
-            booking.PaymentId = payment.PaymentId;
-
-            await _unitOfWork.Bookings.UpdateAsync(booking);
-            await _unitOfWork.SaveChangesAsync();
-
-            return _mapper.Map<PaymentDto>(payment);
         }
 
 
