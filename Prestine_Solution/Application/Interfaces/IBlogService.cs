@@ -9,7 +9,7 @@ namespace Application.Interfaces
 {
     public interface IBlogService
     {
-        Task<IEnumerable<BlogDto>> GetAllBlogsAsync();
+        Task<IEnumerable<BlogDto>> GetAllBlogsAsync(int? hashtagId = null);
         Task<BlogDto> GetBlogByIdAsync(int blogId);
         Task<BlogDto> CreateBlogAsync(CreateBlogDto createBlogDto);
         Task UpdateBlogAsync(int blogId, UpdateBlogDto updateBlogDto);
