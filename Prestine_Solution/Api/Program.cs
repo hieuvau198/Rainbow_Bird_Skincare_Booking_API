@@ -9,6 +9,7 @@ using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Infrastructure.Persistence;
 using Infrastructure.Repositories;
+using Infrastructure.UnitOfWorks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -131,6 +132,10 @@ builder.Services.AddAuthorization(options =>
 });
 #endregion
 
+#region Register UoW
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+#endregion
+
 #region Register DI for services such as Repositories, Application Services, etc
 builder.Services.AddScoped<DbContext, PrestinedbContext>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
@@ -227,19 +232,17 @@ var app = builder.Build();
 app.UseCors("AllowAll"); // Enable CORS allowance
 
 // Enable Swagger UI for both development and production environments
-app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
     c.RoutePrefix = string.Empty; // Opens Swagger at the root URL
 });
 
-if (!app.Environment.IsDevelopment())
-{
-    // Enforce HTTPS for production
-    app.UseHttpsRedirection();
+app.UseSwagger();
 
-}
+app.UseSwaggerUI();
+
+app.UseHttpsRedirection();
 
 app.UseAuthentication();
 

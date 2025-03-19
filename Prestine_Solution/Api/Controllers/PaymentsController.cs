@@ -45,7 +45,16 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<ActionResult<PaymentDto>> CreatePayment(CreatePaymentDto createDto)
         {
-            return Ok(await _service.CreatePaymentAsync(createDto));
+            try
+            {
+                var paymentDto = await _service.CreatePaymentAsync(createDto);
+                return Ok(paymentDto);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (ex.Message, ex.StackTrace) for debugging purposes if necessary
+                return StatusCode(500, new { message = ex.Message ?? "Sorry, but something went wrong." });
+            }
         }
 
         [HttpPut("{id}")]
