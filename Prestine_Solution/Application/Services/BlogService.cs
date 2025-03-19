@@ -15,23 +15,42 @@ namespace Application.Services
     {
         private readonly IGenericRepository<Blog> _repository;
         private readonly IGenericRepository<User> _userRepository;
+        private readonly IGenericRepository<BlogHashtag> _blogHashtagRepository;
         private readonly IMapper _mapper;
 
         public BlogService(
             IGenericRepository<Blog> repository,
             IGenericRepository<User> userRepository,
+            IGenericRepository<BlogHashtag> blogHashtagRepository,
             IMapper mapper)
         {
             _repository = repository;
             _userRepository = userRepository;
+            _blogHashtagRepository = blogHashtagRepository;
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<BlogDto>> GetAllBlogsAsync()
+        public async Task<IEnumerable<BlogDto>> GetAllBlogsAsync(int? hashtagId = null)
         {
-            var blogs = await _repository.GetAllAsync(null, b => b.Author);
+            IEnumerable<Blog> blogs;
+
+            if (hashtagId.HasValue && hashtagId > 0)
+            {
+                var blogHashtags = await _blogHashtagRepository.GetAllAsync(
+                    bh => bh.HashtagId == hashtagId.Value,
+                    bh => bh.Blog.Author
+                );
+
+                blogs = blogHashtags.Select(bh => bh.Blog).Distinct();
+            }
+            else
+            {
+                blogs = await _repository.GetAllAsync(null, b => b.Author);
+            }
+
             return _mapper.Map<IEnumerable<BlogDto>>(blogs);
         }
+
 
         public async Task<BlogDto> GetBlogByIdAsync(int blogId)
         {

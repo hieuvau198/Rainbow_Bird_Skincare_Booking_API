@@ -18,11 +18,12 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BlogDto>>> GetAllBlogs()
+        public async Task<ActionResult<IEnumerable<BlogDto>>> GetAllBlogs([FromQuery] int? hashtagId = null)
         {
-            var blogs = await _blogService.GetAllBlogsAsync();
+            var blogs = await _blogService.GetAllBlogsAsync(hashtagId);
             return Ok(blogs);
         }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<BlogDto>> GetBlog(int id)

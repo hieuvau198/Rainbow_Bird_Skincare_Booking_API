@@ -18,9 +18,9 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<NewsDto>>> GetAllNews()
+        public async Task<ActionResult<IEnumerable<NewsDto>>> GetAllNews([FromQuery] int? hashtagId = null)
         {
-            var news = await _newsService.GetAllNewsAsync();
+            var news = await _newsService.GetAllNewsAsync(hashtagId);
             return Ok(news);
         }
 
