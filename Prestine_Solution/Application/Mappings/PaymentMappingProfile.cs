@@ -22,6 +22,8 @@ namespace Application.Mappings
                 .ForMember(dest => dest.PaymentMethod, opt => opt.Ignore())
                 .ForMember(dest => dest.Bookings, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<Transaction, TransactionDto>();
         }
     }
 }

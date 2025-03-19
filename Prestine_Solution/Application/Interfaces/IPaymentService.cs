@@ -16,5 +16,8 @@ namespace Application.Interfaces
         Task<PaymentDto> CreatePaymentAsync(CreatePaymentDto createDto);
         Task UpdatePaymentAsync(int id, UpdatePaymentDto updateDto);
         Task DeletePaymentAsync(int id);
+        Task<IEnumerable<TransactionDto>> GetTransactionsAsync(TransactionFilterDto filter);
+        Task<TransactionDto> GetTransactionByIdAsync(int id);
+
     }
 }

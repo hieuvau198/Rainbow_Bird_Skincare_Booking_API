@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence;
 
-public partial class SkincareDbContext : DbContext
+public partial class PrestinedbContext : DbContext
 {
-    public SkincareDbContext()
+    public PrestinedbContext()
     {
     }
 
-    public SkincareDbContext(DbContextOptions<SkincareDbContext> options)
+    public PrestinedbContext(DbContextOptions<PrestinedbContext> options)
         : base(options)
     {
     }
@@ -82,6 +82,7 @@ public partial class SkincareDbContext : DbContext
     public virtual DbSet<TherapistProfile> TherapistProfiles { get; set; }
 
     public virtual DbSet<TimeSlot> TimeSlots { get; set; }
+    public virtual DbSet<Transaction> Transactions { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -1023,6 +1024,55 @@ public partial class SkincareDbContext : DbContext
                 .HasForeignKey(d => d.WorkingDayId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__TimeSlot__workin__00200768");
+        });
+
+        modelBuilder.Entity<Transaction>(entity =>
+        {
+            entity.HasKey(e => e.TransactionId).HasName("PK__Transaction__ID");
+
+            entity.ToTable("Transaction");
+
+            entity.Property(e => e.TransactionId).HasColumnName("transaction_id");
+            entity.Property(e => e.Amount)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("amount");
+            entity.Property(e => e.Currency)
+                .HasMaxLength(3)
+                .HasDefaultValue("VND")
+                .HasColumnName("currency");
+            entity.Property(e => e.Description)
+                .HasMaxLength(500)
+                .HasColumnName("description");
+            entity.Property(e => e.PaymentId).HasColumnName("payment_id");
+            entity.Property(e => e.Receiver)
+                .HasMaxLength(255)
+                .HasColumnName("receiver");
+            entity.Property(e => e.ReferenceNumber)
+                .HasMaxLength(50)
+                .HasColumnName("reference_number");
+            entity.Property(e => e.Sender)
+                .HasMaxLength(255)
+                .HasColumnName("sender");
+            entity.Property(e => e.ServiceId).HasColumnName("service_id");
+            entity.Property(e => e.ServiceName)
+                .HasMaxLength(100)
+                .HasColumnName("service_name");
+            entity.Property(e => e.SourceSystem)
+                .HasMaxLength(50)
+                .HasColumnName("source_system");
+            entity.Property(e => e.TaxAmount)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("tax_amount");
+            entity.Property(e => e.TaxPercentage)
+                .HasColumnType("decimal(5, 2)")
+                .HasColumnName("tax_percentage");
+            entity.Property(e => e.TransactionDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("transaction_date");
+            entity.Property(e => e.TransactionType)
+                .HasMaxLength(20)
+                .HasColumnName("transaction_type");
         });
 
         modelBuilder.Entity<User>(entity =>

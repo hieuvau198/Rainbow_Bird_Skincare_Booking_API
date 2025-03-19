@@ -80,7 +80,7 @@ builder.Services.AddSwaggerGen(c =>
 
 #region Register DbContext
 
-builder.Services.AddDbContext<SkincareDbContext>(options =>
+builder.Services.AddDbContext<PrestinedbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 #endregion
@@ -132,7 +132,7 @@ builder.Services.AddAuthorization(options =>
 #endregion
 
 #region Register DI for services such as Repositories, Application Services, etc
-builder.Services.AddScoped<DbContext, SkincareDbContext>();
+builder.Services.AddScoped<DbContext, PrestinedbContext>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IAuthService, AuthService>();
 

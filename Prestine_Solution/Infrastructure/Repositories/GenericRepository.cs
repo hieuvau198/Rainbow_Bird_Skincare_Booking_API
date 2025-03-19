@@ -11,10 +11,10 @@ namespace Infrastructure.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        protected readonly SkincareDbContext _context;
+        protected readonly PrestinedbContext _context;
         protected readonly DbSet<T> _dbSet;
 
-        public GenericRepository(SkincareDbContext context)
+        public GenericRepository(PrestinedbContext context)
         {
             _context = context;
             _dbSet = context.Set<T>();
