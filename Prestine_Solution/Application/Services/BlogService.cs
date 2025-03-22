@@ -6,27 +6,18 @@ using Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Services
 {
     public class BlogService : IBlogService
     {
-        private readonly IGenericRepository<Blog> _repository;
-        private readonly IGenericRepository<User> _userRepository;
-        private readonly IGenericRepository<BlogHashtag> _blogHashtagRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public BlogService(
-            IGenericRepository<Blog> repository,
-            IGenericRepository<User> userRepository,
-            IGenericRepository<BlogHashtag> blogHashtagRepository,
-            IMapper mapper)
+        public BlogService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _repository = repository;
-            _userRepository = userRepository;
-            _blogHashtagRepository = blogHashtagRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -36,7 +27,7 @@ namespace Application.Services
 
             if (hashtagId.HasValue && hashtagId > 0)
             {
-                var blogHashtags = await _blogHashtagRepository.GetAllAsync(
+                var blogHashtags = await _unitOfWork.BlogHashtags.GetAllAsync(
                     bh => bh.HashtagId == hashtagId.Value,
                     bh => bh.Blog.Author
                 );
@@ -45,16 +36,15 @@ namespace Application.Services
             }
             else
             {
-                blogs = await _repository.GetAllAsync(null, b => b.Author);
+                blogs = await _unitOfWork.Blogs.GetAllAsync(null, b => b.Author);
             }
 
             return _mapper.Map<IEnumerable<BlogDto>>(blogs);
         }
 
-
         public async Task<BlogDto> GetBlogByIdAsync(int blogId)
         {
-            var blog = await _repository.GetByIdAsync(blogId, b => b.Author);
+            var blog = await _unitOfWork.Blogs.GetByIdAsync(blogId, b => b.Author);
             if (blog == null)
                 throw new KeyNotFoundException($"Blog with ID {blogId} not found");
 
@@ -63,36 +53,39 @@ namespace Application.Services
 
         public async Task<BlogDto> CreateBlogAsync(CreateBlogDto createBlogDto)
         {
-            var author = await _userRepository.GetByIdAsync(createBlogDto.AuthorId);
+            var author = await _unitOfWork.Users.GetByIdAsync(createBlogDto.AuthorId);
             if (author == null)
                 throw new KeyNotFoundException($"Author with ID {createBlogDto.AuthorId} not found");
 
             var blog = _mapper.Map<Blog>(createBlogDto);
             blog.CreatedAt = DateTime.UtcNow;
 
-            await _repository.CreateAsync(blog);
+            await _unitOfWork.Blogs.CreateAsync(blog);
+            await _unitOfWork.SaveChangesAsync();
             return _mapper.Map<BlogDto>(blog);
         }
 
         public async Task UpdateBlogAsync(int blogId, UpdateBlogDto updateBlogDto)
         {
-            var blog = await _repository.GetByIdAsync(blogId);
+            var blog = await _unitOfWork.Blogs.GetByIdAsync(blogId);
             if (blog == null)
                 throw new KeyNotFoundException($"Blog with ID {blogId} not found");
 
             _mapper.Map(updateBlogDto, blog);
             blog.UpdatedAt = DateTime.UtcNow;
 
-            await _repository.UpdateAsync(blog);
+            await _unitOfWork.Blogs.UpdateAsync(blog);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task DeleteBlogAsync(int blogId)
         {
-            var blog = await _repository.GetByIdAsync(blogId);
+            var blog = await _unitOfWork.Blogs.GetByIdAsync(blogId);
             if (blog == null)
                 throw new KeyNotFoundException($"Blog with ID {blogId} not found");
 
-            await _repository.DeleteAsync(blog);
+            await _unitOfWork.Blogs.DeleteAsync(blog);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }
