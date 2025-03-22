@@ -5,26 +5,21 @@ using Domain.Entities;
 using Domain.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Application.Services
 {
     public class NewsService : INewsService
     {
-        private readonly IGenericRepository<News> _repository;
-        private readonly IGenericRepository<User> _userRepository;
-        private readonly IGenericRepository<NewsHashtag> _newsHashtagRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public NewsService(
-            IGenericRepository<News> repository,
-            IGenericRepository<User> userRepository,
-            IGenericRepository<NewsHashtag> newsHashtagRepository,
+            IUnitOfWork unitOfWork,
             IMapper mapper)
         {
-            _repository = repository;
-            _userRepository = userRepository;
-            _newsHashtagRepository = newsHashtagRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -34,7 +29,7 @@ namespace Application.Services
 
             if (hashtagId.HasValue && hashtagId > 0)
             {
-                var newsHashtags = await _newsHashtagRepository.GetAllAsync(
+                var newsHashtags = await _unitOfWork.NewsHashtags.GetAllAsync(
                     nh => nh.HashtagId == hashtagId.Value,
                     nh => nh.News.Publisher
                 );
@@ -43,7 +38,7 @@ namespace Application.Services
             }
             else
             {
-                newsList = await _repository.GetAllAsync(null, n => n.Publisher);
+                newsList = await _unitOfWork.News.GetAllAsync(null, n => n.Publisher);
             }
 
             return _mapper.Map<IEnumerable<NewsDto>>(newsList);
@@ -51,7 +46,7 @@ namespace Application.Services
 
         public async Task<NewsDto> GetNewsByIdAsync(int newsId)
         {
-            var news = await _repository.GetByIdAsync(newsId, n => n.Publisher);
+            var news = await _unitOfWork.News.GetByIdAsync(newsId, n => n.Publisher);
             if (news == null)
                 throw new KeyNotFoundException($"News with ID {newsId} not found");
 
@@ -60,7 +55,7 @@ namespace Application.Services
 
         public async Task<NewsDto> CreateNewsAsync(CreateNewsDto createNewsDto)
         {
-            var publisher = await _userRepository.GetByIdAsync(createNewsDto.PublisherId);
+            var publisher = await _unitOfWork.Users.GetByIdAsync(createNewsDto.PublisherId);
             if (publisher == null)
                 throw new KeyNotFoundException($"Publisher with ID {createNewsDto.PublisherId} not found");
 
@@ -68,27 +63,30 @@ namespace Application.Services
             news.PublishedAt = DateTime.UtcNow;
             news.IsPublished = false; // Default to unpublished
 
-            await _repository.CreateAsync(news);
+            await _unitOfWork.News.CreateAsync(news);
+            await _unitOfWork.SaveChangesAsync();
             return _mapper.Map<NewsDto>(news);
         }
 
         public async Task UpdateNewsAsync(int newsId, UpdateNewsDto updateNewsDto)
         {
-            var news = await _repository.GetByIdAsync(newsId);
+            var news = await _unitOfWork.News.GetByIdAsync(newsId);
             if (news == null)
                 throw new KeyNotFoundException($"News with ID {newsId} not found");
 
             _mapper.Map(updateNewsDto, news);
-            await _repository.UpdateAsync(news);
+            await _unitOfWork.News.UpdateAsync(news);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task DeleteNewsAsync(int newsId)
         {
-            var news = await _repository.GetByIdAsync(newsId);
+            var news = await _unitOfWork.News.GetByIdAsync(newsId);
             if (news == null)
                 throw new KeyNotFoundException($"News with ID {newsId} not found");
 
-            await _repository.DeleteAsync(news);
+            await _unitOfWork.News.DeleteAsync(news);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

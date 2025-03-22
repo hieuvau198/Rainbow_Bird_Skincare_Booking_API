@@ -13,26 +13,18 @@ namespace Application.Services
 {
     public class BlogCommentService : IBlogCommentService
     {
-        private readonly IGenericRepository<BlogComment> _repository;
-        private readonly IGenericRepository<Blog> _blogRepository;
-        private readonly IGenericRepository<User> _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public BlogCommentService(
-            IGenericRepository<BlogComment> repository,
-            IGenericRepository<Blog> blogRepository,
-            IGenericRepository<User> userRepository,
-            IMapper mapper)
+        public BlogCommentService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _repository = repository;
-            _blogRepository = blogRepository;
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<BlogCommentDto> GetCommentByIdAsync(int commentId)
         {
-            var comment = await _repository.GetByIdAsync(commentId, c => c.InverseParentComment);
+            var comment = await _unitOfWork.BlogComments.GetByIdAsync(commentId, c => c.InverseParentComment);
             if (comment == null)
                 throw new KeyNotFoundException($"Comment not found with ID: {commentId}");
 
@@ -44,7 +36,7 @@ namespace Application.Services
         public async Task<IEnumerable<BlogCommentDto>> GetAllCommentsForBlogAsync(int blogId)
         {
             // Get only top-level comments (no parent)
-            var comments = await _repository.GetAllAsync(
+            var comments = await _unitOfWork.BlogComments.GetAllAsync(
                 c => c.BlogId == blogId && c.ParentCommentId == null,
                 c => c.InverseParentComment);
 
@@ -67,7 +59,7 @@ namespace Application.Services
             int page = 1,
             int size = 10)
         {
-            var query = _repository.GetAllAsQueryable();
+            var query = _unitOfWork.BlogComments.GetAllAsQueryable();
 
             if (blogId.HasValue)
                 query = query.Where(c => c.BlogId == blogId.Value);
@@ -103,22 +95,22 @@ namespace Application.Services
 
         public async Task<BlogCommentDto> CreateCommentAsync(CreateBlogCommentDto dto)
         {
-            var blog = await _blogRepository.GetByIdAsync(dto.BlogId);
+            var blog = await _unitOfWork.Blogs.GetByIdAsync(dto.BlogId);
             if (blog == null)
                 throw new KeyNotFoundException($"Blog not found with ID: {dto.BlogId}");
 
             string fullName = "Anynomous";
 
-            if(dto.UserId != null && dto.UserId != 0)
+            if (dto.UserId != null && dto.UserId != 0)
             {
-                var user = await _userRepository.GetByIdAsync(dto.UserId ?? 0);
+                var user = await _unitOfWork.Users.GetByIdAsync(dto.UserId ?? 0);
                 if (user == null) throw new KeyNotFoundException("User Not Found.");
                 fullName = user.FullName ?? "Anynomous";
             }
 
             if (dto.ParentCommentId.HasValue && dto.ParentCommentId != 0)
             {
-                var parentComment = await _repository.GetByIdAsync(dto.ParentCommentId.Value);
+                var parentComment = await _unitOfWork.BlogComments.GetByIdAsync(dto.ParentCommentId.Value);
                 if (parentComment == null)
                     throw new KeyNotFoundException($"Parent comment not found with ID: {dto.ParentCommentId}");
 
@@ -138,13 +130,14 @@ namespace Application.Services
             comment.IsEdited = false;
             comment.AvatarUrl = "https://img.freepik.com/premium-vector/avatar-icon0002_750950-43.jpg?semt=ais_hybrid"; // Default avatar
 
-            await _repository.CreateAsync(comment);
+            await _unitOfWork.BlogComments.CreateAsync(comment);
+            await _unitOfWork.SaveChangesAsync();
             return _mapper.Map<BlogCommentDto>(comment);
         }
 
         public async Task<BlogCommentDto> UpdateCommentAsync(int commentId, UpdateBlogCommentDto dto)
         {
-            var comment = await _repository.GetByIdAsync(commentId);
+            var comment = await _unitOfWork.BlogComments.GetByIdAsync(commentId);
             if (comment == null)
                 throw new KeyNotFoundException($"Comment not found with ID: {commentId}");
 
@@ -153,38 +146,42 @@ namespace Application.Services
             comment.IsEdited = true;
             comment.UpdatedAt = DateTime.UtcNow;
 
-            await _repository.UpdateAsync(comment);
+            await _unitOfWork.BlogComments.UpdateAsync(comment);
+            await _unitOfWork.SaveChangesAsync();
             return _mapper.Map<BlogCommentDto>(comment);
         }
 
         public async Task DeleteCommentAsync(int commentId)
         {
-            var comment = await _repository.GetByIdAsync(commentId);
+            var comment = await _unitOfWork.BlogComments.GetByIdAsync(commentId);
             if (comment == null)
                 throw new KeyNotFoundException($"Comment not found with ID: {commentId}");
 
-            await _repository.DeleteAsync(comment);
+            await _unitOfWork.BlogComments.DeleteAsync(comment);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task<BlogCommentDto> UpvoteCommentAsync(int commentId)
         {
-            var comment = await _repository.GetByIdAsync(commentId);
+            var comment = await _unitOfWork.BlogComments.GetByIdAsync(commentId);
             if (comment == null)
                 throw new KeyNotFoundException($"Comment not found with ID: {commentId}");
 
             comment.Upvotes = (comment.Upvotes ?? 0) + 1;
-            await _repository.UpdateAsync(comment);
+            await _unitOfWork.BlogComments.UpdateAsync(comment);
+            await _unitOfWork.SaveChangesAsync();
             return _mapper.Map<BlogCommentDto>(comment);
         }
 
         public async Task<BlogCommentDto> DownvoteCommentAsync(int commentId)
         {
-            var comment = await _repository.GetByIdAsync(commentId);
+            var comment = await _unitOfWork.BlogComments.GetByIdAsync(commentId);
             if (comment == null)
                 throw new KeyNotFoundException($"Comment not found with ID: {commentId}");
 
             comment.Downvotes = (comment.Downvotes ?? 0) + 1;
-            await _repository.UpdateAsync(comment);
+            await _unitOfWork.BlogComments.UpdateAsync(comment);
+            await _unitOfWork.SaveChangesAsync();
             return _mapper.Map<BlogCommentDto>(comment);
         }
     }
