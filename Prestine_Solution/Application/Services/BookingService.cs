@@ -27,6 +27,36 @@ namespace Application.Services
 
         public async Task<IEnumerable<BookingDto>> GetAllBookingsAsync()
         {
+            var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+            // Get outdated bookings with any of the target statuses
+            var outdatedBookings = await _unitOfWork.Bookings.GetAllAsync(b =>
+                b.BookingDate < today &&
+                (b.Status == "Await Confirmation" ||
+                 b.Status == "Confirmed" ||
+                 b.Status == "Checked In" ||
+                 b.Status == "In Progress"));
+
+            // Step 2: Update status based on current state
+            foreach (var booking in outdatedBookings)
+            {
+                switch (booking.Status)
+                {
+                    case "Await Confirmation":
+                        booking.Status = "Cancelled By Staff";
+                        break;
+                    case "Confirmed":
+                        booking.Status = "No Show";
+                        break;
+                    case "Checked In":
+                    case "In Progress":
+                        booking.Status = "Incomplete";
+                        break;
+                }
+
+                await _unitOfWork.Bookings.UpdateAsync(booking);
+            }
+
             var bookings = await _unitOfWork.Bookings.GetAllAsync(null, b => b.Customer);
             return _mapper.Map<IEnumerable<BookingDto>>(bookings);
         }
