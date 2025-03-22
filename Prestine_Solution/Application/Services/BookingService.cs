@@ -14,75 +14,59 @@ namespace Application.Services
 {
     public class BookingService : IBookingService
     {
-        private readonly IGenericRepository<Booking> _repository;
-        private readonly IGenericRepository<Therapist> _therapistRepository;
-        private readonly IGenericRepository<TherapistAvailability> _therapistAvaiRepository;
-        private readonly IGenericRepository<Service> _serviceRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public BookingService(
-            IGenericRepository<Booking> repository,
-            IGenericRepository<Therapist> therapistRepository,
-            IGenericRepository<TherapistAvailability> therapistAvaiRepository,
-            IGenericRepository<Service> serviceRepository,
+            IUnitOfWork unitOfWork,
             IMapper mapper)
         {
-            _repository = repository;
-            _therapistRepository = therapistRepository;
-            _therapistAvaiRepository = therapistAvaiRepository;
-            _serviceRepository = serviceRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
-        // ✅ Efficiently fetch all bookings with necessary relationships
         public async Task<IEnumerable<BookingDto>> GetAllBookingsAsync()
         {
-            var bookings = await _repository.GetAllAsync(null, b => b.Customer);
+            var bookings = await _unitOfWork.Bookings.GetAllAsync(null, b => b.Customer);
             return _mapper.Map<IEnumerable<BookingDto>>(bookings);
         }
 
-        // ✅ Get booking by ID with necessary relationships
         public async Task<BookingDto> GetBookingByIdAsync(int id)
         {
-            var booking = await _repository.GetByIdAsync(id, b => b.Customer);
+            var booking = await _unitOfWork.Bookings.GetByIdAsync(id, b => b.Customer);
             if (booking == null)
                 throw new KeyNotFoundException("The requested booking does not exist.");
 
             return _mapper.Map<BookingDto>(booking);
         }
 
-        // ✅ Optimized search for customer bookings
         public async Task<IEnumerable<BookingDto>> GetBookingsByCustomerIdAsync(int customerId)
         {
-            var bookings = await _repository.GetAllAsync(b => b.CustomerId == customerId, b => b.Customer);
+            var bookings = await _unitOfWork.Bookings.GetAllAsync(b => b.CustomerId == customerId, b => b.Customer);
             return _mapper.Map<IEnumerable<BookingDto>>(bookings.OrderByDescending(b => b.BookingDate));
         }
 
-        // ✅ Optimized search for therapist bookings
         public async Task<IEnumerable<BookingDto>> GetBookingsByTherapistIdAsync(int therapistId)
         {
-            var bookings = await _repository.GetAllAsync(b => b.TherapistId == therapistId);
+            var bookings = await _unitOfWork.Bookings.GetAllAsync(b => b.TherapistId == therapistId);
             return _mapper.Map<IEnumerable<BookingDto>>(bookings.OrderByDescending(b => b.BookingDate));
         }
 
-        // ✅ Optimized search for service bookings
         public async Task<IEnumerable<BookingDto>> GetBookingsByServiceIdAsync(int serviceId)
         {
-            var bookings = await _repository.GetAllAsync(b => b.ServiceId == serviceId);
+            var bookings = await _unitOfWork.Bookings.GetAllAsync(b => b.ServiceId == serviceId);
             return _mapper.Map<IEnumerable<BookingDto>>(bookings.OrderByDescending(b => b.BookingDate));
         }
 
-        // ✅ Get bookings by date efficiently
         public async Task<IEnumerable<BookingDto>> GetBookingsByDateAsync(DateOnly date)
         {
-            var bookings = await _repository.GetAllAsync(b => b.BookingDate == date);
+            var bookings = await _unitOfWork.Bookings.GetAllAsync(b => b.BookingDate == date);
             return _mapper.Map<IEnumerable<BookingDto>>(bookings.OrderBy(b => b.SlotId));
         }
 
-        // ✅ Get booking status & next allowed transitions
         public async Task<GetBookingStatusDto> GetBookingStatusAsync(int id)
         {
-            var booking = await _repository.GetByIdAsync(id);
+            var booking = await _unitOfWork.Bookings.GetByIdAsync(id);
             if (booking == null)
                 throw new KeyNotFoundException("The requested booking does not exist.");
 
@@ -95,12 +79,9 @@ namespace Application.Services
             };
         }
 
-
-
-        // ✅ Prevent duplicate bookings & default to "Awaiting Confirmation"
         public async Task<BookingDto> CreateBookingAsync(CreateBookingDto createDto)
         {
-            var existingBookings = await _repository.GetAllAsync(b =>
+            var existingBookings = await _unitOfWork.Bookings.GetAllAsync(b =>
                 b.CustomerId == createDto.CustomerId &&
                 b.BookingDate == createDto.BookingDate &&
                 b.SlotId == createDto.SlotId
@@ -109,15 +90,15 @@ namespace Application.Services
             if (existingBookings.Any())
                 throw new InvalidOperationException("You already have a booking for this time slot. Please choose a different time.");
 
-            Service service = await _serviceRepository.FindAsync(s => s.ServiceId == createDto.ServiceId);
+            Service service = await _unitOfWork.Services.FindAsync(s => s.ServiceId == createDto.ServiceId);
             if (service == null)
                 throw new InvalidOperationException("This service is no longer existed.");
 
             string therapistName = "No Therapist Assigned";
-            if(createDto.TherapistId != 0)
+            if (createDto.TherapistId != 0)
             {
-                Therapist therapist = await _therapistRepository.FindAsync(t => t.TherapistId == createDto.TherapistId, t => t.User);
-                if(therapist != null)
+                Therapist therapist = await _unitOfWork.Therapists.FindAsync(t => t.TherapistId == createDto.TherapistId, t => t.User);
+                if (therapist != null)
                 {
                     therapistName = therapist.User.FullName;
                 }
@@ -125,7 +106,7 @@ namespace Application.Services
 
             service.BookingNumber++;
 
-            await _serviceRepository.UpdateAsync(service);
+            await _unitOfWork.Services.UpdateAsync(service);
 
             var booking = _mapper.Map<Booking>(createDto);
             booking.CreatedAt = DateTime.UtcNow;
@@ -140,30 +121,34 @@ namespace Application.Services
             booking.PaymentStatus = PaymentStatus.Pending.ToString();
             booking.TherapistName = therapistName;
 
-            await _repository.CreateAsync(booking);
+            await _unitOfWork.Bookings.CreateAsync(booking);
+            await _unitOfWork.SaveChangesAsync();
+
             return _mapper.Map<BookingDto>(booking);
         }
 
-        // ✅ Update booking details
         public async Task UpdateBookingAsync(int id, UpdateBookingDto updateDto)
         {
-            var booking = await _repository.GetByIdAsync(id);
+            var booking = await _unitOfWork.Bookings.GetByIdAsync(id);
             if (booking == null)
                 throw new KeyNotFoundException("Sorry! This booking does not exist.");
 
-            if(updateDto.TherapistId == 0 && updateDto.Status.Equals("Confirmed"))
+            if (updateDto.TherapistId == 0 && updateDto.Status.Equals("Confirmed"))
             {
                 throw new InvalidOperationException("Assign a therapist for this booking before confirm it.");
             }
-
+            if(updateDto.TherapistId != booking.TherapistId)
+            {
+                await UpdateBookingTherapistAsync(id, updateDto.TherapistId);
+            }
             _mapper.Map(updateDto, booking);
-            await _repository.UpdateAsync(booking);
+            await _unitOfWork.Bookings.UpdateAsync(booking);
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        // ✅ Update booking status with validation
         public async Task UpdateBookingStatusAsync(int id, string newStatusString)
         {
-            var booking = await _repository.GetByIdAsync(id);
+            var booking = await _unitOfWork.Bookings.GetByIdAsync(id);
             if (booking == null)
                 throw new KeyNotFoundException("The requested booking does not exist.");
 
@@ -180,12 +165,10 @@ namespace Application.Services
 
             booking.Status = BookingStatusHelper.GetStatusDisplayName(newStatus.Value); // ✅ Store as display name
 
-            await _repository.UpdateAsync(booking);
+            await _unitOfWork.Bookings.UpdateAsync(booking);
+            await _unitOfWork.SaveChangesAsync();
         }
 
-
-
-        // ✅ Overloaded method for DTO-based status update
         public async Task UpdateBookingStatusAsync(int id, UpdateBookingDto updateDto)
         {
             if (updateDto.Status == null)
@@ -196,17 +179,15 @@ namespace Application.Services
 
         public async Task UpdateBookingTherapistAsync(int bookingId, int newTherapistId)
         {
-            var booking = await _repository.GetByIdAsync(bookingId);
+            var booking = await _unitOfWork.Bookings.GetByIdAsync(bookingId);
             if (booking == null)
                 throw new KeyNotFoundException("The requested booking does not exist.");
 
-            // Ensure the new therapist exists (Optional validation)
-            var therapistExists = await _therapistRepository.ExistsAsync(t => t.TherapistId == newTherapistId);
-            if (!therapistExists)
+            var therapist = await _unitOfWork.Therapists.FindAsync(t => t.TherapistId == newTherapistId, t => t.User);
+            if (therapist == null)
                 throw new KeyNotFoundException("The specified therapist does not exist.");
 
-            // ✅ Check if the new therapist is actually available at this time
-            var isTherapistAvailable = await _therapistAvaiRepository.ExistsAsync(a =>
+            var isTherapistAvailable = await _unitOfWork.TherapistAvailabilities.ExistsAsync(a =>
                 a.TherapistId == newTherapistId &&
                 a.SlotId == booking.SlotId &&
                 a.Status == "Available" // Ensure the status indicates the therapist is working
@@ -215,8 +196,7 @@ namespace Application.Services
             if (!isTherapistAvailable)
                 throw new InvalidOperationException("The selected therapist is not available at this time. Please choose a different therapist.");
 
-            // Check if the new therapist is already booked at the same time slot
-            var isTherapistBooked = await _repository.ExistsAsync(b =>
+            var isTherapistBooked = await _unitOfWork.Bookings.ExistsAsync(b =>
                 b.TherapistId == newTherapistId &&
                 b.BookingDate == booking.BookingDate &&
                 b.SlotId == booking.SlotId &&
@@ -226,21 +206,21 @@ namespace Application.Services
             if (isTherapistBooked)
                 throw new InvalidOperationException("The selected therapist is already booked at this time slot. Please choose a different therapist.");
 
-            // Update the therapist ID
             booking.TherapistId = newTherapistId;
+            booking.TherapistName = therapist.User.FullName;
 
-            await _repository.UpdateAsync(booking);
+            await _unitOfWork.Bookings.UpdateAsync(booking);
+            await _unitOfWork.SaveChangesAsync();
         }
 
-
-        // ✅ Delete a booking
         public async Task DeleteBookingAsync(int id)
         {
-            var booking = await _repository.GetByIdAsync(id);
+            var booking = await _unitOfWork.Bookings.GetByIdAsync(id);
             if (booking == null)
                 throw new KeyNotFoundException("The requested booking does not exist.");
 
-            await _repository.DeleteAsync(booking);
+            await _unitOfWork.Bookings.DeleteAsync(booking);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }
