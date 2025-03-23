@@ -277,7 +277,7 @@ namespace Application.Services
 
         public async Task<decimal> GetTotalRevenueAsync(DateTime? startDate = null, DateTime? endDate = null)
         {
-            DateTime start = startDate ?? DateTime.UtcNow.Date.AddMonths(-1);
+            DateTime start = startDate ?? new DateTime(2024, 1, 1); // from 2024
             DateTime end = endDate ?? DateTime.UtcNow.Date.AddDays(1);
 
             var transactions = await _unitOfWork.Transactions.GetAllAsync();
