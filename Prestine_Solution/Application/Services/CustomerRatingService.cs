@@ -48,6 +48,16 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<CustomerRatingDto>>(ratings);
         }
 
+        public async Task<IEnumerable<CustomerRatingDto>> GetRatingsByServiceIdAsync(int serviceId)
+        {
+            var ratings = await _unitOfWork.CustomerRatings.GetAllAsync(
+                r => r.Booking.ServiceId == serviceId,
+                r => r.Booking
+            );
+
+            return _mapper.Map<IEnumerable<CustomerRatingDto>>(ratings);
+        }
+
         public async Task<CustomerRatingDto> CreateRatingAsync(CreateCustomerRatingDto createDto)
         {
             if (createDto.RatingValue < 1 || createDto.RatingValue > 5)

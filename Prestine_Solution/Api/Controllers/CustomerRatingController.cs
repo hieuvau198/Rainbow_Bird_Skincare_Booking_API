@@ -38,6 +38,13 @@ namespace Api.Controllers
             return Ok(ratings);
         }
 
+        [HttpGet("service/{serviceId}")]
+        public async Task<ActionResult<IEnumerable<CustomerRatingDto>>> GetRatingsByServiceId(int serviceId)
+        {
+            var ratings = await _ratingService.GetRatingsByServiceIdAsync(serviceId);
+            return Ok(ratings);
+        }
+
         [HttpPost]
         public async Task<ActionResult<CustomerRatingDto>> CreateRating(CreateCustomerRatingDto createDto)
         {
