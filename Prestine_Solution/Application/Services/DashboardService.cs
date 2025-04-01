@@ -285,5 +285,21 @@ namespace Application.Services
                 .Where(t => t.TransactionDate >= start && t.TransactionDate < end)
                 .Sum(t => t.Amount);
         }
+
+        public async Task<List<CategoryServiceCountDto>> GetCategoryServiceCountsAsync()
+        {
+            var categories = await _unitOfWork.ServiceCategories.GetAllAsync();
+            var services = await _unitOfWork.Services.GetAllAsync();
+
+            var result = categories.Select(c => new CategoryServiceCountDto
+            {
+                CategoryId = c.CategoryId,
+                CategoryName = c.CategoryName,
+                ServiceCount = services.Count(s => s.CategoryId == c.CategoryId),
+                Description = c.Description
+            }).ToList();
+
+            return result;
+        }
     }
 }

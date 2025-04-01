@@ -121,5 +121,19 @@ namespace Api.Controllers
                 return StatusCode(500, new { message = ex.Message ?? "Sorry, but something went wrong." });
             }
         }
+
+        [HttpGet("categories/stats")]
+        public async Task<ActionResult<IEnumerable<CategoryServiceCountDto>>> GetCategoryStats()
+        {
+            try
+            {
+                var result = await _service.GetCategoryServiceCountsAsync();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message ?? "Sorry, but something went wrong." });
+            }
+        }
     }
 }
