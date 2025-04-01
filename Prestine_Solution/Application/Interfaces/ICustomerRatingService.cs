@@ -12,6 +12,7 @@ namespace Application.Interfaces
         Task<IEnumerable<CustomerRatingDto>> GetAllRatingsAsync();
         Task<CustomerRatingDto> GetRatingByIdAsync(int id);
         Task<IEnumerable<CustomerRatingDto>> GetRatingsByBookingIdAsync(int bookingId);
+        Task<IEnumerable<CustomerRatingDto>> GetRatingsByServiceIdAsync(int serviceId);
         Task<CustomerRatingDto> CreateRatingAsync(CreateCustomerRatingDto createDto);
         Task UpdateRatingAsync(int id, UpdateCustomerRatingDto updateDto);
         Task DeleteRatingAsync(int id);
