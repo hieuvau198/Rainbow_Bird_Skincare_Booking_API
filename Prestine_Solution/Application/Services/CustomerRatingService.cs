@@ -11,35 +11,26 @@ namespace Application.Services
 {
     public class CustomerRatingService : ICustomerRatingService
     {
-        private readonly IGenericRepository<CustomerRating> _repository;
-        private readonly IGenericRepository<Booking> _bookingRepository;
-        private readonly IGenericRepository<Service> _serviceRepo;
-        private readonly IGenericRepository<Therapist> _therapistRepo;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public CustomerRatingService(
-            IGenericRepository<CustomerRating> repository,
-            IGenericRepository<Booking> bookingRepository,
-            IGenericRepository<Service> serviceRepo,
-            IGenericRepository<Therapist> therapistRepo,
+            IUnitOfWork unitOfWork,
             IMapper mapper)
         {
-            _repository = repository;
-            _bookingRepository = bookingRepository;
-            _serviceRepo = serviceRepo;
-            _therapistRepo = therapistRepo;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<IEnumerable<CustomerRatingDto>> GetAllRatingsAsync()
         {
-            var ratings = await _repository.GetAllAsync(null, r => r.Booking);
+            var ratings = await _unitOfWork.CustomerRatings.GetAllAsync(null, r => r.Booking);
             return _mapper.Map<IEnumerable<CustomerRatingDto>>(ratings);
         }
 
         public async Task<CustomerRatingDto> GetRatingByIdAsync(int id)
         {
-            var rating = await _repository.GetByIdAsync(id, r => r.Booking);
+            var rating = await _unitOfWork.CustomerRatings.GetByIdAsync(id, r => r.Booking);
 
             if (rating == null)
                 throw new KeyNotFoundException($"Rating with ID {id} not found");
@@ -49,7 +40,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<CustomerRatingDto>> GetRatingsByBookingIdAsync(int bookingId)
         {
-            var ratings = await _repository.GetAllAsync(
+            var ratings = await _unitOfWork.CustomerRatings.GetAllAsync(
                 r => r.BookingId == bookingId,
                 r => r.Booking
             );
@@ -61,25 +52,33 @@ namespace Application.Services
         {
             if (createDto.RatingValue < 1 || createDto.RatingValue > 5)
                 throw new InvalidOperationException("Rating value must be between 1 and 5");
-            Booking booking = await _bookingRepository.GetByIdAsync(createDto.BookingId);
+
+            var booking = await _unitOfWork.Bookings.GetByIdAsync(createDto.BookingId);
 
             if (booking == null)
                 throw new InvalidOperationException("This booking is not existed");
 
-            var existedRating = _repository.FindAsync(r => r.BookingId ==  createDto.BookingId);
+            var existedRating = await _unitOfWork.CustomerRatings.FindAsync(r => r.BookingId == createDto.BookingId);
             if (existedRating != null)
                 throw new InvalidOperationException("You rated this service booking already.");
+
             try
             {
                 if (booking != null)
                 {
                     booking.IsRated = true;
-                    Service service = await _serviceRepo.GetByIdAsync(booking.ServiceId);
-                    Therapist therapist = await _therapistRepo.GetByIdAsync((int)booking.TherapistId);
+                    var service = await _unitOfWork.Services.GetByIdAsync(booking.ServiceId);
+                    var therapist = await _unitOfWork.Therapists.GetByIdAsync((int)booking.TherapistId);
+
                     service.Rating = (service.Rating * service.RatingCount + createDto.RatingValue) / (service.RatingCount + 1);
                     service.RatingCount++;
+
                     therapist.Rating = (therapist.Rating * therapist.RatingCount + createDto.RatingValue) / (therapist.RatingCount + 1);
                     therapist.RatingCount++;
+
+                    await _unitOfWork.Bookings.UpdateAsync(booking);
+                    await _unitOfWork.Services.UpdateAsync(service);
+                    await _unitOfWork.Therapists.UpdateAsync(therapist);
                 }
             }
             catch (Exception ex)
@@ -90,13 +89,15 @@ namespace Application.Services
             var rating = _mapper.Map<CustomerRating>(createDto);
             rating.CreatedAt = DateTime.UtcNow;
 
-            await _repository.CreateAsync(rating);
+            await _unitOfWork.CustomerRatings.CreateAsync(rating);
+            await _unitOfWork.SaveChangesAsync();
+
             return _mapper.Map<CustomerRatingDto>(rating);
         }
 
         public async Task UpdateRatingAsync(int id, UpdateCustomerRatingDto updateDto)
         {
-            var rating = await _repository.GetByIdAsync(id);
+            var rating = await _unitOfWork.CustomerRatings.GetByIdAsync(id);
             if (rating == null)
                 throw new KeyNotFoundException($"Rating with ID {id} not found");
 
@@ -105,26 +106,28 @@ namespace Application.Services
 
             _mapper.Map(updateDto, rating);
 
-            await _repository.UpdateAsync(rating);
+            await _unitOfWork.CustomerRatings.UpdateAsync(rating);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task DeleteRatingAsync(int id)
         {
-            var rating = await _repository.GetByIdAsync(id);
+            var rating = await _unitOfWork.CustomerRatings.GetByIdAsync(id);
             if (rating == null)
                 throw new KeyNotFoundException($"Rating with ID {id} not found");
 
-            await _repository.DeleteAsync(rating);
+            await _unitOfWork.CustomerRatings.DeleteAsync(rating);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task<bool> RatingExistsAsync(int id)
         {
-            return await _repository.ExistsAsync(r => r.RatingId == id);
+            return await _unitOfWork.CustomerRatings.ExistsAsync(r => r.RatingId == id);
         }
 
         public async Task<bool> HasUserRatedBookingAsync(int bookingId)
         {
-            return await _repository.ExistsAsync(r => r.BookingId == bookingId);
+            return await _unitOfWork.CustomerRatings.ExistsAsync(r => r.BookingId == bookingId);
         }
     }
 }

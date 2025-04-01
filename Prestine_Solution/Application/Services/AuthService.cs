@@ -104,71 +104,7 @@ namespace Application.Services
             }
         }
 
-        private (string Token, DateTime Expiration) GenerateAccessToken(UserDto userDto)
-        {
-            var roleString = userDto.Role?.ToString() ?? "Customer"; // Default to "Customer" if Role is null
-
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name, userDto.Username),
-                new Claim(ClaimTypes.Email, userDto.Email),
-                new Claim(ClaimTypes.Role, roleString) // Store role as string
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                _configuration["Jwt:SecretKey"] ??
-                throw new InvalidOperationException("JWT Secret Key is not configured")));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var expiration = DateTime.UtcNow.AddMinutes(
-                double.Parse(_configuration["Jwt:AccessTokenExpirationMinutes"] ?? "30"));
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: expiration,
-                signingCredentials: creds
-            );
-
-            return (new JwtSecurityTokenHandler().WriteToken(token), expiration);
-        }
-
-        private string GenerateRefreshToken()
-        {
-            var randomNumber = new byte[32];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(randomNumber);
-                return Convert.ToBase64String(randomNumber);
-            }
-        }
-
-        private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
-        {
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateAudience = true,
-                ValidateIssuer = true,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"] ??
-                    throw new InvalidOperationException("JWT Secret Key is not configured"))),
-                ValidateLifetime = false, 
-                ValidIssuer = _configuration["Jwt:Issuer"],
-                ValidAudience = _configuration["Jwt:Audience"]
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out _);
-            return principal;
-        }
-
-        private bool VerifyPassword(string inputPassword, string storedHash)
-        {
-            return BCrypt.Net.BCrypt.Verify(inputPassword, storedHash);
-        }
+        
         
         public async Task<AuthResponseDto> RegisterBasicUserAsync(RegisterUserDto registerUserDto)
         {
@@ -249,5 +185,72 @@ namespace Application.Services
                 User = _mapper.Map<UserDto>(user)
             };
         }
+
+        private (string Token, DateTime Expiration) GenerateAccessToken(UserDto userDto)
+        {
+            var roleString = userDto.Role?.ToString() ?? "Customer"; // Default to "Customer" if Role is null
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Name, userDto.Username),
+                new Claim(ClaimTypes.Email, userDto.Email),
+                new Claim(ClaimTypes.Role, roleString) // Store role as string
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                _configuration["Jwt:SecretKey"] ??
+                throw new InvalidOperationException("JWT Secret Key is not configured")));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var expiration = DateTime.UtcNow.AddMinutes(
+                double.Parse(_configuration["Jwt:AccessTokenExpirationMinutes"] ?? "30"));
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: expiration,
+                signingCredentials: creds
+            );
+
+            return (new JwtSecurityTokenHandler().WriteToken(token), expiration);
+        }
+
+        private string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
+        }
+
+        private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = true,
+                ValidateIssuer = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"] ??
+                    throw new InvalidOperationException("JWT Secret Key is not configured"))),
+                ValidateLifetime = false,
+                ValidIssuer = _configuration["Jwt:Issuer"],
+                ValidAudience = _configuration["Jwt:Audience"]
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out _);
+            return principal;
+        }
+
+        private bool VerifyPassword(string inputPassword, string storedHash)
+        {
+            return BCrypt.Net.BCrypt.Verify(inputPassword, storedHash);
+        }
     }
+
 }
