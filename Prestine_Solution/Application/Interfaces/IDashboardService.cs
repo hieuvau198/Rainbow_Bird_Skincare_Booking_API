@@ -14,5 +14,7 @@ namespace Application.Interfaces
         Task<List<ServiceRevenueDto>> GetTopServicesAsync(int count = 5, DateTime? startDate = null, DateTime? endDate = null);
         Task<List<RevenueByDayDto>> GetCustomPeriodRevenueAsync(RevenueFilterDto filter);
         Task<decimal> GetTotalRevenueAsync(DateTime? startDate = null, DateTime? endDate = null);
+        Task<List<CategoryServiceCountDto>> GetCategoryServiceCountsAsync();
+
     }
 }

@@ -59,4 +59,12 @@ namespace Application.DTOs
         public int TransactionCount { get; set; }
         public decimal Percentage { get; set; } // Percentage of total revenue
     }
+
+    public class CategoryServiceCountDto
+    {
+        public int CategoryId { get; set; }
+        public string CategoryName { get; set; }
+        public int ServiceCount { get; set; }
+        public string Description { get; set; }
+    }
 }
