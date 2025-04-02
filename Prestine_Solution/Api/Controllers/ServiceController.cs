@@ -81,7 +81,6 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "StandardPolicy")]
         public async Task<ActionResult<ServiceDto>> CreateService([FromForm] CreateServiceDto createDto)
         {
             try
@@ -104,7 +103,6 @@ namespace Api.Controllers
         }
 
         [HttpPut("{serviceId}")]
-        [Authorize(Policy = "StandardPolicy")]
         public async Task<ActionResult<ServiceDto>> UpdateService(int serviceId, [FromForm] UpdateServiceDto updateDto)
         {
             try
@@ -127,7 +125,6 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{serviceId}")]
-        [Authorize(Policy = "RestrictPolicy")]
         public async Task<IActionResult> DeleteService(int serviceId)
         {
             try
